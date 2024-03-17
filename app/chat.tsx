@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <View>
       <Text>Chat</Text>
-      <Link href="/about">Map</Link>
+      <Link href="/map">Map</Link>
       <Link href="/">Swipe</Link>
       <Link href="/chat">Chat</Link>
     </View>

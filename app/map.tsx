@@ -5,8 +5,8 @@ import { Link } from "expo-router";
 export default function Page() {
   return (
     <View>
-      <Text>About</Text>
-      <Link href="/about">Map</Link>
+      <Text>Map</Text>
+      <Link href="/map">Map</Link>
       <Link href="/">Swipe</Link>
       <Link href="/chat">Chat</Link>
     </View>
