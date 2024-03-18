@@ -7,8 +7,9 @@ export default function Page() {
     <View>
       <Text>Chat</Text>
       <Link href="/map">Map</Link>
-      <Link href="/">Swipe</Link>
+      <Link href="/swipe">Swipe</Link>
       <Link href="/chat">Chat</Link>
+      <Link href="/">Index</Link>
     </View>
   );
 }
