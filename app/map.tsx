@@ -1,14 +1,21 @@
-import { View, Text } from "react-native";
+import React from "react";
+import MapView from "react-native-maps";
+import { StyleSheet, View } from "react-native";
 
-import { Link } from "expo-router";
-
-export default function Page() {
+export default function Map() {
   return (
-    <View>
-      <Text>Map</Text>
-      <Link href="/map">Map</Link>
-      <Link href="/">Swipe</Link>
-      <Link href="/chat">Chat</Link>
+    <View style={styles.container}>
+      <MapView style={styles.map} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
+});
