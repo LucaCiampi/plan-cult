@@ -1,14 +1,12 @@
 import React from "react";
-import { Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable, PressableProps } from "react-native";
 
-interface Props {
+interface Props extends PressableProps {
   children?: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
 }
 
-const Button = ({ children, className, onClick }: Props) => (
-  <Pressable style={styles.button} onPress={onClick}>
+const Button = ({ children, style, ...rest }: Props) => (
+  <Pressable style={StyleSheet.flatten([styles.button, style])} {...rest}>
     <Text style={styles.text}>{children}</Text>
   </Pressable>
 );
