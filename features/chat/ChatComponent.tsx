@@ -18,7 +18,7 @@ const ChatComponent = () => {
 
   return (
     <>
-      <View>
+      <View style={styles.chatView}>
         <ScrollView>
           <Conversation />
         </ScrollView>
@@ -28,6 +28,10 @@ const ChatComponent = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  chatView: {
+    height: "100%",
+  },
+});
 
 export default ChatComponent;

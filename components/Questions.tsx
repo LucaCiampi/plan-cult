@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Button } from "react-native";
+import { View, StyleSheet } from "react-native";
+import Button from "./common/Button";
 import {
   addMessageToConversation,
   setCurrentQuestions,
@@ -40,19 +41,27 @@ const Questions = () => {
   };
 
   return (
-    <View>
+    <View style={styles.questionsOptions}>
       {currentQuestions &&
         currentQuestions.map((q: Dialogue) => (
           <Button
             key={q.id}
-            title={q.question_short}
             onPress={() =>
               handleQuestionClick(q.question, q.followUp, q.answer)
             }
-          />
+          >
+            {q.question_short}
+          </Button>
         ))}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  questionsOptions: {
+    gap: 6,
+    padding: 6,
+  },
+});
 
 export default Questions;

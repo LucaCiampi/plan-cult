@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import React from "react";
 import { Text, StyleSheet, Pressable, PressableProps } from "react-native";
 
@@ -19,14 +20,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "black",
+    backgroundColor: Colors.secondary,
   },
   text: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: "bold",
     letterSpacing: 0.25,
-    color: "white",
+    color: "black",
   },
 });
 

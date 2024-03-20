@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { View, Text, StyleSheet } from "react-native";
 import { selectConversations } from "@/features/chat/chatSlice";
+import Colors from "@/constants/Colors";
 
 const Conversation = () => {
   const conversations = useSelector(selectConversations);
@@ -28,7 +29,7 @@ const Conversation = () => {
 const styles = StyleSheet.create({
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "blue",
+    backgroundColor: Colors.secondary,
     color: "white",
     padding: 10,
     borderRadius: 10,
