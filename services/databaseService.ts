@@ -1,8 +1,9 @@
 import * as SQLite from "expo-sqlite/next";
 import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
+import Config from "@/constants/Config";
 
-export async function prepareDatabase(debugMode: boolean) {
+export async function prepareDatabase() {
   const databaseFilename = "db.db";
   const documentsDirectory = FileSystem.documentDirectory;
   const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
@@ -20,7 +21,7 @@ export async function prepareDatabase(debugMode: boolean) {
   const dbAsset = Asset.fromModule(require("../assets/databases/db.db"));
 
   try {
-    if (debugMode) {
+    if (Config.DEBUG) {
       console.log(
         "🪲 Mode débogage activé : Recopie systématique de la base de données."
       );

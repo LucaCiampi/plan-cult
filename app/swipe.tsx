@@ -20,7 +20,7 @@ export default function SwipePage() {
 
   useEffect(() => {
     async function fetchData() {
-      const db = await prepareDatabase(true);
+      const db = await prepareDatabase();
       let charactersData = await retrieveAllFromDatabaseTable(db);
 
       // Filtrez les personnages likés de la liste à afficher
