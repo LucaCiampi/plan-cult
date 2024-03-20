@@ -19,11 +19,17 @@ const Questions = () => {
     answers: string[]
   ) => {
     // Ajouter la question à la conversation
-    question.forEach((q) => dispatch(addMessageToConversation(q)));
+    question.forEach((q) =>
+      dispatch(addMessageToConversation({ text: q, sender: "user" }))
+    );
 
     // Attendre 1 seconde avant de montrer les réponses
     setTimeout(() => {
-      answers.forEach((answer) => dispatch(addMessageToConversation(answer)));
+      answers.forEach((answer) =>
+        dispatch(
+          addMessageToConversation({ text: answer, sender: "character" })
+        )
+      );
       if (followUp) {
         dispatch(setPreviousQuestions(currentQuestions));
         dispatch(setCurrentQuestions(followUp as Dialogue[]));
