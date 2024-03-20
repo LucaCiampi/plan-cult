@@ -50,7 +50,7 @@
       {
         "id": "lvl1q2",
         "question_short": "Tu aimes le foot ?",
-        "question": ["J'ai une question", "Est-ce que tu aimes le foot ?"],
+        "question": ["J'ai une question", "Est-ce que tu aimes le foot ?", "C'est pour ma culture gé"],
         "answer": [
           "Ah oui totalement",
           "Et toi tu aimes ?"
@@ -90,6 +90,13 @@
             "question": ["Pas du tout", "Mais j'étais curieux voilà tout"],
             "answer": [
               "D'accord je vois"
+            ]
+          },
+          {
+            "id": "lvl1q2c",
+            "question_short": "Pas sûr",
+            "question": ["Pas sûr (pas de réponse) suivante"],
+            "answer": [
             ]
           }
         ]
