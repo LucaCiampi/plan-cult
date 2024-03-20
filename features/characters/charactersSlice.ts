@@ -20,8 +20,6 @@ export const charactersSlice = createSlice({
       state.allCharacters = action.payload;
     },
     likeCharacter: (state, action: PayloadAction<number>) => {
-      console.log("🍰 likeCharacter");
-
       const character = state.allCharacters.find(
         (c) => c.id === action.payload
       );
@@ -33,8 +31,6 @@ export const charactersSlice = createSlice({
       }
     },
     removeCharacter: (state, action: PayloadAction<number>) => {
-      console.log("🍰 removeCharacter");
-
       state.allCharacters = state.allCharacters.filter(
         (character) => character.id !== action.payload
       );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, Text } from "react-native";
 import {
   prepareDatabase,
   retrieveAllFromDatabaseTable,
@@ -14,7 +14,8 @@ import {
 export default function SwipePage() {
   const [characters, setCharactersState] = useState<Character[]>([]);
   const dispatch = useDispatch();
-  // Sélectionnez l'état des personnages likés depuis Redux
+
+  // Récupération des profils likés depuis Redux
   const likedCharacters = useSelector(selectLikedCharacters);
 
   useEffect(() => {
@@ -33,7 +34,15 @@ export default function SwipePage() {
     }
 
     fetchData();
-  }, [dispatch, likedCharacters]); // Ajoutez likedCharacters dans le tableau des dépendances
+  }, [dispatch, likedCharacters]);
+
+  if (characters.length === 0) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text>Pas de profil dans les parages</Text>
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -55,5 +64,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#cccccc",
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

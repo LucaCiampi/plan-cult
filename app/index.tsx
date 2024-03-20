@@ -7,7 +7,7 @@ export default function Page() {
       <Text>Index / onboarding</Text>
       <Link href="/map">Map</Link>
       <Link href="/">Swipe</Link>
-      <Link href="/chat">Chat</Link>
+      <Link href="/chat/index">Chat</Link>
     </View>
   );
 }

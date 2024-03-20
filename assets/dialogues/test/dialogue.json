@@ -49,44 +49,48 @@
       },
       {
         "id": "lvl1q2",
-        "question_short": "tu aimes le foot ?",
-        "question": ["Est-ce que tu aimes le foot ?"],
+        "question_short": "Tu aimes le foot ?",
+        "question": ["J'ai une question", "Est-ce que tu aimes le foot ?"],
         "answer": [
-          "Absolument! Et toi, tu joues ?"
+          "Ah oui totalement",
+          "Et toi tu aimes ?"
         ],
         "followUp": [
           {
             "id": "lvl1q2a",
             "question_short": "Oui",
-            "question": ["Oui, je joue en club."],
+            "question": ["Oui j'adore"],
             "answer": [
-              "Cool ! Dans quelle équipe ?"
+              "D'accord!",
+              "Moi aussi :)"
             ],
-            "followUp": {
-              "q2a1": {
-                "question_short": "Les locaux",
-                "question": ["Je joue pour les locaux, et toi ?"],
-                "answer": [
-                  "Juste avec des amis le weekend."
-                ]
-              }
-            }
+            "followUp": [
+                {
+                  "id": "lvl1q2a1",
+                  "question_short": "cool !",
+                  "question": ["Ok !", "Trop cool"],
+                  "answer": [
+                    "Yup"
+                  ]
+                },
+                {
+                  "id": "lvl1q2a2",
+                  "question_short": "M'en fou",
+                  "question": ["Je m'en fou"],
+                  "answer": [
+                    "Ah d'accord",
+                    "Pas sympa"
+                  ]
+                }
+              ]
           },
           {
+            "id": "lvl1q2b",
             "question_short": "Non",
-            "question": ["Non, je préfère regarder."],
+            "question": ["Pas du tout", "Mais j'étais curieux voilà tout"],
             "answer": [
-              "Chacun son truc ! Tu suis quelle équipe ?"
-            ],
-            "followUp": {
-              "q2b1": {
-                "question_short": "OM",
-                "question": ["Je supporte l'OM."],
-                "answer": [
-                  "Ah, une personne de goût !"
-                ]
-              }
-            }
+              "D'accord je vois"
+            ]
           }
         ]
       }

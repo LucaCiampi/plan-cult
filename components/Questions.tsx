@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { View, StyleSheet } from "react-native";
-import Button from "./common/Button";
+import Button from "@/components/common/Button";
 import {
   addMessageToConversation,
   setCurrentQuestions,
@@ -14,17 +14,25 @@ const Questions = () => {
   const dispatch = useDispatch();
   const { currentQuestions } = useSelector(selectCurrentQuestions);
 
+  /**
+   * Se déclenche au clic d'un choix de question de la part de l'utilisateur
+   * @param question les textes de la question posée
+   * @param answers les textes de réponses en lien avec la question
+   * @param followUp l'éventuel cheminement vers les questions suivantes
+   */
   const handleQuestionClick = async (
     question: string[],
-    followUp: Dialogue[] | unknown,
-    answers: string[]
+    answers: string[],
+    followUp: Dialogue[] | undefined
   ) => {
-    // Ajouter la question à la conversation
-    question.forEach((q) =>
-      dispatch(addMessageToConversation({ text: q, sender: "user" }))
+    // Ajoute la question posée à la conversation
+    question.forEach((questionSentence) =>
+      dispatch(
+        addMessageToConversation({ text: questionSentence, sender: "user" })
+      )
     );
 
-    // Attendre 1 seconde avant de montrer les réponses
+    // Attend 1 seconde avant d'ajouter les réponses à la conversation
     setTimeout(() => {
       answers.forEach((answer) =>
         dispatch(
@@ -43,14 +51,18 @@ const Questions = () => {
   return (
     <View style={styles.questionsOptions}>
       {currentQuestions &&
-        currentQuestions.map((q: Dialogue) => (
+        currentQuestions.map((currentQuestion: Dialogue) => (
           <Button
-            key={q.id}
+            key={currentQuestion.id}
             onPress={() =>
-              handleQuestionClick(q.question, q.followUp, q.answer)
+              handleQuestionClick(
+                currentQuestion.question,
+                currentQuestion.answer,
+                currentQuestion.followUp
+              )
             }
           >
-            {q.question_short}
+            {currentQuestion.question_short}
           </Button>
         ))}
     </View>

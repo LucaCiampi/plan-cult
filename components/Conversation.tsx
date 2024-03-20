@@ -6,20 +6,23 @@ import { selectConversations } from "@/features/chat/chatSlice";
 import Colors from "@/constants/Colors";
 
 const Conversation = () => {
-  const conversations = useSelector(selectConversations);
+  const conversation = useSelector(selectConversations);
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 100); // Délai de 100 millisecondes pour s'assurer que le message a bien le temps de s'afficher
-  }, [conversations]);
+  }, [conversation]);
 
+  //TODO: rajouter un memo pour éviter de re-charger le fil de discussion systématiquement
   return (
     <ScrollView ref={scrollViewRef}>
-      {conversations.map((message: Message, index: number) => (
+      {conversation.map((message: Message, index: number) => (
+        // Lors de l'ajout d'un message à la conversation
         <View
-          key={index}
+          //TODO: voir si optimal
+          key={`msg-${Date.now()}-${Math.random()}`}
           style={[
             styles.message,
             message.sender === "user"

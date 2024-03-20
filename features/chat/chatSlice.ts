@@ -3,13 +3,13 @@ import { RootState } from "@/app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
-  conversations: Message[];
+  conversation: Message[];
   currentQuestions: Dialogue[];
   previousQuestions: Dialogue[];
 }
 
 const initialState: ChatState = {
-  conversations: [],
+  conversation: [],
   currentQuestions: [],
   previousQuestions: [],
 };
@@ -18,9 +18,6 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setConversations: (state, action: PayloadAction<Message[]>) => {
-      state.conversations = action.payload;
-    },
     setCurrentQuestions: (state, action: PayloadAction<Dialogue[]>) => {
       state.currentQuestions = action.payload;
     },
@@ -28,7 +25,7 @@ const chatSlice = createSlice({
       state.previousQuestions = action.payload;
     },
     addMessageToConversation: (state, action: PayloadAction<Message>) => {
-      state.conversations.push(action.payload);
+      state.conversation.push(action.payload);
     },
     resetToPreviousQuestions: (state) => {
       state.currentQuestions = state.previousQuestions;
@@ -37,7 +34,6 @@ const chatSlice = createSlice({
 });
 
 export const {
-  setConversations,
   setCurrentQuestions,
   setPreviousQuestions,
   addMessageToConversation,
@@ -45,7 +41,7 @@ export const {
 } = chatSlice.actions;
 
 export const selectConversations = (state: RootState) =>
-  state.chat.conversations;
+  state.chat.conversation;
 export const selectCurrentQuestions = (state: RootState) => state.chat;
 
 export default chatSlice.reducer;
