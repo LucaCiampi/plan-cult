@@ -6,17 +6,16 @@ import {
   setCurrentQuestions,
   setPreviousQuestions,
   resetToPreviousQuestions,
+  selectCurrentQuestions,
 } from "@/features/chat/chatSlice";
 
 const Questions = () => {
   const dispatch = useDispatch();
-  const { currentQuestions, conversations } = useSelector(
-    (state: any) => state.chat
-  );
+  const { currentQuestions } = useSelector(selectCurrentQuestions);
 
   const handleQuestionClick = async (
     question: string[],
-    followUp: Dialogue[] | undefined,
+    followUp: Dialogue[] | unknown,
     answers: string[]
   ) => {
     // Ajouter la question à la conversation
@@ -27,7 +26,7 @@ const Questions = () => {
       answers.forEach((answer) => dispatch(addMessageToConversation(answer)));
       if (followUp) {
         dispatch(setPreviousQuestions(currentQuestions));
-        dispatch(setCurrentQuestions(followUp));
+        dispatch(setCurrentQuestions(followUp as Dialogue[]));
       } else {
         dispatch(resetToPreviousQuestions());
       }
@@ -36,13 +35,16 @@ const Questions = () => {
 
   return (
     <View>
-      {currentQuestions.map((q: Dialogue) => (
-        <Button
-          key={q.id}
-          title={q.question_short}
-          onPress={() => handleQuestionClick(q.question, q.followUp, q.answer)}
-        />
-      ))}
+      {currentQuestions &&
+        currentQuestions.map((q: Dialogue) => (
+          <Button
+            key={q.id}
+            title={q.question_short}
+            onPress={() =>
+              handleQuestionClick(q.question, q.followUp, q.answer)
+            }
+          />
+        ))}
     </View>
   );
 };

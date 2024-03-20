@@ -2,9 +2,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { View, Text } from "react-native";
+import { selectConversations } from "@/features/chat/chatSlice";
 
 const Conversation = () => {
-  const conversations = useSelector((state: any) => state.chat.conversations);
+  const conversations = useSelector(selectConversations);
 
   return (
     <View>

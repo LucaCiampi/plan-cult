@@ -1,4 +1,5 @@
 // store/chatSlice.ts
+import { RootState } from "@/app/store";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
@@ -42,4 +43,9 @@ export const {
   addMessageToConversation,
   resetToPreviousQuestions,
 } = chatSlice.actions;
+
+export const selectConversations = (state: RootState) =>
+  state.chat.conversations;
+export const selectCurrentQuestions = (state: RootState) => state.chat;
+
 export default chatSlice.reducer;
