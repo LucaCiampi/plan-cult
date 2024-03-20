@@ -1,22 +1,39 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import Button from "../components/common/Button";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { View, FlatList, StyleSheet } from "react-native";
 import {
   prepareDatabase,
   retrieveAllFromDatabaseTable,
 } from "@/services/databaseService";
+import CharacterComponent from "@/features/characters/CharacterComponent";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCharacters,
+  selectLikedCharacters,
+} from "@/features/characters/charactersSlice";
 
-export default function Page() {
-  const [characters, setCharacters] = useState<Character[]>([]);
+export default function SwipePage() {
+  const [characters, setCharactersState] = useState<Character[]>([]);
+  const dispatch = useDispatch();
+  // Sélectionnez l'état des personnages likés depuis Redux
+  const likedCharacters = useSelector(selectLikedCharacters);
 
   useEffect(() => {
     async function fetchData() {
       const db = await prepareDatabase(true);
-      const charactersData = await retrieveAllFromDatabaseTable(db);
-      setCharacters(charactersData as Character[]);
+      let charactersData = await retrieveAllFromDatabaseTable(db);
+
+      // Filtrez les personnages likés de la liste à afficher
+      charactersData = charactersData.filter(
+        (character) =>
+          !likedCharacters.some((liked) => liked.id === character.id)
+      );
+
+      setCharactersState(charactersData as Character[]);
+      dispatch(setCharacters(charactersData as Character[]));
     }
+
     fetchData();
-  }, []);
+  }, [dispatch, likedCharacters]); // Ajoutez likedCharacters dans le tableau des dépendances
 
   return (
     <View>
@@ -25,16 +42,7 @@ export default function Page() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.characterContainer}>
-            <Text style={styles.characterName}>
-              {item.name} {item.surname}
-            </Text>
-            {item.birth && (
-              <Text style={styles.characterDescription}>{item.birth}</Text>
-            )}
-            <View style={styles.buttonsContainer}>
-              <Button style={styles.button}>Dislike</Button>
-              <Button style={styles.button}>Like</Button>
-            </View>
+            <CharacterComponent character={item} />
           </View>
         )}
       />
@@ -43,30 +51,9 @@ export default function Page() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-  },
   characterContainer: {
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#cccccc",
-  },
-  characterName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  characterDescription: {
-    fontSize: 14,
-  },
-  buttonsContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    gap: 24,
-  },
-  button: {
-    flex: 1,
   },
 });

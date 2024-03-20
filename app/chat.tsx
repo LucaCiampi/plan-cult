@@ -1,15 +1,38 @@
-import { View, Text } from "react-native";
+import React from "react";
+import { View, FlatList, StyleSheet, Text } from "react-native";
+import { useSelector } from "react-redux";
+import { selectLikedCharacters } from "../features/characters/charactersSlice";
+import CharacterComponent from "../features/characters/CharacterComponent";
 
-import { Link } from "expo-router";
+export default function ChatPage() {
+  const likedCharacters = useSelector(selectLikedCharacters);
 
-export default function Page() {
+  console.log("coucou");
+  console.log(likedCharacters); // Dans ChatPage pour vérifier les personnages likés
+
   return (
-    <View>
-      <Text>Chat</Text>
-      <Link href="/map">Map</Link>
-      <Link href="/swipe">Swipe</Link>
-      <Link href="/chat">Chat</Link>
-      <Link href="/">Index</Link>
+    <View style={styles.container}>
+      <FlatList
+        data={likedCharacters}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.characterContainer}>
+            <CharacterComponent character={item} />
+          </View>
+        )}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+  },
+  characterContainer: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#cccccc",
+  },
+});

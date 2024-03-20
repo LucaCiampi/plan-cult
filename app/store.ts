@@ -1,10 +1,10 @@
-// store.ts
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice'
+// app/store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import charactersReducer from "../features/characters/charactersSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer
+    characters: charactersReducer,
   },
 });
 
