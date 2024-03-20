@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,12 +9,45 @@ import {
 
 // Importer le fichier JSON
 import dialogue from "../../assets/dialogues/test/dialogue.json";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { useSelector } from "react-redux";
+import { selectLikedCharacters } from "@/features/characters/charactersSlice";
 
 export default function ChatWithCharacterPage() {
+  const { id } = useLocalSearchParams();
+  const likedCharacters = useSelector(selectLikedCharacters);
+  const [character, setCharacter] = useState<Character | null>(null);
+  const [trustLevel, setTrustLevel] = useState<number>(0);
+
+  useEffect(() => {
+    // Trouver le personnage par id
+    const char = likedCharacters.find((c) => c.id.toString() === id);
+    setCharacter(char ?? null);
+  }, [id, likedCharacters]);
+
+  if (!character) {
+    return (
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            title: "Introuvable",
+          }}
+        />
+        <Text>Discussion introuvable</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.chatContainer}>
+      <Stack.Screen
+        options={{
+          title: `${character.name} ${character.surname ?? ""}`,
+          headerBackTitle: "Retour",
+        }}
+      />
       <ScrollView style={styles.scrollView}>
-        {dialogue[0].map((item, index) => (
+        {dialogue[trustLevel].map((item, index) => (
           <InitialQuestionDisplayComponent key={index} item={item} />
         ))}
       </ScrollView>
@@ -22,9 +55,7 @@ export default function ChatWithCharacterPage() {
   );
 }
 
-const InitialQuestionDisplayComponent: React.FC<{ item: Question }> = ({
-  item,
-}) => {
+const InitialQuestionDisplayComponent = ({ item }: { item: Question }) => {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
   return (
@@ -46,7 +77,7 @@ const InitialQuestionDisplayComponent: React.FC<{ item: Question }> = ({
 const DisplayComponent: React.FC<{ item: Question }> = ({ item }) => {
   const [messages, setMessages] = useState<string[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     // Ajouter la question après un court délai pour simuler la "frappe" du message
     timeoutId = setTimeout(() => {
@@ -110,10 +141,3 @@ const styles = StyleSheet.create({
 });
 
 // Assurez-vous que l'interface Question est correctement définie pour correspondre à votre structure de données
-interface Question {
-  id: string;
-  question_short: string;
-  question: string[];
-  answer: string[];
-  followUp?: Question[];
-}
