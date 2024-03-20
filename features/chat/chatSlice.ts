@@ -1,14 +1,6 @@
 // store/chatSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Dialogue {
-  id: string;
-  question_short: string;
-  question: string[];
-  answer: string[];
-  followUp?: Dialogue[];
-}
-
 interface ChatState {
   conversations: string[];
   currentQuestions: Dialogue[];
@@ -17,7 +9,7 @@ interface ChatState {
 
 const initialState: ChatState = {
   conversations: [],
-  currentQuestions: [], // Initialiser avec les premières questions
+  currentQuestions: [],
   previousQuestions: [],
 };
 

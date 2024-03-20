@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Button, Text } from "react-native";
+import { View, Button } from "react-native";
 import {
   addMessageToConversation,
   setCurrentQuestions,
@@ -16,7 +16,7 @@ const Questions = () => {
 
   const handleQuestionClick = async (
     question: string[],
-    followUp: any[],
+    followUp: Dialogue[] | undefined,
     answers: string[]
   ) => {
     // Ajouter la question à la conversation
@@ -36,7 +36,7 @@ const Questions = () => {
 
   return (
     <View>
-      {currentQuestions.map((q: any) => (
+      {currentQuestions.map((q: Dialogue) => (
         <Button
           key={q.id}
           title={q.question_short}
