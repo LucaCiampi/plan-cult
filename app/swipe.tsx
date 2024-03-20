@@ -4,7 +4,7 @@ import {
   prepareDatabase,
   retrieveAllFromDatabaseTable,
 } from "@/services/databaseService";
-import CharacterComponent from "@/features/characters/CharacterComponent";
+import CharacterCard from "@/features/characters/CharacterCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCharacters,
@@ -42,7 +42,7 @@ export default function SwipePage() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.characterContainer}>
-            <CharacterComponent character={item} />
+            <CharacterCard character={item} />
           </View>
         )}
       />

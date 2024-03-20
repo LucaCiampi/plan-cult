@@ -22,8 +22,6 @@ export const charactersSlice = createSlice({
     likeCharacter: (state, action: PayloadAction<number>) => {
       console.log("🍰 likeCharacter");
 
-      console.log(state.allCharacters);
-
       const character = state.allCharacters.find(
         (c) => c.id === action.payload
       );

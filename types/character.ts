@@ -3,5 +3,5 @@ type Character = {
   name: string;
   surname: string;
   birth: string;
-  date: string;
+  death: string;
 };

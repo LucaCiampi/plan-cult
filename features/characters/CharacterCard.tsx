@@ -1,4 +1,4 @@
-// CharacterComponent.tsx
+// CharacterCard.tsx
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ interface CharacterProps {
   character: Character;
 }
 
-const CharacterComponent: React.FC<CharacterProps> = ({ character }) => {
+const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
   return (
@@ -32,8 +32,6 @@ const CharacterComponent: React.FC<CharacterProps> = ({ character }) => {
         <Button
           style={styles.button}
           onPress={() => {
-            console.log(character.id);
-
             dispatch(likeCharacter(character.id));
             console.log(`${character.name} removed`);
           }}
@@ -65,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CharacterComponent;
+export default CharacterCard;

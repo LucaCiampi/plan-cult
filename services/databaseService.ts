@@ -7,13 +7,15 @@ export async function prepareDatabase(debugMode: boolean) {
   const internalDbName = `${FileSystem.documentDirectory}SQLite/${databaseFilename}`;
 
   if (debugMode) {
-    console.log("Mode débogage : recopie systématique de la base de données.");
+    console.log(
+      "🪲 Mode débogage : recopie systématique de la base de données."
+    );
     const asset = Asset.fromModule(require("../assets/databases/db.db"));
     await FileSystem.downloadAsync(asset.uri, internalDbName);
   } else {
     const fileInfo = await FileSystem.getInfoAsync(internalDbName);
     if (!fileInfo.exists) {
-      console.log("Copie de la base de données dans le stockage interne.");
+      console.log("🪲 Copie de la base de données dans le stockage interne.");
       const asset = Asset.fromModule(require("../assets/databases/db.db"));
       await FileSystem.downloadAsync(asset.uri, internalDbName);
     }
