@@ -19,9 +19,7 @@ const ChatComponent = () => {
   return (
     <>
       <View style={styles.chatView}>
-        <ScrollView>
-          <Conversation />
-        </ScrollView>
+        <Conversation />
         <Questions />
       </View>
     </>
