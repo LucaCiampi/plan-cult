@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import { selectLikedCharacters } from "../../features/characters/charactersSlice";
 import CharacterChatItem from "@/features/characters/CharacterChatItem";
