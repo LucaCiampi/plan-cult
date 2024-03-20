@@ -33,7 +33,6 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
           style={styles.button}
           onPress={() => {
             dispatch(likeCharacter(character.id));
-            console.log(`${character.name} removed`);
           }}
         >
           Like
