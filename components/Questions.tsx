@@ -10,6 +10,7 @@ import {
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
 import { randomBetween } from '@/utils/random';
+import { useCallback } from 'react';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
@@ -22,43 +23,14 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * @param question the current Dialogue node
    */
   const handleQuestionClick = (question: Dialogue) => {
-    let totalDelayForQuestions = 0;
+    sendMessagesOrganically(question.question, true); // Pour les questions, isUserSent est true
 
-    question.question.forEach((newMessage, index) => {
-      const delay = index * randomBetween(1, 3) * 1000;
-      totalDelayForQuestions += delay; // Accumuler le délai pour calculer le départ des réponses
+    const totalDelayForQuestions =
+      question.question.length * randomBetween(1, 3) * 1000;
 
-      setTimeout(() => {
-        dispatch(
-          addMessageToConversation({
-            characterId,
-            message: {
-              text: newMessage,
-              isUserSent: true,
-            },
-          })
-        );
-      }, totalDelayForQuestions);
-    });
-
-    // Utiliser totalDelayForQuestions pour calculer le délai de départ pour les réponses
-    // Ajouter un petit délai supplémentaire avant de commencer à afficher les réponses
-    const initialDelayForAnswers = totalDelayForQuestions + 1000;
-
-    question.answer.forEach((answerMessage, index) => {
-      const delay = randomBetween(1, 3) * 1000;
-      setTimeout(() => {
-        dispatch(
-          addMessageToConversation({
-            characterId,
-            message: {
-              text: answerMessage,
-              isUserSent: false,
-            },
-          })
-        );
-      }, initialDelayForAnswers + index * delay);
-    });
+    setTimeout(() => {
+      sendMessagesOrganically(question.answer, false); // Pour les réponses, isUserSent est false
+    }, totalDelayForQuestions);
 
     if (question.followUp != null) {
       dispatch(
@@ -71,6 +43,30 @@ const Questions = ({ characterId }: { characterId: string }) => {
       dispatch(resetToPreviousQuestions({ characterId }));
     }
   };
+
+  /**
+   * Sends messages with a small random delay to add authenticity
+   */
+  const sendMessagesOrganically = useCallback(
+    (messages: string[], isUserSent: boolean) => {
+      messages.forEach((message, index) => {
+        const delay = index * randomBetween(1, 3) * 1000;
+
+        setTimeout(() => {
+          dispatch(
+            addMessageToConversation({
+              characterId,
+              message: {
+                text: message,
+                isUserSent,
+              },
+            })
+          );
+        }, delay);
+      });
+    },
+    []
+  );
 
   return (
     <View style={styles.questionsOptions}>
