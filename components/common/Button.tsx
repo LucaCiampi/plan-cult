@@ -1,6 +1,6 @@
-import Colors from "@/constants/Colors";
-import React from "react";
-import { Text, StyleSheet, Pressable, PressableProps } from "react-native";
+import Colors from '@/constants/Colors';
+import React from 'react';
+import { Text, StyleSheet, Pressable, PressableProps } from 'react-native';
 
 interface Props extends PressableProps {
   children?: React.ReactNode;
@@ -14,8 +14,8 @@ const Button = ({ children, style, ...rest }: Props) => (
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 4,
@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     lineHeight: 21,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: "black",
+    color: 'black',
   },
 });
 

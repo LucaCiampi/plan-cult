@@ -1,6 +1,6 @@
 // store/chatSlice.ts
-import { RootState } from "@/app/store";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from '@/app/store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ChatState {
   conversation: Message[];
@@ -15,7 +15,7 @@ const initialState: ChatState = {
 };
 
 const chatSlice = createSlice({
-  name: "chat",
+  name: 'chat',
   initialState,
   reducers: {
     setCurrentQuestions: (state, action: PayloadAction<Dialogue[]>) => {

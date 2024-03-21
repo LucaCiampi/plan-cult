@@ -1,4 +1,4 @@
 interface Message {
   text: string;
-  sender: "user" | "character";
+  sender: 'user' | 'character';
 }

@@ -1,27 +1,26 @@
-import { Tabs } from "expo-router/tabs";
-import Colors from "@/constants/Colors";
-import { useFonts } from "expo-font";
-import { SplashScreen } from "expo-router";
-import { useEffect } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Provider } from "react-redux";
-import { store } from "./store";
+import { Tabs } from 'expo-router/tabs';
+import Colors from '@/constants/Colors';
+import { useFonts } from 'expo-font';
+import { SplashScreen } from 'expo-router';
+import { useEffect } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
   const [loaded, error] = useFonts({
-    RobotoLight: require("@/assets/fonts/Roboto-Light.ttf"),
+    RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
   });
 
   useEffect(() => {
-    if (error) throw error;
+    if (error != null) throw error;
   }, [error]);
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync();
     }
   }, [loaded]);
 
@@ -33,14 +32,14 @@ export default function AppLayout() {
         screenOptions={{
           tabBarActiveTintColor: Colors.primary,
           tabBarLabelStyle: {
-            fontFamily: "RobotoLight",
+            fontFamily: 'RobotoLight',
           },
         }}
       >
         <Tabs.Screen
           name="map"
           options={{
-            title: "Map",
+            title: 'Map',
             tabBarIcon: ({ color }) => (
               <FontAwesome5 name="map-marked-alt" size={24} color="black" />
             ),
@@ -49,7 +48,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="swipe"
           options={{
-            title: "Swipe",
+            title: 'Swipe',
             tabBarIcon: ({ color }) => (
               <MaterialIcons name="swipe" size={24} color="black" />
             ),
@@ -58,7 +57,7 @@ export default function AppLayout() {
         <Tabs.Screen
           name="chat"
           options={{
-            title: "Chat",
+            title: 'Chat',
             tabBarIcon: ({ color }) => (
               <Ionicons name="chatbubble" size={24} color="black" />
             ),

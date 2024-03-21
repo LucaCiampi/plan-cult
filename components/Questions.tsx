@@ -1,14 +1,14 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { View, StyleSheet } from "react-native";
-import Button from "@/components/common/Button";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, StyleSheet } from 'react-native';
+import Button from '@/components/common/Button';
 import {
   addMessageToConversation,
   setCurrentQuestions,
   setPreviousQuestions,
   resetToPreviousQuestions,
   selectCurrentQuestions,
-} from "@/features/chat/chatSlice";
+} from '@/features/chat/chatSlice';
 
 const Questions = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const Questions = () => {
    * @param answers les textes de réponses en lien avec la question
    * @param followUp l'éventuel cheminement vers les questions suivantes
    */
-  const handleQuestionClick = async (
+  const handleQuestionClick = (
     question: string[],
     answers: string[],
     followUp: Dialogue[] | undefined
@@ -28,7 +28,7 @@ const Questions = () => {
     // Ajoute la question posée à la conversation
     question.forEach((questionSentence) =>
       dispatch(
-        addMessageToConversation({ text: questionSentence, sender: "user" })
+        addMessageToConversation({ text: questionSentence, sender: 'user' })
       )
     );
 
@@ -36,12 +36,12 @@ const Questions = () => {
     setTimeout(() => {
       answers.forEach((answer) =>
         dispatch(
-          addMessageToConversation({ text: answer, sender: "character" })
+          addMessageToConversation({ text: answer, sender: 'character' })
         )
       );
-      if (followUp) {
+      if (followUp != null) {
         dispatch(setPreviousQuestions(currentQuestions));
-        dispatch(setCurrentQuestions(followUp as Dialogue[]));
+        dispatch(setCurrentQuestions(followUp));
       } else {
         dispatch(resetToPreviousQuestions());
       }
@@ -50,21 +50,20 @@ const Questions = () => {
 
   return (
     <View style={styles.questionsOptions}>
-      {currentQuestions &&
-        currentQuestions.map((currentQuestion: Dialogue) => (
-          <Button
-            key={currentQuestion.id}
-            onPress={() =>
-              handleQuestionClick(
-                currentQuestion.question,
-                currentQuestion.answer,
-                currentQuestion.followUp
-              )
-            }
-          >
-            {currentQuestion.question_short}
-          </Button>
-        ))}
+      {currentQuestions?.map((currentQuestion: Dialogue) => (
+        <Button
+          key={currentQuestion.id}
+          onPress={() => {
+            handleQuestionClick(
+              currentQuestion.question,
+              currentQuestion.answer,
+              currentQuestion.followUp
+            );
+          }}
+        >
+          {currentQuestion.question_short}
+        </Button>
+      ))}
     </View>
   );
 };

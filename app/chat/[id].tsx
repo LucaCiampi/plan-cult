@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import { Stack, useLocalSearchParams } from "expo-router";
-import { useSelector } from "react-redux";
-import { selectLikedCharacters } from "@/features/characters/charactersSlice";
-import ChatComponent from "@/features/chat/ChatComponent";
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useSelector } from 'react-redux';
+import { selectLikedCharacters } from '@/features/characters/charactersSlice';
+import ChatComponent from '@/features/chat/ChatComponent';
 
 export default function ChatWithCharacterPage() {
   const { id } = useLocalSearchParams();
@@ -17,12 +17,12 @@ export default function ChatWithCharacterPage() {
     setCharacter(char ?? null);
   }, [id, likedCharacters]);
 
-  if (!character) {
+  if (character == null) {
     return (
       <View>
         <Stack.Screen
           options={{
-            title: "Introuvable",
+            title: 'Introuvable',
           }}
         />
         <Text>Discussion introuvable</Text>
@@ -34,8 +34,8 @@ export default function ChatWithCharacterPage() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: `${character.name} ${character.surname ?? ""}`,
-          headerBackTitle: "Retour",
+          title: `${character.name} ${character.surname ?? ''}`,
+          headerBackTitle: 'Retour',
         }}
       />
       <ChatComponent />
@@ -45,6 +45,6 @@ export default function ChatWithCharacterPage() {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
+    display: 'flex',
   },
 });

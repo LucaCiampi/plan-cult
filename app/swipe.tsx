@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
 import {
   prepareDatabase,
   retrieveAllFromDatabaseTable,
-} from "@/services/databaseService";
-import CharacterCard from "@/features/characters/CharacterCard";
-import { useDispatch, useSelector } from "react-redux";
+} from '@/services/databaseService';
+import CharacterCard from '@/features/characters/CharacterCard';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setCharacters,
   selectLikedCharacters,
-} from "@/features/characters/charactersSlice";
+} from '@/features/characters/charactersSlice';
 
 export default function SwipePage() {
   const [characters, setCharactersState] = useState<Character[]>([]);
@@ -29,11 +29,11 @@ export default function SwipePage() {
           !likedCharacters.some((liked) => liked.id === character.id)
       );
 
-      setCharactersState(charactersData as Character[]);
-      dispatch(setCharacters(charactersData as Character[]));
+      setCharactersState(charactersData);
+      dispatch(setCharacters(charactersData));
     }
 
-    fetchData();
+    void fetchData();
   }, [dispatch, likedCharacters]);
 
   if (characters.length === 0) {
@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
   characterContainer: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#cccccc",
+    borderBottomColor: '#cccccc',
   },
   centeredContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

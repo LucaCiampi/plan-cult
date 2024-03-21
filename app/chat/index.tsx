@@ -1,11 +1,11 @@
-import React from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
-import { useSelector } from "react-redux";
-import { selectLikedCharacters } from "../../features/characters/charactersSlice";
-import CharacterChatItem from "@/features/characters/CharacterChatItem";
-import { Stack } from "expo-router";
+import React from 'react';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { useSelector } from 'react-redux';
+import { selectLikedCharacters } from '../../features/characters/charactersSlice';
+import CharacterChatItem from '@/features/characters/CharacterChatItem';
+import { Stack } from 'expo-router';
 
-export default function ChatPage() {
+export default function ChatPage () {
   const likedCharacters = useSelector(selectLikedCharacters);
 
   if (likedCharacters.length === 0) {
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
   characterContainer: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#cccccc",
+    borderBottomColor: '#cccccc',
   },
   centeredContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

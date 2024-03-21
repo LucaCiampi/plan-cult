@@ -1,10 +1,10 @@
-import * as SQLite from "expo-sqlite/next";
-import * as FileSystem from "expo-file-system";
-import { Asset } from "expo-asset";
-import Config from "@/constants/Config";
+import * as SQLite from 'expo-sqlite/next';
+import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
+import Config from '@/constants/Config';
 
 export async function prepareDatabase() {
-  const databaseFilename = "db.db";
+  const databaseFilename = 'db.db';
   const documentsDirectory = FileSystem.documentDirectory;
   const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
   const internalDbName = `${sqlLiteDirectory}${databaseFilename}`;
@@ -12,18 +12,22 @@ export async function prepareDatabase() {
   // Vérifier et créer le répertoire SQLite si nécessaire
   const dirInfo = await FileSystem.getInfoAsync(sqlLiteDirectory);
   if (!dirInfo.exists) {
-    console.log("Création du répertoire SQLite.");
+    console.log('Création du répertoire SQLite.');
     await FileSystem.makeDirectoryAsync(sqlLiteDirectory, {
       intermediates: true,
     });
   }
 
-  const dbAsset = Asset.fromModule(require("../assets/databases/db.db"));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
+  // const dbAsset = Asset.fromModule(
+  //   require('../assets/databases/db.db') as string
+  // );
 
   try {
     if (Config.DEBUG) {
       console.log(
-        "🪲 Mode débogage activé : Recopie systématique de la base de données."
+        '🪲 Mode débogage activé : Recopie systématique de la base de données.'
       );
       console.log(
         `Tentative de téléchargement de la base de données depuis ${dbAsset.uri} vers ${internalDbName}`
@@ -43,19 +47,21 @@ export async function prepareDatabase() {
           "La base de données n'existe pas, début du téléchargement..."
         );
         await FileSystem.downloadAsync(dbAsset.uri, internalDbName);
-        console.log("Téléchargement de la base de données réussi.");
+        console.log('Téléchargement de la base de données réussi.');
       } else {
         console.log(
-          "La base de données existe déjà, pas besoin de la télécharger."
+          'La base de données existe déjà, pas besoin de la télécharger.'
         );
       }
     }
 
-    console.log("Ouverture de la base de données...");
-    return SQLite.openDatabaseAsync(databaseFilename);
+    console.log('Ouverture de la base de données...');
+    return await SQLite.openDatabaseAsync(databaseFilename);
   } catch (error) {
     console.error(
-      `Erreur lors de la préparation de la base de données : ${error}`
+      `Erreur lors de la préparation de la base de données : ${
+        typeof error === 'string' ? error : JSON.stringify(error)
+      }`
     );
     throw error; // Rethrow l'erreur pour indiquer un échec dans le flux d'exécution appelant.
   }
@@ -64,7 +70,7 @@ export async function prepareDatabase() {
 export async function retrieveAllFromDatabaseTable(
   db: SQLite.SQLiteDatabase
 ): Promise<Character[]> {
-  const allRows = await db.getAllAsync("SELECT * FROM CHARACTERS");
+  const allRows = await db.getAllAsync('SELECT * FROM CHARACTERS');
   return allRows as Character[];
 }
 

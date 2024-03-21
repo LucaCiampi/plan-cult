@@ -1,7 +1,7 @@
 // CharacterChatItem.tsx
-import React from "react";
-import { Text, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 
 interface CharacterProps {
   character: Character;
@@ -20,7 +20,7 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
 const styles = StyleSheet.create({
   characterName: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   characterDescription: {
     fontSize: 14,

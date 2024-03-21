@@ -14,6 +14,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "metro.config.js"
+    ".eslintrc.js",
+    "babel.config.js"
   ]
 }

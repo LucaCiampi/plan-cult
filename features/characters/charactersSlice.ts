@@ -1,6 +1,6 @@
 // features/characters/charactersSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
 
 interface CharactersState {
   allCharacters: Character[];
@@ -13,7 +13,7 @@ const initialState: CharactersState = {
 };
 
 export const charactersSlice = createSlice({
-  name: "characters",
+  name: 'characters',
   initialState,
   reducers: {
     setCharacters: (state, action: PayloadAction<Character[]>) => {
@@ -23,7 +23,7 @@ export const charactersSlice = createSlice({
       const character = state.allCharacters.find(
         (c) => c.id === action.payload
       );
-      if (character) {
+      if (character != null) {
         state.allCharacters = state.allCharacters.filter(
           (c) => c.id !== action.payload
         );

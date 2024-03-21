@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { View, ScrollView, StyleSheet, Text } from "react-native";
-import { useDispatch } from "react-redux";
-import { setCurrentQuestions } from "./chatSlice";
-import Conversation from "@/components/Conversation";
-import Questions from "@/components/Questions";
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setCurrentQuestions } from './chatSlice';
+import Conversation from '@/components/Conversation';
+import Questions from '@/components/Questions';
 
 // TODO: rendre dynamique
-import dialoguesData from "@/assets/dialogues/test/dialogue.json";
+import dialoguesData from '@/assets/dialogues/test/dialogue.json';
 
 const ChatComponent = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const ChatComponent = () => {
 
 const styles = StyleSheet.create({
   chatView: {
-    height: "100%",
+    height: '100%',
   },
 });
 

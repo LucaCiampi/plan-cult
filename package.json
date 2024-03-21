@@ -7,8 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "npx eslint .",
-    "lint-fix": "npx eslint . --fix"
+    "lint": "npx eslint './**'",
+    "lint-fix": "npx eslint './**' --fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
