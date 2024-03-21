@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   characterContainer: {
-    padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
   },

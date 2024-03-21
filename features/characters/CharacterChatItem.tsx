@@ -1,6 +1,6 @@
 // CharacterChatItem.tsx
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
 
 interface CharacterProps {
@@ -10,14 +10,19 @@ interface CharacterProps {
 const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
   return (
     <Link push href={`/chat/${character.id}`}>
-      <Text style={styles.characterName}>
-        {character.name} {character.surname}
-      </Text>
+      <View style={styles.characterItem}>
+        <Text style={styles.characterName}>
+          {character.name} {character.surname}
+        </Text>
+      </View>
     </Link>
   );
 };
 
 const styles = StyleSheet.create({
+  characterItem: {
+    padding: 20,
+  },
   characterName: {
     fontSize: 18,
     fontWeight: 'bold',
