@@ -19,10 +19,10 @@ export async function prepareDatabase() {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
-  // const dbAsset = Asset.fromModule(
-  //   require('../assets/databases/db.db') as string
-  // );
+  // const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
+  const dbAsset = Asset.fromModule(
+    require('../assets/databases/db.db') as string
+  );
 
   try {
     if (Config.DEBUG) {

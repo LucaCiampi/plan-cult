@@ -38,7 +38,7 @@ export default function ChatWithCharacterPage() {
           headerBackTitle: 'Retour',
         }}
       />
-      <ChatComponent />
+      <ChatComponent characterId={id[0]} />
     </View>
   );
 }

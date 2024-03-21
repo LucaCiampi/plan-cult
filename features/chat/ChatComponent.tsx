@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setCurrentQuestions } from './chatSlice';
@@ -8,19 +8,25 @@ import Questions from '@/components/Questions';
 // TODO: rendre dynamique
 import dialoguesData from '@/assets/dialogues/test/dialogue.json';
 
-const ChatComponent = () => {
+const ChatComponent = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     // Initialiser avec le premier niveau de questions du JSON
-    dispatch(setCurrentQuestions(dialoguesData[0]));
+    dispatch(
+      setCurrentQuestions({
+        characterId,
+        // TODO: remplacer any[]
+        questions: dialoguesData[0] as any[],
+      })
+    );
   }, [dispatch]);
 
   return (
     <>
       <View style={styles.chatView}>
-        <Conversation />
-        <Questions />
+        <Conversation characterId={characterId} />
+        <Questions characterId={characterId} />
       </View>
     </>
   );

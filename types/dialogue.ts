@@ -1,7 +1,7 @@
 interface Dialogue {
   id: string;
   question_short: string;
-  question: string[];
-  answer: string[];
+  question: Message[];
+  answer: Message[];
   followUp?: Dialogue[] | undefined;
 }

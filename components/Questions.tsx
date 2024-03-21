@@ -1,7 +1,7 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import Button from '@/components/common/Button';
+import { RootState } from '@/app/store';
 import {
   addMessageToConversation,
   setCurrentQuestions,
@@ -9,54 +9,63 @@ import {
   resetToPreviousQuestions,
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
+import { useEffect } from 'react';
 
-const Questions = () => {
+const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
-  const { currentQuestions } = useSelector(selectCurrentQuestions);
+  const currentQuestions = useSelector((state) =>
+    selectCurrentQuestions(state as RootState, characterId)
+  );
 
-  /**
-   * Se déclenche au clic d'un choix de question de la part de l'utilisateur
-   * @param question les textes de la question posée
-   * @param answers les textes de réponses en lien avec la question
-   * @param followUp l'éventuel cheminement vers les questions suivantes
-   */
+  useEffect(() => {
+    // Assurez-vous d'avoir un état initial valide à passer ici
+    // const initialChatState = {
+    //   conversation: [],
+    //   currentQuestions: [],
+    //   previousQuestions: [],
+    // };
+    // dispatch(initializeCharacterChatState({ characterId, initialChatState }));
+  }, [characterId, dispatch]);
+
   const handleQuestionClick = (
-    question: string[],
-    answers: string[],
+    question: Message[],
+    answers: Message[],
     followUp: Dialogue[] | undefined
   ) => {
-    // Ajoute la question posée à la conversation
-    question.forEach((questionSentence) =>
-      dispatch(
-        addMessageToConversation({ text: questionSentence, sender: 'user' })
-      )
+    question.forEach((newMessage) =>
+      dispatch(addMessageToConversation({ characterId, message: newMessage }))
     );
 
-    // Attend 1 seconde avant d'ajouter les réponses à la conversation
     setTimeout(() => {
       answers.forEach((answer) =>
-        dispatch(
-          addMessageToConversation({ text: answer, sender: 'character' })
-        )
+        dispatch(addMessageToConversation({ characterId, message: answer }))
       );
+
       if (followUp != null) {
-        dispatch(setPreviousQuestions(currentQuestions));
-        dispatch(setCurrentQuestions(followUp));
+        dispatch(
+          setPreviousQuestions({ characterId, questions: currentQuestions })
+        );
+        dispatch(setCurrentQuestions({ characterId, questions: followUp }));
       } else {
-        dispatch(resetToPreviousQuestions());
+        dispatch(resetToPreviousQuestions({ characterId }));
       }
-    }, 1000); // Délai de 1 seconde
+    }, 1000);
   };
+
+  console.log(currentQuestions);
 
   return (
     <View style={styles.questionsOptions}>
-      {currentQuestions?.map((currentQuestion: Dialogue) => (
+      {currentQuestions.map((currentQuestion: Dialogue) => (
         <Button
           key={currentQuestion.id}
           onPress={() => {
             handleQuestionClick(
-              currentQuestion.question,
-              currentQuestion.answer,
+              [{ text: currentQuestion.question, sender: 'user' }],
+              currentQuestion.answer.map((a) => ({
+                text: a,
+                sender: 'character',
+              })),
               currentQuestion.followUp
             );
           }}

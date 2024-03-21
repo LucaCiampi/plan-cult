@@ -1,12 +1,30 @@
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { useSelector } from 'react-redux';
 import { selectLikedCharacters } from '../../features/characters/charactersSlice';
 import CharacterChatItem from '@/features/characters/CharacterChatItem';
 import { Stack } from 'expo-router';
+import { initializeCharacterChatState } from '@/features/chat/chatSlice';
 
-export default function ChatPage () {
+export default function ChatPage() {
   const likedCharacters = useSelector(selectLikedCharacters);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    likedCharacters.forEach((character) => {
+      const characterId = character.id.toString();
+      const initialChatState = {
+        conversation: [],
+        currentQuestions: [],
+        previousQuestions: [],
+      };
+      dispatch(initializeCharacterChatState({ characterId, initialChatState }));
+      console.log(
+        'initializeCharacterChatState({ characterId, initialChatState })',
+        characterId
+      );
+    });
+  }, [likedCharacters, dispatch]);
 
   if (likedCharacters.length === 0) {
     return (

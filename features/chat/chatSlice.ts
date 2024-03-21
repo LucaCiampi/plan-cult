@@ -1,47 +1,93 @@
-// store/chatSlice.ts
 import { RootState } from '@/app/store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ChatState {
+interface CharacterChatState {
   conversation: Message[];
   currentQuestions: Dialogue[];
   previousQuestions: Dialogue[];
 }
 
+interface ChatState {
+  chatsByCharacter: Record<string, CharacterChatState>;
+}
+
 const initialState: ChatState = {
-  conversation: [],
-  currentQuestions: [],
-  previousQuestions: [],
+  chatsByCharacter: {},
 };
 
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setCurrentQuestions: (state, action: PayloadAction<Dialogue[]>) => {
-      state.currentQuestions = action.payload;
+    initializeCharacterChatState: (
+      state,
+      action: PayloadAction<{
+        characterId: string;
+        initialChatState: CharacterChatState;
+      }>
+    ) => {
+      console.log('🍰 initializeCharacterChatState');
+
+      const { characterId, initialChatState } = action.payload;
+      state.chatsByCharacter[characterId] = initialChatState;
     },
-    setPreviousQuestions: (state, action: PayloadAction<Dialogue[]>) => {
-      state.previousQuestions = action.payload;
+    addMessageToConversation: (
+      state,
+      action: PayloadAction<{ characterId: string; message: Message }>
+    ) => {
+      console.log('🍰 addMessageToConversation');
+
+      const { characterId, message } = action.payload;
+      state.chatsByCharacter[characterId].conversation.push(message);
     },
-    addMessageToConversation: (state, action: PayloadAction<Message>) => {
-      state.conversation.push(action.payload);
+    setCurrentQuestions: (
+      state,
+      action: PayloadAction<{ characterId: string; questions: Dialogue[] }>
+    ) => {
+      console.log('🍰 setCurrentQuestions');
+
+      const { characterId, questions } = action.payload;
+      state.chatsByCharacter[characterId].currentQuestions = questions;
     },
-    resetToPreviousQuestions: (state) => {
-      state.currentQuestions = state.previousQuestions;
+    setPreviousQuestions: (
+      state,
+      action: PayloadAction<{ characterId: string; questions: Dialogue[] }>
+    ) => {
+      console.log('🍰 setPreviousQuestions');
+
+      const { characterId, questions } = action.payload;
+      state.chatsByCharacter[characterId].previousQuestions = questions;
+    },
+    resetToPreviousQuestions: (
+      state,
+      action: PayloadAction<{ characterId: string }>
+    ) => {
+      console.log('🍰 resetToPreviousQuestions');
+
+      const { characterId } = action.payload;
+      state.chatsByCharacter[characterId].currentQuestions =
+        state.chatsByCharacter[characterId].previousQuestions;
     },
   },
 });
 
 export const {
+  initializeCharacterChatState,
+  addMessageToConversation,
   setCurrentQuestions,
   setPreviousQuestions,
-  addMessageToConversation,
   resetToPreviousQuestions,
 } = chatSlice.actions;
 
-export const selectConversations = (state: RootState) =>
-  state.chat.conversation;
-export const selectCurrentQuestions = (state: RootState) => state.chat;
+export const selectCurrentQuestions = (state: RootState, characterId: string) =>
+  state.chat.chatsByCharacter[characterId].currentQuestions;
+
+export const selectConversations = (
+  state: RootState,
+  characterId: string
+): Message[] => {
+  const chatState = state.chat.chatsByCharacter[characterId];
+  return chatState.conversation;
+};
 
 export default chatSlice.reducer;
