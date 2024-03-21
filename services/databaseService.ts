@@ -9,7 +9,7 @@ export async function prepareDatabase() {
   const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
   const internalDbName = `${sqlLiteDirectory}${databaseFilename}`;
 
-  // Vérifier et créer le répertoire SQLite si nécessaire
+  // Vérifie et créé le répertoire SQLite si nécessaire
   const dirInfo = await FileSystem.getInfoAsync(sqlLiteDirectory);
   if (!dirInfo.exists) {
     console.log('Création du répertoire SQLite.');

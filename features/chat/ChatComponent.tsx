@@ -16,8 +16,7 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
     dispatch(
       setCurrentQuestions({
         characterId,
-        // TODO: remplacer any[]
-        questions: dialoguesData[0] as any[],
+        questions: dialoguesData[0] as Dialogue[],
       })
     );
   }, [dispatch]);

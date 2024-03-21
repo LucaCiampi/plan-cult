@@ -12,7 +12,7 @@ export default function ChatWithCharacterPage() {
   const [character, setCharacter] = useState<Character | null>(null);
 
   useEffect(() => {
-    // Trouver le personnage par id
+    // Trouve le personnage par id
     const char = likedCharacters.find((c) => c.id.toString() === id);
     setCharacter(char ?? null);
   }, [id, likedCharacters]);

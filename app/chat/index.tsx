@@ -19,10 +19,6 @@ export default function ChatPage() {
         previousQuestions: [],
       };
       dispatch(initializeCharacterChatState({ characterId, initialChatState }));
-      console.log(
-        'initializeCharacterChatState({ characterId, initialChatState })',
-        characterId
-      );
     });
   }, [likedCharacters, dispatch]);
 

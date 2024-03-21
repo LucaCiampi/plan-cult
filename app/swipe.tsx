@@ -23,7 +23,7 @@ export default function SwipePage() {
       const db = await prepareDatabase();
       let charactersData = await retrieveAllFromDatabaseTable(db);
 
-      // Filtrez les personnages likés de la liste à afficher
+      // Filtre les personnages likés de la liste à afficher
       charactersData = charactersData.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)

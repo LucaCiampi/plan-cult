@@ -9,7 +9,6 @@ import {
   resetToPreviousQuestions,
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
-import { useEffect } from 'react';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
@@ -17,42 +16,48 @@ const Questions = ({ characterId }: { characterId: string }) => {
     selectCurrentQuestions(state as RootState, characterId)
   );
 
-  useEffect(() => {
-    // Assurez-vous d'avoir un état initial valide à passer ici
-    // const initialChatState = {
-    //   conversation: [],
-    //   currentQuestions: [],
-    //   previousQuestions: [],
-    // };
-    // dispatch(initializeCharacterChatState({ characterId, initialChatState }));
-  }, [characterId, dispatch]);
-
-  const handleQuestionClick = (
-    question: Message[],
-    answers: Message[],
-    followUp: Dialogue[] | undefined
-  ) => {
-    question.forEach((newMessage) =>
-      dispatch(addMessageToConversation({ characterId, message: newMessage }))
+  /**
+   * Sends the dialogue object with user texts, answers and eventual followUp
+   * @param question the current Dialogue node
+   */
+  const handleQuestionClick = (question: Dialogue) => {
+    question.question.forEach((newMessage) =>
+      dispatch(
+        addMessageToConversation({
+          characterId,
+          message: {
+            text: newMessage,
+            sender: 'user',
+          },
+        })
+      )
     );
 
     setTimeout(() => {
-      answers.forEach((answer) =>
-        dispatch(addMessageToConversation({ characterId, message: answer }))
+      question.answer.forEach((answerMessage) =>
+        dispatch(
+          addMessageToConversation({
+            characterId,
+            message: {
+              text: answerMessage,
+              sender: 'character',
+            },
+          })
+        )
       );
 
-      if (followUp != null) {
+      if (question.followUp != null) {
         dispatch(
           setPreviousQuestions({ characterId, questions: currentQuestions })
         );
-        dispatch(setCurrentQuestions({ characterId, questions: followUp }));
+        dispatch(
+          setCurrentQuestions({ characterId, questions: question.followUp })
+        );
       } else {
         dispatch(resetToPreviousQuestions({ characterId }));
       }
     }, 1000);
   };
-
-  console.log(currentQuestions);
 
   return (
     <View style={styles.questionsOptions}>
@@ -60,14 +65,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
         <Button
           key={currentQuestion.id}
           onPress={() => {
-            handleQuestionClick(
-              [{ text: currentQuestion.question, sender: 'user' }],
-              currentQuestion.answer.map((a) => ({
-                text: a,
-                sender: 'character',
-              })),
-              currentQuestion.followUp
-            );
+            handleQuestionClick(currentQuestion);
           }}
         >
           {currentQuestion.question_short}
