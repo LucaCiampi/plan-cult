@@ -27,7 +27,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
           characterId,
           message: {
             text: newMessage,
-            sender: 'user',
+            isUserSent: true,
           },
         })
       )
@@ -40,7 +40,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
             characterId,
             message: {
               text: answerMessage,
-              sender: 'character',
+              isUserSent: false,
             },
           })
         )

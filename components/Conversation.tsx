@@ -25,9 +25,7 @@ const Conversation = ({ characterId }: { characterId: string }) => {
           key={index}
           style={[
             styles.message,
-            message.sender === 'user'
-              ? styles.userMessage
-              : styles.characterMessage,
+            message.isUserSent ? styles.userMessage : styles.characterMessage,
           ]}
         >
           <Text>{message.text}</Text>
