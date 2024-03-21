@@ -9,6 +9,7 @@ import {
   resetToPreviousQuestions,
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
+import { randomBetween } from '@/utils/random';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
@@ -21,20 +22,32 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * @param question the current Dialogue node
    */
   const handleQuestionClick = (question: Dialogue) => {
-    question.question.forEach((newMessage) =>
-      dispatch(
-        addMessageToConversation({
-          characterId,
-          message: {
-            text: newMessage,
-            isUserSent: true,
-          },
-        })
-      )
-    );
+    let totalDelayForQuestions = 0;
 
-    setTimeout(() => {
-      question.answer.forEach((answerMessage) =>
+    question.question.forEach((newMessage, index) => {
+      const delay = index * randomBetween(1, 3) * 1000;
+      totalDelayForQuestions += delay; // Accumuler le délai pour calculer le départ des réponses
+
+      setTimeout(() => {
+        dispatch(
+          addMessageToConversation({
+            characterId,
+            message: {
+              text: newMessage,
+              isUserSent: true,
+            },
+          })
+        );
+      }, totalDelayForQuestions);
+    });
+
+    // Utiliser totalDelayForQuestions pour calculer le délai de départ pour les réponses
+    // Ajouter un petit délai supplémentaire avant de commencer à afficher les réponses
+    const initialDelayForAnswers = totalDelayForQuestions + 1000;
+
+    question.answer.forEach((answerMessage, index) => {
+      const delay = randomBetween(1, 3) * 1000;
+      setTimeout(() => {
         dispatch(
           addMessageToConversation({
             characterId,
@@ -43,20 +56,20 @@ const Questions = ({ characterId }: { characterId: string }) => {
               isUserSent: false,
             },
           })
-        )
-      );
+        );
+      }, initialDelayForAnswers + index * delay);
+    });
 
-      if (question.followUp != null) {
-        dispatch(
-          setPreviousQuestions({ characterId, questions: currentQuestions })
-        );
-        dispatch(
-          setCurrentQuestions({ characterId, questions: question.followUp })
-        );
-      } else {
-        dispatch(resetToPreviousQuestions({ characterId }));
-      }
-    }, 1000);
+    if (question.followUp != null) {
+      dispatch(
+        setPreviousQuestions({ characterId, questions: currentQuestions })
+      );
+      dispatch(
+        setCurrentQuestions({ characterId, questions: question.followUp })
+      );
+    } else {
+      dispatch(resetToPreviousQuestions({ characterId }));
+    }
   };
 
   return (
