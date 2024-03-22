@@ -1,39 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import {
-  prepareDatabase,
-  retrieveAllFromDatabaseTable,
-} from '@/services/databaseService';
 import CharacterCard from '@/features/characters/CharacterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setCharacters,
   selectLikedCharacters,
 } from '@/features/characters/charactersSlice';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 export default function SwipePage() {
   const [characters, setCharactersState] = useState<Character[]>([]);
+  const dbService = useDatabaseService();
   const dispatch = useDispatch();
 
   // Récupération des profils likés depuis Redux
   const likedCharacters = useSelector(selectLikedCharacters);
 
   useEffect(() => {
-    async function fetchData() {
-      const db = await prepareDatabase();
-      let charactersData = await retrieveAllFromDatabaseTable(db);
+    const fetchAllCharacters = async () => {
+      let allCharactersFromDb = await dbService.getAllCharacters();
 
       // Filtre les personnages likés de la liste à afficher
-      charactersData = charactersData.filter(
+      allCharactersFromDb = allCharactersFromDb.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)
       );
 
-      setCharactersState(charactersData);
-      dispatch(setCharacters(charactersData));
-    }
+      setCharactersState(allCharactersFromDb);
+      dispatch(setCharacters(allCharactersFromDb));
+    };
 
-    void fetchData();
+    void fetchAllCharacters();
   }, [dispatch, likedCharacters]);
 
   if (characters.length === 0) {

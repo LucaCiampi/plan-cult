@@ -1,3 +1,4 @@
+// features/chat/chatSlice.ts
 import { RootState } from '@/app/store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 

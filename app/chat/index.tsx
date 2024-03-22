@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { selectLikedCharacters } from '../../features/characters/charactersSlice';
-import CharacterChatItem from '@/features/characters/CharacterChatItem';
-import { Stack } from 'expo-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { initializeCharacterChatState } from '@/features/chat/chatSlice';
+import { Stack } from 'expo-router';
+import CharacterChatItem from '@/features/characters/CharacterChatItem';
+import { selectLikedCharacters } from '@/features/characters/charactersSlice';
 
 export default function ChatPage() {
   const likedCharacters = useSelector(selectLikedCharacters);

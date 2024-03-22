@@ -29,6 +29,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/indent': 'off',
   },
   ignorePatterns: [
     'metro.config.js',
