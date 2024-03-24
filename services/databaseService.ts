@@ -116,7 +116,7 @@ class DatabaseService {
       fromUser,
       message.toString()
     );
-    console.log(result);
+    console.log('💽 INSERT INTO conversation_history :', result);
   }
 
   async loadConversationFromConversationHistory(
@@ -127,10 +127,14 @@ class DatabaseService {
       throw new Error('Database is not initialized.');
     }
     const result = await this.db.getAllAsync(
-      'SELECT * FROM conversation_history WHERE character_id = ?',
+      'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent DESC',
       characterId
     );
-    console.log(result);
+    console.log(
+      '💽 SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent DESC :',
+      result
+    );
+    return result;
   }
 }
 
