@@ -41,6 +41,18 @@ const chatSlice = createSlice({
       const { characterId, message } = action.payload;
       state.chatsByCharacter[characterId].conversation.push(message);
     },
+    clearMessagesFromConversation: (
+      state,
+      action: PayloadAction<{ characterId: string }>
+    ) => {
+      console.log('🍰 clearMessagesFromConversation');
+
+      const { characterId } = action.payload;
+      // Réinitialisez la conversation pour le characterId spécifié à un tableau vide
+      if (state.chatsByCharacter[characterId].conversation.length > 0) {
+        state.chatsByCharacter[characterId].conversation = [];
+      }
+    },
     setCurrentQuestions: (
       state,
       action: PayloadAction<{ characterId: string; questions: Dialogue[] }>
@@ -75,6 +87,7 @@ const chatSlice = createSlice({
 export const {
   initializeCharacterChatState,
   addMessageToConversation,
+  clearMessagesFromConversation,
   setCurrentQuestions,
   setPreviousQuestions,
   resetToPreviousQuestions,

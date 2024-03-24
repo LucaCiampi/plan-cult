@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectLikedCharacters } from '@/features/characters/charactersSlice';
 import ChatComponent from '@/features/chat/ChatComponent';
+import { clearMessagesFromConversation } from '@/features/chat/chatSlice';
 
 export default function ChatWithCharacterPage() {
   const { id } = useLocalSearchParams();
   const likedCharacters = useSelector(selectLikedCharacters);
   const [character, setCharacter] = useState<Character | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Trouve le personnage par id
-    const char = likedCharacters.find((c) => c.id.toString() === id);
-    setCharacter(char ?? null);
+    const currentCharacter = likedCharacters.find(
+      (c) => c.id.toString() === id
+    );
+    setCharacter(currentCharacter ?? null);
+
+    return () => {
+      // Dispatchez l'action pour réinitialiser la conversation à vide
+      dispatch(clearMessagesFromConversation({ characterId: id[0] }));
+    };
   }, [id, likedCharacters]);
 
   if (character == null) {

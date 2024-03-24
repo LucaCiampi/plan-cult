@@ -25,24 +25,16 @@ const Conversation = ({ characterId }: { characterId: string }) => {
       const history = await dbService.loadConversationFromConversationHistory(
         parseInt(characterId)
       );
-      // console.log('history', history);
-      // Étape 1: Transformer `history` en `Message[]`
+
       const historyAsMessages: Message[] = history.map((record: any) => {
-        // console.log('record', record);
-
-        // console.log(record.message);
-        // TODO: split le tableau de messages
-
         return {
           text: record.message,
-          isUserSent: record.from_user, // Convertit en booléen, supposant que `from_user` est 1 pour l'utilisateur et 0 pour le personnage
+          isUserSent: record.from_user,
         };
       });
 
       console.log('historyAsMessages', historyAsMessages);
 
-      // Here you'd dispatch an action to merge this history into your Redux state
-      // For demonstration, assuming it's automatically merged into `conversation`
       setConversationHistory(historyAsMessages);
 
       setIsInitialLoad(false);

@@ -127,11 +127,11 @@ class DatabaseService {
       throw new Error('Database is not initialized.');
     }
     const result = await this.db.getAllAsync(
-      'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent DESC',
+      'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC',
       characterId
     );
     console.log(
-      '💽 SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent DESC :',
+      '💽 SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC :',
       result
     );
     return result;
