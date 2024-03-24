@@ -8,7 +8,7 @@ const DatabaseServiceContext = createContext<DatabaseService>(databaseService);
 export const useDatabaseService = () => useContext(DatabaseServiceContext);
 
 interface DatabaseServiceProviderProps {
-  children: ReactNode; // Utiliser ReactNode pour le type des enfants
+  children: ReactNode;
 }
 
 export const DatabaseServiceProvider: React.FC<

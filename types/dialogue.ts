@@ -4,4 +4,5 @@ interface Dialogue {
   question: string[];
   answer: string[];
   followUp?: Dialogue[] | undefined;
+  action?: unknown; // to implement
 }

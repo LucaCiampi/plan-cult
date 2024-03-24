@@ -11,12 +11,14 @@ import {
 } from '@/features/chat/chatSlice';
 import { randomBetween } from '@/utils/random';
 import { useCallback } from 'react';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
   const currentQuestions = useSelector((state) =>
     selectCurrentQuestions(state as RootState, characterId)
   );
+  const dbService = useDatabaseService();
 
   /**
    * Sends the dialogue object with user texts, answers and eventual followUp
@@ -24,12 +26,22 @@ const Questions = ({ characterId }: { characterId: string }) => {
    */
   const handleQuestionClick = (question: Dialogue) => {
     sendMessagesOrganically(question.question, true); // Pour les questions, isUserSent est true
+    void dbService.saveConversationToConversationHistory(
+      parseInt(characterId),
+      true,
+      question.question
+    );
 
     const totalDelayForQuestions =
       question.question.length * randomBetween(1, 3) * 1000;
 
     setTimeout(() => {
       sendMessagesOrganically(question.answer, false); // Pour les réponses, isUserSent est false
+      void dbService.saveConversationToConversationHistory(
+        parseInt(characterId),
+        false,
+        question.question
+      );
     }, totalDelayForQuestions);
 
     if (question.followUp != null) {

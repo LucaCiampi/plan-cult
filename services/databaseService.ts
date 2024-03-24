@@ -78,21 +78,8 @@ class DatabaseService {
     }
   }
 
-  async getAllLikedCharacters(): Promise<Character[]> {
-    await this.initializeDB();
-    // S'assurer que db n'est pas null grâce à l'initialisation
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const allRows = await this.db.getAllAsync(
-      'SELECT * FROM CHARACTERS WHERE liked = 1'
-    );
-    return allRows as Character[];
-  }
-
   async getAllCharacters(): Promise<Character[]> {
     await this.initializeDB();
-    // S'assurer que db n'est pas null grâce à l'initialisation
     if (this.db == null) {
       throw new Error('Database is not initialized.');
     }
@@ -100,7 +87,51 @@ class DatabaseService {
     return allRows as Character[];
   }
 
-  // Autres méthodes d'accès à la base de données ici
+  async getAllLikedCharacters(): Promise<Character[]> {
+    await this.initializeDB();
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+    const allRows = await this.db.getAllAsync(
+      'SELECT * FROM CHARACTERS WHERE liked = true'
+    );
+    return allRows as Character[];
+  }
+
+  async saveConversationToConversationHistory(
+    characterId: number,
+    isSentByUser: boolean,
+    message: string[]
+  ): Promise<any> {
+    await this.initializeDB();
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+    const currentDate = new Date();
+    const fromUser = isSentByUser ? 1 : 0;
+    const result = await this.db.runAsync(
+      'INSERT INTO conversation_history (character_id, date_sent, from_user, message) VALUES (?, ?, ?, ?)',
+      characterId,
+      currentDate.toString(),
+      fromUser,
+      message.toString()
+    );
+    console.log(result);
+  }
+
+  async loadConversationFromConversationHistory(
+    characterId: number
+  ): Promise<any> {
+    await this.initializeDB();
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+    const result = await this.db.getAllAsync(
+      'SELECT * FROM conversation_history WHERE character_id = ?',
+      characterId
+    );
+    console.log(result);
+  }
 }
 
 export default DatabaseService;

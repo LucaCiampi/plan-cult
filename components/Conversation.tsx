@@ -4,13 +4,20 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { selectConversations } from '@/features/chat/chatSlice';
 import Colors from '@/constants/Colors';
 import { RootState } from '@/app/store';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 const Conversation = ({ characterId }: { characterId: string }) => {
   const conversation = useSelector((state) =>
     selectConversations(state as RootState, characterId)
   );
+  const dbService = useDatabaseService();
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const history = dbService.loadConversationFromConversationHistory(
+    parseInt(characterId)
+  );
+  console.log(history);
 
   useEffect(() => {
     setTimeout(() => {
