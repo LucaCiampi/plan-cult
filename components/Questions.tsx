@@ -26,22 +26,12 @@ const Questions = ({ characterId }: { characterId: string }) => {
    */
   const handleQuestionClick = (question: Dialogue) => {
     sendMessagesOrganically(question.question, true); // Pour les questions, isUserSent est true
-    void dbService.saveConversationToConversationHistory(
-      parseInt(characterId),
-      true,
-      question.question
-    );
 
     const totalDelayForQuestions =
       question.question.length * randomBetween(1, 3) * 1000;
 
     setTimeout(() => {
       sendMessagesOrganically(question.answer, false); // Pour les réponses, isUserSent est false
-      void dbService.saveConversationToConversationHistory(
-        parseInt(characterId),
-        false,
-        question.question
-      );
     }, totalDelayForQuestions);
 
     if (question.followUp != null) {
@@ -63,6 +53,12 @@ const Questions = ({ characterId }: { characterId: string }) => {
     (messages: string[], isUserSent: boolean) => {
       messages.forEach((message, index) => {
         const delay = index * randomBetween(1, 3) * 1000;
+
+        void dbService.saveConversationToConversationHistory(
+          parseInt(characterId),
+          isUserSent,
+          message
+        );
 
         setTimeout(() => {
           dispatch(

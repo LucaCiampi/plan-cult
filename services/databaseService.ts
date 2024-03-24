@@ -101,7 +101,7 @@ class DatabaseService {
   async saveConversationToConversationHistory(
     characterId: number,
     isSentByUser: boolean,
-    message: string[]
+    message: string
   ): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
