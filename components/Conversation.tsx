@@ -15,11 +15,6 @@ const Conversation = ({ characterId }: { characterId: string }) => {
   );
   const dbService = useDatabaseService();
 
-  const history = dbService.loadConversationFromConversationHistory(
-    parseInt(characterId)
-  );
-  console.log(history);
-
   useEffect(() => {
     const loadHistory = async () => {
       const history = await dbService.loadConversationFromConversationHistory(
@@ -32,8 +27,6 @@ const Conversation = ({ characterId }: { characterId: string }) => {
           isUserSent: record.from_user,
         };
       });
-
-      console.log('historyAsMessages', historyAsMessages);
 
       setConversationHistory(historyAsMessages);
 

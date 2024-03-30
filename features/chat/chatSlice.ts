@@ -61,6 +61,7 @@ const chatSlice = createSlice({
 
       const { characterId, questions } = action.payload;
       state.chatsByCharacter[characterId].currentQuestions = questions;
+      console.log('current questions are :', questions);
     },
     setPreviousQuestions: (
       state,

@@ -44,6 +44,11 @@ const Questions = ({ characterId }: { characterId: string }) => {
     } else {
       dispatch(resetToPreviousQuestions({ characterId }));
     }
+
+    void dbService.saveCurrentDialogueNodeProgress(
+      parseInt(characterId),
+      question.id
+    );
   };
 
   /**

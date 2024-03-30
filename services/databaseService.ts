@@ -109,14 +109,14 @@ class DatabaseService {
     }
     const currentDate = new Date();
     const fromUser = isSentByUser ? 1 : 0;
-    const result = await this.db.runAsync(
+    void (await this.db.runAsync(
       'INSERT INTO conversation_history (character_id, date_sent, from_user, message) VALUES (?, ?, ?, ?)',
       characterId,
       currentDate.toString(),
       fromUser,
       message.toString()
-    );
-    console.log('💽 INSERT INTO conversation_history :', result);
+    ));
+    console.log('💽 saveConversationToConversationHistory');
   }
 
   async loadConversationFromConversationHistory(
@@ -130,10 +130,36 @@ class DatabaseService {
       'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC',
       characterId
     );
-    console.log(
-      '💽 SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC :',
-      result
+    console.log('💽 loadConversationFromConversationHistory');
+    return result;
+  }
+
+  async saveCurrentDialogueNodeProgress(
+    characterId: number,
+    dialogueId: string
+  ): Promise<any> {
+    await this.initializeDB();
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+    const result = await this.db.runAsync(
+      'INSERT INTO current_conversation_state (character_id, dialogue_id) VALUES (?, ?)',
+      characterId,
+      dialogueId
     );
+    console.log('💽 saveCurrentDialogueNodeProgress', result);
+  }
+
+  async getCurrentDialogueNodeProgress(characterId: number): Promise<any> {
+    await this.initializeDB();
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+    const result = await this.db.getFirstAsync(
+      'SELECT * FROM dialogues INNER JOIN current_conversation_state ON dialogues.id = current_conversation_state.dialogue_id WHERE current_conversation_state.character_id = ?',
+      characterId
+    );
+    console.log('💽 getCurrentDialogueNodeProgress', result);
     return result;
   }
 }
