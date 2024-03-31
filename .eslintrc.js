@@ -33,6 +33,7 @@ module.exports = {
   },
   ignorePatterns: [
     'metro.config.js',
+    'postinstall.js',
     'package.json',
     'package-lock.json',
     'README.md',
