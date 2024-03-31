@@ -2,6 +2,7 @@ import * as SQLite from 'expo-sqlite/next';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
+import { Platform } from 'react-native';
 
 class DatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
@@ -11,7 +12,7 @@ class DatabaseService {
   }
 
   async initializeDB(): Promise<void> {
-    if (this.db == null) {
+    if (this.db == null && Platform.OS !== 'web') {
       const databaseFilename = 'db.db';
       const documentsDirectory = FileSystem.documentDirectory;
       const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
@@ -81,7 +82,7 @@ class DatabaseService {
   async getAllCharacters(): Promise<Character[]> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const allRows = await this.db.getAllAsync('SELECT * FROM CHARACTERS');
     return allRows as Character[];
@@ -90,7 +91,7 @@ class DatabaseService {
   async getAllLikedCharacters(): Promise<Character[]> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const allRows = await this.db.getAllAsync(
       'SELECT * FROM CHARACTERS WHERE liked = true'
@@ -105,7 +106,7 @@ class DatabaseService {
   ): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const currentDate = new Date();
     const fromUser = isSentByUser ? 1 : 0;
@@ -124,7 +125,7 @@ class DatabaseService {
   ): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const result = await this.db.getAllAsync(
       'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC',
@@ -140,7 +141,7 @@ class DatabaseService {
   ): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const result = await this.db.runAsync(
       'INSERT INTO current_conversation_state (character_id, dialogue_id) VALUES (?, ?)',
@@ -153,7 +154,7 @@ class DatabaseService {
   async getCurrentDialogueNodeProgress(characterId: number): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
-      throw new Error('Database is not initialized.');
+      return await fetchDataFromStrapi('characters');
     }
     const result = await this.db.getFirstAsync(
       'SELECT * FROM dialogues INNER JOIN current_conversation_state ON dialogues.id = current_conversation_state.dialogue_id WHERE current_conversation_state.character_id = ?',
@@ -163,5 +164,46 @@ class DatabaseService {
     return result;
   }
 }
+
+const token = process.env.EXPO_PUBLIC_STRAPI_TOKEN;
+/**
+ * When SQLite is unavailable, fetches data from the Strapi CMS server
+ * @param endpoint the endpoint of the strapi REST API
+ * @returns unkown data
+ */
+const fetchDataFromStrapi = async (endpoint: string) => {
+  try {
+    const response = await fetch(Config.STRAPI_URL + endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+
+    const data = await response.json();
+    console.log('🛜 fetchDataFromStrapi', data);
+    return strapiDataCleansing(data);
+  } catch (error) {
+    console.error('Error fetching data from Strapi', error);
+    throw error;
+  }
+};
+
+/**
+ * Only keeps data needed and flattens the object to use it within the app
+ * @param data reponse from API
+ * @returns any kind of data really
+ */
+const strapiDataCleansing = (data: any) => {
+  const transformedData = data.data.map((item: any) => ({
+    id: item.id,
+    ...item.attributes,
+  }));
+
+  return transformedData;
+};
 
 export default DatabaseService;
