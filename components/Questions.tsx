@@ -25,13 +25,13 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * @param question the current Dialogue node
    */
   const handleQuestionClick = (question: Dialogue) => {
-    sendMessagesOrganically(question.question, true); // Pour les questions, isUserSent est true
+    sendMessagesOrganically(question.questions as StrapiMessage[], true); // Pour les questions, isUserSent est true
 
     const totalDelayForQuestions =
-      question.question.length * randomBetween(1, 3) * 1000;
+      question.questions.length * randomBetween(1, 3) * 1000;
 
     setTimeout(() => {
-      sendMessagesOrganically(question.answer, false); // Pour les réponses, isUserSent est false
+      sendMessagesOrganically(question.answers as StrapiMessage[], false); // Pour les réponses, isUserSent est false
     }, totalDelayForQuestions);
 
     if (question.followUp != null) {
@@ -55,14 +55,14 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * Sends messages with a small random delay to add authenticity
    */
   const sendMessagesOrganically = useCallback(
-    (messages: string[], isUserSent: boolean) => {
+    (messages: StrapiMessage[], isUserSent: boolean) => {
       messages.forEach((message, index) => {
         const delay = index * randomBetween(1, 3) * 1000;
 
         void dbService.saveConversationToConversationHistory(
           parseInt(characterId),
           isUserSent,
-          message
+          message.text[0].children[0].text as string
         );
 
         setTimeout(() => {
@@ -70,7 +70,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
             addMessageToConversation({
               characterId,
               message: {
-                text: message,
+                text: message.text[0].children[0].text,
                 isUserSent,
               },
             })
