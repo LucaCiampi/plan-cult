@@ -6,7 +6,6 @@ import Conversation from '@/components/Conversation';
 import Questions from '@/components/Questions';
 
 // TODO: rendre dynamique
-import dialoguesData from '@/assets/dialogues/test/dialogue.json';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 const ChatComponent = ({ characterId }: { characterId: string }) => {
@@ -14,19 +13,27 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
   const dbService = useDatabaseService();
 
   useEffect(() => {
-    // Initialiser avec le premier niveau de questions du JSON
-    const lastDialogueID = dbService.getCurrentDialogueNodeProgress(
-      parseInt(characterId)
-    );
-    console.log('❤️ lastDialogueID', lastDialogueID);
+    const fetchCurrentQuestions = async () => {
+      // Initialiser avec le premier niveau de questions du JSON
+      // const lastDialogueID = dbService.getCurrentDialogueNodeProgress(
+      //   parseInt(characterId)
+      // );
+      // console.log('❤️ lastDialogueID', lastDialogueID);
+      const lastDialogueID = [1, 2];
 
-    dispatch(
-      setCurrentQuestions({
-        characterId,
-        questions: dialoguesData[0] as Dialogue[],
-      })
-    );
-  }, [dispatch]);
+      const currentQuestions = await dbService.getDialoguesOfId(lastDialogueID);
+      console.log('❤️ currentQuestions', currentQuestions);
+
+      dispatch(
+        setCurrentQuestions({
+          characterId,
+          questions: currentQuestions,
+        })
+      );
+    };
+
+    void fetchCurrentQuestions();
+  }, [dispatch, characterId, dbService]);
 
   return (
     <>

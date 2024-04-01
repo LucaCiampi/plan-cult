@@ -163,6 +163,11 @@ class SQLiteService implements IDatabaseService {
     console.log('💽 getCurrentDialogueNodeProgress', result);
     return result;
   }
+
+  async getDialoguesOfId(dialoguesId: number[]): Promise<any> {
+    // TODO
+    return [];
+  }
 }
 
 export default SQLiteService;

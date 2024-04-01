@@ -22,7 +22,7 @@ class StrapiService implements IDatabaseService {
   async loadConversationFromConversationHistory(
     characterId: number
   ): Promise<any> {
-    return await fetchDataFromStrapi('');
+    return [];
   }
 
   async saveCurrentDialogueNodeProgress(
@@ -33,7 +33,17 @@ class StrapiService implements IDatabaseService {
   }
 
   async getCurrentDialogueNodeProgress(characterId: number): Promise<any> {
-    return await fetchDataFromStrapi('dialogues/' + characterId);
+    return await fetchDataFromStrapi(
+      `dialogues?filters[character][id][$eq]=${characterId}`
+    );
+  }
+
+  async getDialoguesOfId(dialoguesId: number[]): Promise<any> {
+    const filters = dialoguesId
+      .map((id, index) => `filters[id][$in][${index}]=${id}`)
+      .join('&');
+    const endpoint = `dialogues?populate=*&${filters}`;
+    return await fetchDataFromStrapi(endpoint);
   }
 }
 
