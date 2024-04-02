@@ -9,7 +9,7 @@ import {
   resetToPreviousQuestions,
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
-import { randomBetween } from '@/utils/random';
+import { randomBetween } from '@/utils/randomUtils';
 import { useCallback } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
@@ -25,13 +25,13 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * @param question the current Dialogue node
    */
   const handleQuestionClick = (question: Dialogue) => {
-    sendMessagesOrganically(question.questions as StrapiMessage[], true); // Pour les questions, isUserSent est true
+    sendMessagesOrganically(question.questions, true); // Pour les questions, isUserSent est true
 
     const totalDelayForQuestions =
       question.questions.length * randomBetween(1, 3) * 1000;
 
     setTimeout(() => {
-      sendMessagesOrganically(question.answers as StrapiMessage[], false); // Pour les réponses, isUserSent est false
+      sendMessagesOrganically(question.answers, false); // Pour les réponses, isUserSent est false
     }, totalDelayForQuestions);
 
     if (question.followUp != null) {
@@ -62,7 +62,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
         void dbService.saveConversationToConversationHistory(
           parseInt(characterId),
           isUserSent,
-          message.text[0].children[0].text as string
+          message.text[0].children[0].text
         );
 
         setTimeout(() => {

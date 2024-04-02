@@ -3,6 +3,7 @@ import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
 import { Platform } from 'react-native';
+import { fetchDataFromStrapi } from '@/utils/strapiUtils';
 
 class SQLiteService implements IDatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
@@ -151,7 +152,9 @@ class SQLiteService implements IDatabaseService {
     console.log('💽 saveCurrentDialogueNodeProgress', result);
   }
 
-  async getCurrentDialogueNodeProgress(characterId: number): Promise<any> {
+  async getCurrentDialogueNodeProgress(
+    characterId: number
+  ): Promise<Dialogue[]> {
     await this.initializeDB();
     if (this.db == null) {
       throw new Error('Database is not initialized.');
@@ -161,12 +164,18 @@ class SQLiteService implements IDatabaseService {
       characterId
     );
     console.log('💽 getCurrentDialogueNodeProgress', result);
-    return result;
+    return result as Dialogue[];
   }
 
-  async getDialoguesOfId(dialoguesId: number[]): Promise<any> {
-    // TODO
-    return [];
+  async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
+    // TODO: iOS does not allow HTTP requests by default, see info.plist
+    // TODO: store all of the dialogues in local DB only once
+    const filters = dialoguesId
+      .map((id, index) => `filters[id][$in][${index}]=${id}`)
+      .join('&');
+    // TODO: do not populate "character"
+    const endpoint = `dialogues?populate=*&${filters}`;
+    return await fetchDataFromStrapi(endpoint);
   }
 }
 

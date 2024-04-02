@@ -1,4 +1,4 @@
-import Config from '@/constants/Config';
+import { fetchDataFromStrapi } from '@/utils/strapiUtils';
 
 class StrapiService implements IDatabaseService {
   async getAllCharacters(): Promise<Character[]> {
@@ -32,60 +32,32 @@ class StrapiService implements IDatabaseService {
     console.log('💽 saveCurrentDialogueNodeProgress');
   }
 
-  async getCurrentDialogueNodeProgress(characterId: number): Promise<any> {
-    return await fetchDataFromStrapi(
-      `dialogues?filters[character][id][$eq]=${characterId}`
+  async getCurrentDialogueNodeProgress(
+    characterId: number
+  ): Promise<Dialogue[]> {
+    const currentDialogueWithCharacter = await fetchDataFromStrapi(
+      `current-dialogue-states?populate=*&filters[character][id][$eq]=${characterId}`
     );
+
+    const dialoguesId: any[] = [];
+    currentDialogueWithCharacter[0].dialogues.data.forEach((element: any) => {
+      dialoguesId.push(element.id);
+    });
+
+    const dialogues = this.getDialoguesOfId(dialoguesId as number[]);
+    console.log(dialogues);
+
+    return await this.getDialoguesOfId(dialoguesId as number[]);
   }
 
-  async getDialoguesOfId(dialoguesId: number[]): Promise<any> {
+  async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
     const filters = dialoguesId
       .map((id, index) => `filters[id][$in][${index}]=${id}`)
       .join('&');
+    // TODO: do not populate "character"
     const endpoint = `dialogues?populate=*&${filters}`;
     return await fetchDataFromStrapi(endpoint);
   }
 }
-
-const token = process.env.EXPO_PUBLIC_STRAPI_TOKEN;
-/**
- * When SQLite is unavailable, fetches data from the Strapi CMS server
- * @param endpoint the endpoint of the strapi REST API
- * @returns unkown data
- */
-const fetchDataFromStrapi = async (endpoint: string) => {
-  try {
-    const response = await fetch(Config.STRAPI_URL + endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    const data = await response.json();
-    console.log('🛜 fetchDataFromStrapi', data);
-    return strapiDataCleansing(data);
-  } catch (error) {
-    console.error('Error fetching data from Strapi', error);
-    throw error;
-  }
-};
-
-/**
- * Only keeps data needed and flattens the object to use it within the app
- * @param data reponse from API
- * @returns any kind of data really
- */
-const strapiDataCleansing = (data: any) => {
-  const transformedData = data.data.map((item: any) => ({
-    id: item.id,
-    ...item.attributes,
-  }));
-
-  return transformedData;
-};
 
 export default StrapiService;

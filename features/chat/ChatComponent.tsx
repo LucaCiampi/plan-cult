@@ -14,15 +14,11 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
 
   useEffect(() => {
     const fetchCurrentQuestions = async () => {
-      // Initialiser avec le premier niveau de questions du JSON
-      // const lastDialogueID = dbService.getCurrentDialogueNodeProgress(
-      //   parseInt(characterId)
-      // );
-      // console.log('❤️ lastDialogueID', lastDialogueID);
-      const lastDialogueID = [1, 2];
-
-      const currentQuestions = await dbService.getDialoguesOfId(lastDialogueID);
-      console.log('❤️ currentQuestions', currentQuestions);
+      // Récupérer le dernier dialogue non envoyé
+      const currentQuestions = await dbService.getCurrentDialogueNodeProgress(
+        parseInt(characterId)
+      );
+      console.log('❤️ lastDialogues', currentQuestions);
 
       dispatch(
         setCurrentQuestions({
