@@ -39,15 +39,14 @@ class StrapiService implements IDatabaseService {
       `current-dialogue-states?populate=*&filters[character][id][$eq]=${characterId}`
     );
 
-    const dialoguesId: any[] = [];
-    currentDialogueWithCharacter[0].dialogues.data.forEach((element: any) => {
-      dialoguesId.push(element.id);
-    });
+    const dialoguesId: number[] = [];
+    currentDialogueWithCharacter[0].dialogues.data.forEach(
+      (element: { id: number }) => {
+        dialoguesId.push(element.id);
+      }
+    );
 
-    const dialogues = this.getDialoguesOfId(dialoguesId as number[]);
-    console.log(dialogues);
-
-    return await this.getDialoguesOfId(dialoguesId as number[]);
+    return await this.getDialoguesOfId(dialoguesId);
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
