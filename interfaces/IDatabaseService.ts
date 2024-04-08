@@ -6,7 +6,7 @@ interface IDatabaseService {
     characterId: number,
     isSentByUser: boolean,
     message: string
-  ) => Promise<any>;
+  ) => Promise<void>;
   loadConversationFromConversationHistory: (
     characterId: number
   ) => Promise<any>;
@@ -14,7 +14,8 @@ interface IDatabaseService {
     characterId: number,
     dialogueId: string,
     followingDialoguesId: number[]
-  ) => Promise<any>;
+  ) => Promise<void>;
   getCurrentDialogueNodeProgress: (characterId: number) => Promise<Dialogue[]>;
   getDialoguesOfId: (dialoguesId: number[]) => Promise<Dialogue[]>;
+  downloadCharactersData: () => Promise<void>;
 }

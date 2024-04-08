@@ -1,6 +1,6 @@
 // CharacterCard.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { likeCharacter } from './charactersSlice';
 import Button from '@/components/common/Button';
@@ -13,8 +13,14 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
+  console.log('CharacterCard character', character);
+
   return (
     <>
+      <Image
+        source={{ uri: character.avatarUrl }}
+        style={{ width: 100, height: 100 }}
+      />
       <Text style={styles.characterName}>
         {character.name} {character.surname}
       </Text>

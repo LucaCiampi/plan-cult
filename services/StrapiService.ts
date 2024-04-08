@@ -13,7 +13,7 @@ class StrapiService implements IDatabaseService {
     characterId: number,
     isSentByUser: boolean,
     message: string
-  ): Promise<any> {
+  ): Promise<void> {
     // const currentDate = new Date();
     // const fromUser = isSentByUser ? 1 : 0;
     console.log('💽 saveConversationToConversationHistory');
@@ -29,7 +29,7 @@ class StrapiService implements IDatabaseService {
     characterId: number,
     dialogueId: string,
     followingDialoguesId: number[]
-  ): Promise<any> {
+  ): Promise<void> {
     console.log('💽 saveCurrentDialogueNodeProgress');
   }
 
@@ -57,6 +57,10 @@ class StrapiService implements IDatabaseService {
     // TODO: do not populate "character"
     const endpoint = `dialogues?populate=*&${filters}`;
     return await fetchDataFromStrapi(endpoint);
+  }
+
+  async downloadCharactersData(): Promise<void> {
+    console.log('💽 downloadCharactersData');
   }
 }
 

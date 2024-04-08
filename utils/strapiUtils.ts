@@ -8,7 +8,7 @@ const token = process.env.EXPO_PUBLIC_STRAPI_TOKEN;
  */
 export const fetchDataFromStrapi = async (endpoint: string) => {
   try {
-    const response = await fetch(Config.STRAPI_URL + endpoint, {
+    const response = await fetch(Config.STRAPI_API_URL + endpoint, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

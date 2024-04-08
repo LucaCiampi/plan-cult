@@ -4,6 +4,7 @@ import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
 import { Platform } from 'react-native';
 import { fetchDataFromStrapi } from '@/utils/strapiUtils';
+import { downloadImage } from '@/utils/downloadUtils';
 
 class SQLiteService implements IDatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
@@ -124,6 +125,7 @@ class SQLiteService implements IDatabaseService {
     return result;
   }
 
+  // TODO: change promise to "Message[]"
   async loadConversationFromConversationHistory(
     characterId: number
   ): Promise<any> {
@@ -143,7 +145,7 @@ class SQLiteService implements IDatabaseService {
     characterId: number,
     dialogueId: string,
     followingDialoguesId: number[]
-  ): Promise<any> {
+  ): Promise<void> {
     await this.initializeDB();
     if (this.db == null) {
       throw new Error('Database is not initialized.');
@@ -155,7 +157,6 @@ class SQLiteService implements IDatabaseService {
       characterId
     );
     console.log('💽 saveCurrentDialogueNodeProgress', result.changes);
-    return result;
   }
 
   async getCurrentDialogueNodeProgress(
@@ -165,12 +166,12 @@ class SQLiteService implements IDatabaseService {
     if (this.db == null) {
       throw new Error('Database is not initialized.');
     }
-    const result = (await this.db.getFirstAsync(
+    const result = await this.db.getFirstAsync(
       'SELECT following_dialogues_id FROM current_conversation_state where character_id = ?',
       characterId
-    )) as CurrentConversationState;
+    );
     const followingDialoguesId: number[] = JSON.parse(
-      result.following_dialogues_id as string
+      (result as CurrentConversationState).following_dialogues_id
     ).map(Number);
     const dialogues = await this.getDialoguesOfId(followingDialoguesId);
     console.log('💽 getCurrentDialogueNodeProgress');
@@ -187,6 +188,113 @@ class SQLiteService implements IDatabaseService {
     const endpoint = `dialogues?populate=*&${filters}`;
     console.log('💽 getDialoguesOfId :', dialoguesId);
     return await fetchDataFromStrapi(endpoint);
+  }
+
+  async downloadCharactersData(): Promise<void> {
+    await this.initializeDB();
+    await this.initializeCharactersTable();
+    await this.checkAndAlterCharactersTable();
+
+    const characters = await fetchDataFromStrapi('characters?populate=*');
+    console.log('downloadCharactersData', characters);
+
+    const insertQuery = `
+      INSERT INTO characters (id, name, surname, birth, death, avatarUrl)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+      name=excluded.name,
+      surname=excluded.surname,
+      birth=excluded.birth,
+      death=excluded.death,
+      avatarUrl=excluded.avatarUrl
+    `;
+
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+
+    for (const character of characters) {
+      try {
+        const avatarObjectUrl = character.avatar.data.attributes.url;
+
+        const hasAvatar = Boolean(avatarObjectUrl);
+        const distantAvatarUrl = Config.STRAPI_DOMAIN_URL + avatarObjectUrl;
+
+        const localAvatarUri = hasAvatar
+          ? await downloadImage(distantAvatarUrl)
+          : null;
+
+        const result = await this.db.runAsync(insertQuery, [
+          character.id,
+          character.name,
+          character.surname,
+          character.birth,
+          character.death,
+          localAvatarUri,
+        ]);
+        console.log('💽 downloadCharactersData', result.lastInsertRowId);
+      } catch (error) {
+        console.error('Error processing character:', character.id, error);
+      }
+    }
+  }
+
+  // TODO: move this method ?
+  async initializeCharactersTable(): Promise<void> {
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS characters (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        surname TEXT,
+        birth TEXT,
+        death TEXT,
+        avatarUrl TEXT
+      )
+    `;
+
+    try {
+      await this.db.runAsync(createTableQuery);
+      console.log('Table `characters` is ready.');
+    } catch (error) {
+      console.error('Failed to create table `characters`:', error);
+    }
+  }
+
+  // TODO: move this method ?
+  async checkAndAlterCharactersTable(): Promise<void> {
+    if (this.db == null) {
+      throw new Error('Database is not initialized.');
+    }
+
+    try {
+      const tableInfo = await this.db.getAllAsync(
+        'PRAGMA table_info(characters);'
+      );
+      const existingColumns = tableInfo.map((column: any) => column.name);
+
+      const requiredColumns = ['id', 'name', 'surname', 'avatarUrl'];
+      const missingColumns = requiredColumns.filter(
+        (column) => !existingColumns.includes(column)
+      );
+
+      for (const column of missingColumns) {
+        await this.db.runAsync(
+          `ALTER TABLE characters ADD COLUMN ${column} TEXT;`
+        );
+      }
+
+      if (missingColumns.length > 0) {
+        console.log(`Added missing columns: ${missingColumns.join(', ')}`);
+      } else {
+        console.log('No columns were missing.');
+      }
+    } catch (error) {
+      console.error('Failed to check or alter table `characters`:', error);
+    }
   }
 }
 
