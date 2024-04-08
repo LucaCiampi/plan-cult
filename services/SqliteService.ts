@@ -86,6 +86,7 @@ class SQLiteService implements IDatabaseService {
       throw new Error('Database is not initialized.');
     }
     const allRows = await this.db.getAllAsync('SELECT * FROM CHARACTERS');
+    console.log('💽 getAllCharacters');
     return allRows as Character[];
   }
 
@@ -97,6 +98,7 @@ class SQLiteService implements IDatabaseService {
     const allRows = await this.db.getAllAsync(
       'SELECT * FROM CHARACTERS WHERE liked = true'
     );
+    console.log('💽 getAllLikedCharacters');
     return allRows as Character[];
   }
 
@@ -144,10 +146,20 @@ class SQLiteService implements IDatabaseService {
     if (this.db == null) {
       throw new Error('Database is not initialized.');
     }
-    const result = await this.db.runAsync(
-      'INSERT INTO current_conversation_state (character_id, dialogue_id) VALUES (?, ?)',
+    console.log(
+      '💽 START saveCurrentDialogueNodeProgress :',
       characterId,
       dialogueId
+    );
+    const already = await this.db.getAllAsync(
+      'SELECT * FROM current_conversation_state',
+      characterId
+    );
+    console.log('loadConversationFromConversationHistory', already);
+    const result = await this.db.runAsync(
+      'UPDATE current_conversation_state SET dialogue_id = ? WHERE character_id = ?',
+      dialogueId,
+      characterId
     );
     console.log('💽 saveCurrentDialogueNodeProgress', result);
   }

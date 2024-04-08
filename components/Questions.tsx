@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Button from '@/components/common/Button';
 import { RootState } from '@/app/store';
 import {
@@ -32,14 +32,12 @@ const Questions = ({ characterId }: { characterId: string }) => {
       sendMessagesOrganically(question.answers, false); // Pour les réponses, isUserSent est false
     }, totalDelayForQuestions);
 
-    if (Platform.OS === 'web' && question.follow_up != null) {
+    if (question.follow_up != null) {
       const nextQuestionsId: number[] = [];
-      console.log('pas bon');
 
       question.follow_up?.data.forEach((nextQuestion) => {
         nextQuestionsId.push(nextQuestion.id);
       });
-      console.log('nextQuestionsId', nextQuestionsId);
 
       dbService
         .getDialoguesOfId(nextQuestionsId)
@@ -56,16 +54,11 @@ const Questions = ({ characterId }: { characterId: string }) => {
         });
     }
 
-    if (question.followUp != null) {
-      dispatch(
-        setCurrentQuestions({ characterId, questions: question.followUp })
-      );
-    }
-
     void dbService.saveCurrentDialogueNodeProgress(
       parseInt(characterId),
       question.id
     );
+    console.log('coucou');
   };
 
   /**
