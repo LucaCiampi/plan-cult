@@ -1,12 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import Button from '@/components/common/Button';
 import { RootState } from '@/app/store';
 import {
   addMessageToConversation,
   setCurrentQuestions,
-  setPreviousQuestions,
-  resetToPreviousQuestions,
   selectCurrentQuestions,
 } from '@/features/chat/chatSlice';
 import { randomBetween } from '@/utils/randomUtils';
@@ -34,15 +32,32 @@ const Questions = ({ characterId }: { characterId: string }) => {
       sendMessagesOrganically(question.answers, false); // Pour les réponses, isUserSent est false
     }, totalDelayForQuestions);
 
+    if (Platform.OS === 'web' && question.follow_up != null) {
+      const nextQuestionsId: number[] = [];
+      question.follow_up?.data.forEach((nextQuestion) => {
+        nextQuestionsId.push(nextQuestion.id);
+      });
+      console.log('nextQuestionsId', nextQuestionsId);
+
+      dbService
+        .getDialoguesOfId(nextQuestionsId)
+        .then((nextQuestions) => {
+          dispatch(
+            setCurrentQuestions({
+              characterId,
+              questions: nextQuestions,
+            })
+          );
+        })
+        .catch((error) => {
+          console.error('Failed to get next questions', error);
+        });
+    }
+
     if (question.followUp != null) {
-      dispatch(
-        setPreviousQuestions({ characterId, questions: currentQuestions })
-      );
       dispatch(
         setCurrentQuestions({ characterId, questions: question.followUp })
       );
-    } else {
-      dispatch(resetToPreviousQuestions({ characterId }));
     }
 
     void dbService.saveCurrentDialogueNodeProgress(

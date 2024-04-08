@@ -19,7 +19,6 @@ export default function SwipePage() {
   useEffect(() => {
     const fetchAllCharacters = async () => {
       let allCharactersFromDb = await dbService.getAllCharacters();
-      console.log(allCharactersFromDb);
 
       // Filtre les personnages likés de la liste à afficher
       allCharactersFromDb = allCharactersFromDb.filter(

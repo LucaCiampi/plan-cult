@@ -4,8 +4,6 @@ import { useDispatch } from 'react-redux';
 import { setCurrentQuestions } from './chatSlice';
 import Conversation from '@/components/Conversation';
 import Questions from '@/components/Questions';
-
-// TODO: rendre dynamique
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 const ChatComponent = ({ characterId }: { characterId: string }) => {
@@ -18,7 +16,8 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
       const currentQuestions = await dbService.getCurrentDialogueNodeProgress(
         parseInt(characterId)
       );
-      console.log('❤️ lastDialogues', currentQuestions);
+
+      console.log('pas bon, setCurrentQuestions', currentQuestions);
 
       dispatch(
         setCurrentQuestions({

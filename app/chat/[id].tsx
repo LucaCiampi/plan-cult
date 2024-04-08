@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLikedCharacters } from '@/features/characters/charactersSlice';
@@ -21,7 +21,9 @@ export default function ChatWithCharacterPage() {
 
     return () => {
       // Dispatchez l'action pour réinitialiser la conversation à vide
-      dispatch(clearMessagesFromConversation({ characterId: id[0] }));
+      if (Platform.OS !== 'web') {
+        dispatch(clearMessagesFromConversation({ characterId: id[0] }));
+      }
     };
   }, [id, likedCharacters]);
 

@@ -61,26 +61,6 @@ const chatSlice = createSlice({
 
       const { characterId, questions } = action.payload;
       state.chatsByCharacter[characterId].currentQuestions = questions;
-      console.log('current questions are :', questions);
-    },
-    setPreviousQuestions: (
-      state,
-      action: PayloadAction<{ characterId: string; questions: Dialogue[] }>
-    ) => {
-      console.log('🍰 setPreviousQuestions');
-
-      const { characterId, questions } = action.payload;
-      state.chatsByCharacter[characterId].previousQuestions = questions;
-    },
-    resetToPreviousQuestions: (
-      state,
-      action: PayloadAction<{ characterId: string }>
-    ) => {
-      console.log('🍰 resetToPreviousQuestions');
-
-      const { characterId } = action.payload;
-      state.chatsByCharacter[characterId].currentQuestions =
-        state.chatsByCharacter[characterId].previousQuestions;
     },
   },
 });
@@ -90,8 +70,6 @@ export const {
   addMessageToConversation,
   clearMessagesFromConversation,
   setCurrentQuestions,
-  setPreviousQuestions,
-  resetToPreviousQuestions,
 } = chatSlice.actions;
 
 export const selectCurrentQuestions = (state: RootState, characterId: string) =>
