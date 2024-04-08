@@ -12,7 +12,8 @@ interface IDatabaseService {
   ) => Promise<any>;
   saveCurrentDialogueNodeProgress: (
     characterId: number,
-    dialogueId: string
+    dialogueId: string,
+    followingDialoguesId: number[]
   ) => Promise<any>;
   getCurrentDialogueNodeProgress: (characterId: number) => Promise<Dialogue[]>;
   getDialoguesOfId: (dialoguesId: number[]) => Promise<Dialogue[]>;

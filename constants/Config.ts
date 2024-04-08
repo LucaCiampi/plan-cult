@@ -1,4 +1,4 @@
 export default {
-  DEBUG: false,
+  DEBUG: true,
   STRAPI_URL: 'https://gobelinos.lucaciampi.fr/api/',
 };

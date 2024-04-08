@@ -113,14 +113,15 @@ class SQLiteService implements IDatabaseService {
     }
     const currentDate = new Date();
     const fromUser = isSentByUser ? 1 : 0;
-    void (await this.db.runAsync(
+    const result = await this.db.runAsync(
       'INSERT INTO conversation_history (character_id, date_sent, from_user, message) VALUES (?, ?, ?, ?)',
       characterId,
       currentDate.toString(),
       fromUser,
       message.toString()
-    ));
+    );
     console.log('💽 saveConversationToConversationHistory');
+    return result;
   }
 
   async loadConversationFromConversationHistory(
@@ -140,28 +141,21 @@ class SQLiteService implements IDatabaseService {
 
   async saveCurrentDialogueNodeProgress(
     characterId: number,
-    dialogueId: string
+    dialogueId: string,
+    followingDialoguesId: number[]
   ): Promise<any> {
     await this.initializeDB();
     if (this.db == null) {
       throw new Error('Database is not initialized.');
     }
-    console.log(
-      '💽 START saveCurrentDialogueNodeProgress :',
-      characterId,
-      dialogueId
-    );
-    const already = await this.db.getAllAsync(
-      'SELECT * FROM current_conversation_state',
-      characterId
-    );
-    console.log('loadConversationFromConversationHistory', already);
     const result = await this.db.runAsync(
-      'UPDATE current_conversation_state SET dialogue_id = ? WHERE character_id = ?',
+      'UPDATE current_conversation_state SET dialogue_id = ?, following_dialogues_id = ? WHERE character_id = ?',
       dialogueId,
+      JSON.stringify(followingDialoguesId),
       characterId
     );
-    console.log('💽 saveCurrentDialogueNodeProgress', result);
+    console.log('💽 saveCurrentDialogueNodeProgress', result.changes);
+    return result;
   }
 
   async getCurrentDialogueNodeProgress(
@@ -172,12 +166,15 @@ class SQLiteService implements IDatabaseService {
       throw new Error('Database is not initialized.');
     }
     const result = (await this.db.getFirstAsync(
-      'SELECT * FROM current_conversation_state where character_id = ?',
+      'SELECT following_dialogues_id FROM current_conversation_state where character_id = ?',
       characterId
     )) as CurrentConversationState;
-    const lastDialogueId = result.dialogue_id;
+    const followingDialoguesId: number[] = JSON.parse(
+      result.following_dialogues_id as string
+    ).map(Number);
+    const dialogues = await this.getDialoguesOfId(followingDialoguesId);
     console.log('💽 getCurrentDialogueNodeProgress');
-    return await this.getDialoguesOfId([lastDialogueId] as number[]);
+    return dialogues;
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
@@ -188,6 +185,7 @@ class SQLiteService implements IDatabaseService {
       .join('&');
     // TODO: do not populate "character"
     const endpoint = `dialogues?populate=*&${filters}`;
+    console.log('💽 getDialoguesOfId :', dialoguesId);
     return await fetchDataFromStrapi(endpoint);
   }
 }

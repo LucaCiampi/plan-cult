@@ -52,13 +52,13 @@ const Questions = ({ characterId }: { characterId: string }) => {
         .catch((error) => {
           console.error('Failed to get next questions', error);
         });
-    }
 
-    void dbService.saveCurrentDialogueNodeProgress(
-      parseInt(characterId),
-      question.id
-    );
-    console.log('coucou');
+      void dbService.saveCurrentDialogueNodeProgress(
+        parseInt(characterId),
+        question.id,
+        nextQuestionsId
+      );
+    }
   };
 
   /**

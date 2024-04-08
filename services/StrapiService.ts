@@ -27,7 +27,8 @@ class StrapiService implements IDatabaseService {
 
   async saveCurrentDialogueNodeProgress(
     characterId: number,
-    dialogueId: string
+    dialogueId: string,
+    followingDialoguesId: number[]
   ): Promise<any> {
     console.log('💽 saveCurrentDialogueNodeProgress');
   }
