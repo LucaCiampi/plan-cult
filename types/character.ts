@@ -4,6 +4,5 @@ interface Character {
   surname: string;
   birth: string;
   death: string;
-  avatar?: any;
   avatarUrl?: string;
 }

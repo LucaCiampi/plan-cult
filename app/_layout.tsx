@@ -8,13 +8,22 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { DatabaseServiceProvider } from '@/contexts/DatabaseServiceContext';
+import {
+  DatabaseServiceProvider,
+  useDatabaseService,
+} from '@/contexts/DatabaseServiceContext';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
+  const dbService = useDatabaseService();
+
   const [loaded, error] = useFonts({
     RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
   });
+
+  useEffect(() => {
+    void dbService.downloadCharactersData();
+  }, []);
 
   useEffect(() => {
     if (error != null) throw error;
