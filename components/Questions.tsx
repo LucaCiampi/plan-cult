@@ -34,6 +34,8 @@ const Questions = ({ characterId }: { characterId: string }) => {
 
     if (Platform.OS === 'web' && question.follow_up != null) {
       const nextQuestionsId: number[] = [];
+      console.log('pas bon');
+
       question.follow_up?.data.forEach((nextQuestion) => {
         nextQuestionsId.push(nextQuestion.id);
       });

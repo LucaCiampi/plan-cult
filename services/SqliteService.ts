@@ -159,12 +159,13 @@ class SQLiteService implements IDatabaseService {
     if (this.db == null) {
       throw new Error('Database is not initialized.');
     }
-    const result = await this.db.getFirstAsync(
-      'SELECT * FROM dialogues INNER JOIN current_conversation_state ON dialogues.id = current_conversation_state.dialogue_id WHERE current_conversation_state.character_id = ?',
+    const result = (await this.db.getFirstAsync(
+      'SELECT * FROM current_conversation_state where character_id = ?',
       characterId
-    );
-    console.log('💽 getCurrentDialogueNodeProgress', result);
-    return result as Dialogue[];
+    )) as CurrentConversationState;
+    const lastDialogueId = result.dialogue_id;
+    console.log('💽 getCurrentDialogueNodeProgress');
+    return await this.getDialoguesOfId([lastDialogueId] as number[]);
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {

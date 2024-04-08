@@ -17,8 +17,6 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
         parseInt(characterId)
       );
 
-      console.log('pas bon, setCurrentQuestions', currentQuestions);
-
       dispatch(
         setCurrentQuestions({
           characterId,
