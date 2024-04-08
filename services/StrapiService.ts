@@ -59,8 +59,8 @@ class StrapiService implements IDatabaseService {
     return await fetchDataFromStrapi(endpoint);
   }
 
-  async downloadCharactersData(): Promise<void> {
-    console.log('💽 downloadCharactersData');
+  async syncCharactersData(): Promise<void> {
+    console.log('💽 syncCharactersData');
   }
 }
 

@@ -12,6 +12,8 @@ import {
   DatabaseServiceProvider,
   useDatabaseService,
 } from '@/contexts/DatabaseServiceContext';
+import SyncService from '@/services/SyncService';
+import SQLiteService from '@/services/SqliteService';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
@@ -22,7 +24,14 @@ export default function AppLayout() {
   });
 
   useEffect(() => {
-    void dbService.downloadCharactersData();
+    if (dbService instanceof SQLiteService) {
+      const syncService = new SyncService(dbService);
+      const syncData = async () => {
+        await syncService.syncAll();
+      };
+
+      void syncData();
+    }
   }, []);
 
   useEffect(() => {

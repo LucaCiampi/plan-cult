@@ -17,5 +17,4 @@ interface IDatabaseService {
   ) => Promise<void>;
   getCurrentDialogueNodeProgress: (characterId: number) => Promise<Dialogue[]>;
   getDialoguesOfId: (dialoguesId: number[]) => Promise<Dialogue[]>;
-  downloadCharactersData: () => Promise<void>;
 }
