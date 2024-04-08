@@ -15,32 +15,26 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
     selectCurrentQuestions(state as RootState, characterId)
   );
 
-  console.log(currentQuestionsChatComponent);
-
   useEffect(() => {
     const fetchCurrentQuestions = async () => {
-      console.log('fetchCurrentQuestions', currentQuestionsChatComponent);
+      const currentQuestions = await dbService.getCurrentDialogueNodeProgress(
+        parseInt(characterId)
+      );
 
-      if (currentQuestionsChatComponent.length === 0) {
-        console.log('⚠️ currentQuestionsChatComponent.length === 0');
-        const currentQuestions = await dbService.getCurrentDialogueNodeProgress(
-          parseInt(characterId)
-        );
-
-        dispatch(
-          setCurrentQuestions({
-            characterId,
-            questions: currentQuestions,
-          })
-        );
-      } else {
-        console.log('⚠️ Il existait déjà des questions dans redux');
-      }
+      dispatch(
+        setCurrentQuestions({
+          characterId,
+          questions: currentQuestions,
+        })
+      );
 
       // Récupérer le dernier dialogue non envoyé
     };
 
-    void fetchCurrentQuestions();
+    // Ne récupère les questions que si le slice redux est vide
+    if (currentQuestionsChatComponent.length === 0) {
+      void fetchCurrentQuestions();
+    }
   }, []);
 
   return (
