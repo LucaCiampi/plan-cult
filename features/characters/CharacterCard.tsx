@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { likeCharacter } from './charactersSlice';
 import Button from '@/components/common/Button';
+import { initializeCharacterChatState } from '../chat/chatSlice';
 
 interface CharacterProps {
   character: Character;
@@ -33,6 +34,15 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
           style={styles.button}
           onPress={() => {
             dispatch(likeCharacter(character.id));
+            const initialChatState = {
+              conversation: [],
+              currentQuestions: [],
+              previousQuestions: [],
+            };
+            const characterId = character.id.toString();
+            dispatch(
+              initializeCharacterChatState({ characterId, initialChatState })
+            );
           }}
         >
           Like
