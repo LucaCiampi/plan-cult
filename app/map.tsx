@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
 import cursorPinReference from '@/assets/images/icon.png';
+import LandmarkCard from '@/components/LandmarkCard';
 
 interface Region {
   latitude: number;
@@ -15,7 +16,7 @@ export default function Map() {
     {
       id: 1,
       title: 'Marqueur 1',
-      description: 'ma description',
+      description: 'lorem ipsum',
       coordinates: {
         latlng: {
           latitude: 45.767135,
@@ -61,11 +62,13 @@ export default function Map() {
     setRegion(newRegion);
   };
 
-  // Gestionnaire de changement de région
   const handleMarkerPress = (marker: Landmark) => {
     setSelectedMarker(marker);
+  };
 
-    // setSelectedMarker(marker);
+  // Fonction pour fermer la carte
+  const handleLandmarkClose = () => {
+    setSelectedMarker(null);
   };
 
   if (Platform.OS !== 'web') {
@@ -95,12 +98,7 @@ export default function Map() {
             image={cursorPinReference}
           /> */}
         </MapView>
-        {selectedMarker !== null && (
-          <View style={styles.placeCard}>
-            <Text>{selectedMarker.title}</Text>
-            <Text>{selectedMarker.description}</Text>
-          </View>
-        )}
+        <LandmarkCard onClose={handleLandmarkClose} landmark={selectedMarker} />
       </View>
     );
   }
@@ -124,13 +122,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  placeCard: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 36,
-    backgroundColor: 'red',
   },
 });
