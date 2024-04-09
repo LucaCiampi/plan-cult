@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
 import cursorPinReference from '@/assets/images/icon.png';
 import LandmarkCard from '@/components/LandmarkCard';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 interface Region {
   latitude: number;
@@ -12,6 +14,14 @@ interface Region {
 }
 
 export default function Map() {
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   const [markers] = useState<Landmark[]>([
     {
       id: 1,
@@ -48,7 +58,8 @@ export default function Map() {
     },
   ]);
 
-  const [region, setRegion] = useState<Region>({
+  // TODO: don't use useState
+  const [region] = useState<Region>({
     latitude: 45.767135,
     longitude: 4.833658,
     latitudeDelta: 0.0922,
@@ -57,13 +68,9 @@ export default function Map() {
 
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
 
-  // Gestionnaire de changement de région
-  const handleRegionChange = (newRegion: Region) => {
-    setRegion(newRegion);
-  };
-
   const handleMarkerPress = (marker: Landmark) => {
     setSelectedMarker(marker);
+    bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
   };
 
   // Fonction pour fermer la carte
@@ -73,12 +80,8 @@ export default function Map() {
 
   if (Platform.OS !== 'web') {
     return (
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          region={region}
-          onRegionChange={handleRegionChange}
-        >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <MapView style={styles.map} region={region}>
           {markers.map((marker, index) => (
             <Marker
               key={index}
@@ -98,8 +101,20 @@ export default function Map() {
             image={cursorPinReference}
           /> */}
         </MapView>
-        <LandmarkCard onClose={handleLandmarkClose} landmark={selectedMarker} />
-      </View>
+        <BottomSheet
+          snapPoints={[36, 160, '100%']}
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+        >
+          {/* TODO: remove BottomSheetView ? */}
+          <BottomSheetView style={styles.contentContainer}>
+            <LandmarkCard
+              landmark={selectedMarker}
+              onClose={handleLandmarkClose}
+            />
+          </BottomSheetView>
+        </BottomSheet>
+      </GestureHandlerRootView>
     );
   }
 
@@ -111,9 +126,6 @@ export default function Map() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   map: {
     width: '100%',
     height: '100%',
@@ -121,6 +133,15 @@ const styles = StyleSheet.create({
   centeredContainer: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
     alignItems: 'center',
   },
 });
