@@ -4,8 +4,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CharacterChatState {
   conversation: Message[];
-  currentQuestions: Dialogue[];
-  previousQuestions: Dialogue[];
+  currentQuestions: Dialogue[] | null;
+  previousQuestions: Dialogue[] | null;
 }
 
 interface ChatState {
@@ -55,7 +55,10 @@ const chatSlice = createSlice({
     },
     setCurrentQuestions: (
       state,
-      action: PayloadAction<{ characterId: string; questions: Dialogue[] }>
+      action: PayloadAction<{
+        characterId: string;
+        questions: Dialogue[] | null;
+      }>
     ) => {
       console.log('🍰 setCurrentQuestions');
 

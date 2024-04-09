@@ -29,14 +29,16 @@ const Questions = ({ characterId }: { characterId: string }) => {
     const totalDelayForQuestions =
       question.questions.length * randomBetween(1, 3) * 1000;
 
+    console.log('🥂', question);
+
     setTimeout(() => {
       sendMessagesOrganically(question.answers, false); // Pour les réponses, isUserSent est false
     }, totalDelayForQuestions);
 
-    if (question.follow_up != null) {
+    if (question.follow_up?.data[0] != null) {
       const nextQuestionsId: number[] = [];
 
-      question.follow_up?.data.forEach((nextQuestion) => {
+      question.follow_up.data.forEach((nextQuestion) => {
         nextQuestionsId.push(nextQuestion.id);
       });
 
@@ -58,6 +60,15 @@ const Questions = ({ characterId }: { characterId: string }) => {
         parseInt(characterId),
         question.id,
         nextQuestionsId
+      );
+    } else {
+      console.log('✅ Plus de questions');
+
+      dispatch(
+        setCurrentQuestions({
+          characterId,
+          questions: null,
+        })
       );
     }
   };
@@ -94,7 +105,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
 
   return (
     <View style={styles.questionsOptions}>
-      {currentQuestions.map((currentQuestion: Dialogue) => (
+      {currentQuestions?.map((currentQuestion: Dialogue) => (
         <Button
           key={currentQuestion.id}
           onPress={() => {
