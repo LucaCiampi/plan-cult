@@ -13,9 +13,12 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
+  console.log('character', character);
+
   return (
     <>
       <Image
+        // TODO: manifestement les images fetchées ne sont pas celles en local
         source={{ uri: character.avatar_url }}
         style={{ width: 100, height: 100 }}
       />

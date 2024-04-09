@@ -5,5 +5,5 @@ interface Character {
   birth: string;
   death: string;
   avatar?: any; // Strapi
-  avatar_url?: string;
+  avatar_url?: string; // SQLite
 }

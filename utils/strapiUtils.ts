@@ -20,23 +20,46 @@ export const fetchDataFromStrapi = async (endpoint: string) => {
 
     const data = await response.json();
     console.log('🛜 fetchDataFromStrapi', data);
-    return strapiDataCleansing(data);
+    return data;
   } catch (error) {
     console.error('Error fetching data from Strapi', error);
     throw error;
   }
 };
 
-/**
- * Only keeps data needed and flattens the object to use it within the app
- * @param data reponse from API
- * @returns any kind of data really
- */
-export const strapiDataCleansing = (data: any) => {
-  const transformedData = data.data.map((item: any) => ({
+export const normalizeCharacterFromStrapi = (data: any): Character[] => {
+  return data.data.map((item: any) => ({
     id: item.id,
-    ...item.attributes,
+    name: item.attributes.name,
+    surname: item.attributes.surname,
+    birth: item.attributes.birth,
+    death: item.attributes.death,
+    avatar_url:
+      Config.STRAPI_DOMAIN_URL + item.attributes.avatar.data.attributes.url,
   }));
+};
 
-  return transformedData;
+export const normalizeDialogueFromStrapi = (data: any): Dialogue[] => {
+  return data.data.map((item: any) => ({
+    id: item.id,
+    answers: item.attributes.answers,
+    character: item.attributes.character,
+    follow_up: item.attributes.follow_up,
+    question_short: item.attributes.question_short,
+    questions: item.attributes.questions,
+  }));
+};
+
+export const normalizeCurrentConversationStateFromStrapi = (
+  data: any
+): CurrentConversationState[] => {
+  return data.data.map((item: any) => ({
+    character_id: item.attributes.character.data.id,
+    dialogue_id: item.attributes.dialogues.data.map(
+      (dialogue: any) => dialogue.id
+    ),
+    following_dialogues_id: item.attributes.dialogues.data.map(
+      (dialogue: any) => dialogue.id
+    ),
+  }));
 };

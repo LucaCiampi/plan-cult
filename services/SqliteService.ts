@@ -14,6 +14,8 @@ class SQLiteService implements IDatabaseService {
   }
 
   async initializeDB(): Promise<SQLite.SQLiteDatabase> {
+    console.log('Initializing DB');
+
     const databaseFilename = 'db.db';
     const documentsDirectory = FileSystem.documentDirectory;
     const sqlLiteDirectory = `${documentsDirectory}SQLite/`;

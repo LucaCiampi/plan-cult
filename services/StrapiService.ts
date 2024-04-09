@@ -1,12 +1,21 @@
-import { fetchDataFromStrapi } from '@/utils/strapiUtils';
+import {
+  fetchDataFromStrapi,
+  normalizeCharacterFromStrapi,
+  normalizeCurrentConversationStateFromStrapi,
+  normalizeDialogueFromStrapi,
+} from '@/utils/strapiUtils';
 
 class StrapiService implements IDatabaseService {
   async getAllCharacters(): Promise<Character[]> {
-    return await fetchDataFromStrapi('characters');
+    let data = await fetchDataFromStrapi('characters?populate[0]=avatar');
+    data = normalizeCharacterFromStrapi(data);
+    return data;
   }
 
   async getAllLikedCharacters(): Promise<Character[]> {
-    return await fetchDataFromStrapi('characters');
+    let data = await fetchDataFromStrapi('characters?populate[0]=avatar');
+    data = normalizeCharacterFromStrapi(data);
+    return data;
   }
 
   async saveConversationToConversationHistory(
@@ -36,18 +45,17 @@ class StrapiService implements IDatabaseService {
   async getCurrentDialogueNodeProgress(
     characterId: number
   ): Promise<Dialogue[]> {
-    const currentDialogueWithCharacter = await fetchDataFromStrapi(
+    let currentDialogueWithCharacter = await fetchDataFromStrapi(
       `current-dialogue-states?populate=*&filters[character][id][$eq]=${characterId}`
     );
-
-    const dialoguesId: number[] = [];
-    currentDialogueWithCharacter[0].dialogues.data.forEach(
-      (element: { id: number }) => {
-        dialoguesId.push(element.id);
-      }
+    currentDialogueWithCharacter = normalizeCurrentConversationStateFromStrapi(
+      currentDialogueWithCharacter
     );
+    console.log('currentDialogueWithCharacter', currentDialogueWithCharacter);
 
-    return await this.getDialoguesOfId(dialoguesId);
+    return await this.getDialoguesOfId(
+      currentDialogueWithCharacter[0].following_dialogues_id as number[]
+    );
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
@@ -56,7 +64,9 @@ class StrapiService implements IDatabaseService {
       .join('&');
     // TODO: do not populate "character"
     const endpoint = `dialogues?populate=*&${filters}`;
-    return await fetchDataFromStrapi(endpoint);
+    let dialoguesOfId = await fetchDataFromStrapi(endpoint);
+    dialoguesOfId = normalizeDialogueFromStrapi(dialoguesOfId);
+    return dialoguesOfId;
   }
 }
 

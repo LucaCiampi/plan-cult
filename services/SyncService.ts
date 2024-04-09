@@ -22,6 +22,7 @@ class SyncService {
   };
 
   async syncAll(): Promise<void> {
+    // Exécute des tâches en parallèle étant donné qu'elles sont indépendantes
     await Promise.all([
       this.syncCharactersData(),
       this.syncCurrentConversationStateData(),
