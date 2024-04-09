@@ -8,31 +8,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import {
-  DatabaseServiceProvider,
-  useDatabaseService,
-} from '@/contexts/DatabaseServiceContext';
-import SyncService from '@/services/SyncService';
-import SQLiteService from '@/services/SqliteService';
+import { DatabaseServiceProvider } from '@/contexts/DatabaseServiceContext';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
-  const dbService = useDatabaseService();
-
   const [loaded, error] = useFonts({
     RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
   });
-
-  useEffect(() => {
-    if (dbService instanceof SQLiteService) {
-      const syncService = new SyncService(dbService);
-      const syncData = async () => {
-        await syncService.syncAll();
-      };
-
-      void syncData();
-    }
-  }, []);
 
   useEffect(() => {
     if (error != null) throw error;

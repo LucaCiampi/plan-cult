@@ -16,7 +16,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   return (
     <>
       <Image
-        source={{ uri: character.avatarUrl }}
+        source={{ uri: character.avatar_url }}
         style={{ width: 100, height: 100 }}
       />
       <Text style={styles.characterName}>

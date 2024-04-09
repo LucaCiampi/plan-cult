@@ -2,100 +2,101 @@ import * as SQLite from 'expo-sqlite/next';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
-import { Platform } from 'react-native';
 import { fetchDataFromStrapi } from '@/utils/strapiUtils';
+import SyncService from './SyncService';
 
 class SQLiteService implements IDatabaseService {
-  public db: SQLite.SQLiteDatabase | null = null;
+  public dbPromise: Promise<SQLite.SQLiteDatabase>;
 
   constructor() {
-    void this.initializeDB();
+    this.dbPromise = this.initializeDB();
+    void this.syncWithStrapi();
   }
 
-  async initializeDB(): Promise<void> {
-    if (this.db == null && Platform.OS !== 'web') {
-      const databaseFilename = 'db.db';
-      const documentsDirectory = FileSystem.documentDirectory;
-      const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
-      const internalDbName = `${sqlLiteDirectory}${databaseFilename}`;
+  async initializeDB(): Promise<SQLite.SQLiteDatabase> {
+    const databaseFilename = 'db.db';
+    const documentsDirectory = FileSystem.documentDirectory;
+    const sqlLiteDirectory = `${documentsDirectory}SQLite/`;
+    const internalDbName = `${sqlLiteDirectory}${databaseFilename}`;
 
-      // Vérifie et créé le répertoire SQLite si nécessaire
-      const dirInfo = await FileSystem.getInfoAsync(sqlLiteDirectory);
-      if (!dirInfo.exists) {
-        console.log('Création du répertoire SQLite.');
-        await FileSystem.makeDirectoryAsync(sqlLiteDirectory, {
-          intermediates: true,
-        });
-      }
+    // Vérifie et créé le répertoire SQLite si nécessaire
+    const dirInfo = await FileSystem.getInfoAsync(sqlLiteDirectory);
+    if (!dirInfo.exists) {
+      console.log('Création du répertoire SQLite.');
+      await FileSystem.makeDirectoryAsync(sqlLiteDirectory, {
+        intermediates: true,
+      });
+    }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      // const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
-      const dbAsset = Asset.fromModule(
-        require('../assets/databases/db.db') as string
-      );
+    // const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
+    const dbAsset = Asset.fromModule(
+      require('../assets/databases/db.db') as string
+    );
 
-      try {
-        if (Config.DEBUG) {
+    try {
+      if (Config.DEBUG) {
+        console.log(
+          '🪲 Mode débogage activé : Recopie systématique de la base de données.'
+        );
+        console.log(
+          `Tentative de téléchargement de la base de données depuis ${dbAsset.uri} vers ${internalDbName}`
+        );
+        const downloadResult = await FileSystem.downloadAsync(
+          dbAsset.uri,
+          internalDbName
+        );
+        console.log(
+          `Téléchargement réussi : ${JSON.stringify(downloadResult)}`
+        );
+      } else {
+        console.log(
+          `Vérification de l'existence de la base de données à ${internalDbName}`
+        );
+        const fileInfo = await FileSystem.getInfoAsync(internalDbName);
+        if (!fileInfo.exists) {
           console.log(
-            '🪲 Mode débogage activé : Recopie systématique de la base de données.'
+            "La base de données n'existe pas, début du téléchargement..."
           );
-          console.log(
-            `Tentative de téléchargement de la base de données depuis ${dbAsset.uri} vers ${internalDbName}`
-          );
-          const downloadResult = await FileSystem.downloadAsync(
-            dbAsset.uri,
-            internalDbName
-          );
-          console.log(
-            `Téléchargement réussi : ${JSON.stringify(downloadResult)}`
-          );
+          await FileSystem.downloadAsync(dbAsset.uri, internalDbName);
+          console.log('Téléchargement de la base de données réussi.');
         } else {
           console.log(
-            `Vérification de l'existence de la base de données à ${internalDbName}`
+            'La base de données existe déjà, pas besoin de la télécharger.'
           );
-          const fileInfo = await FileSystem.getInfoAsync(internalDbName);
-          if (!fileInfo.exists) {
-            console.log(
-              "La base de données n'existe pas, début du téléchargement..."
-            );
-            await FileSystem.downloadAsync(dbAsset.uri, internalDbName);
-            console.log('Téléchargement de la base de données réussi.');
-          } else {
-            console.log(
-              'La base de données existe déjà, pas besoin de la télécharger.'
-            );
-          }
         }
-
-        console.log('Ouverture de la base de données...');
-        this.db = await SQLite.openDatabaseAsync(databaseFilename);
-      } catch (error) {
-        console.error(
-          `Erreur lors de la préparation de la base de données : ${
-            typeof error === 'string' ? error : JSON.stringify(error)
-          }`
-        );
-        throw error; // Rethrow l'erreur pour indiquer un échec dans le flux d'exécution appelant.
       }
+
+      console.log('Ouverture de la base de données...');
+      return await SQLite.openDatabaseAsync(databaseFilename);
+    } catch (error) {
+      console.error(
+        `Erreur lors de la préparation de la base de données : ${
+          typeof error === 'string' ? error : JSON.stringify(error)
+        }`
+      );
+      throw error; // Rethrow l'erreur pour indiquer un échec dans le flux d'exécution appelant.
     }
+  }
+
+  private async getDb(): Promise<SQLite.SQLiteDatabase> {
+    return await this.dbPromise;
+  }
+
+  async syncWithStrapi() {
+    const syncService = new SyncService(this);
+    void syncService.syncAll();
   }
 
   async getAllCharacters(): Promise<Character[]> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const allRows = await this.db.getAllAsync('SELECT * FROM CHARACTERS');
+    const db = await this.getDb();
+    const allRows = await db.getAllAsync('SELECT * FROM CHARACTERS');
     console.log('💽 getAllCharacters');
     return allRows as Character[];
   }
 
   async getAllLikedCharacters(): Promise<Character[]> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const allRows = await this.db.getAllAsync(
+    const db = await this.getDb();
+    const allRows = await db.getAllAsync(
       'SELECT * FROM CHARACTERS WHERE liked = true'
     );
     console.log('💽 getAllLikedCharacters');
@@ -107,13 +108,10 @@ class SQLiteService implements IDatabaseService {
     isSentByUser: boolean,
     message: string
   ): Promise<any> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
+    const db = await this.getDb();
     const currentDate = new Date();
     const fromUser = isSentByUser ? 1 : 0;
-    const result = await this.db.runAsync(
+    const result = await db.runAsync(
       'INSERT INTO conversation_history (character_id, date_sent, from_user, message) VALUES (?, ?, ?, ?)',
       characterId,
       currentDate.toString(),
@@ -128,11 +126,8 @@ class SQLiteService implements IDatabaseService {
   async loadConversationFromConversationHistory(
     characterId: number
   ): Promise<any> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const result = await this.db.getAllAsync(
+    const db = await this.getDb();
+    const result = await db.getAllAsync(
       'SELECT * FROM conversation_history WHERE character_id = ? ORDER BY date_sent ASC',
       characterId
     );
@@ -145,11 +140,8 @@ class SQLiteService implements IDatabaseService {
     dialogueId: string,
     followingDialoguesId: number[]
   ): Promise<void> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const result = await this.db.runAsync(
+    const db = await this.getDb();
+    const result = await db.runAsync(
       'UPDATE current_conversation_state SET dialogue_id = ?, following_dialogues_id = ? WHERE character_id = ?',
       dialogueId,
       JSON.stringify(followingDialoguesId),
@@ -161,11 +153,8 @@ class SQLiteService implements IDatabaseService {
   async getCurrentDialogueNodeProgress(
     characterId: number
   ): Promise<Dialogue[]> {
-    await this.initializeDB();
-    if (this.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-    const result = await this.db.getFirstAsync(
+    const db = await this.getDb();
+    const result = await db.getFirstAsync(
       'SELECT following_dialogues_id FROM current_conversation_state where character_id = ?',
       characterId
     );

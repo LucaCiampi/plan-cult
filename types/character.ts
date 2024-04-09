@@ -4,5 +4,6 @@ interface Character {
   surname: string;
   birth: string;
   death: string;
-  avatarUrl?: string;
+  avatar?: any; // Strapi
+  avatar_url?: string;
 }
