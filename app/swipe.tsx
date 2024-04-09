@@ -9,7 +9,7 @@ import {
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 export default function SwipePage() {
-  const [characters, setCharactersState] = useState<Character[]>([]);
+  const [charactersWaiting, setCharactersWaiting] = useState<Character[]>([]);
   const dbService = useDatabaseService();
   const dispatch = useDispatch();
 
@@ -26,14 +26,24 @@ export default function SwipePage() {
           !likedCharacters.some((liked) => liked.id === character.id)
       );
 
-      setCharactersState(allCharactersFromDb);
-      dispatch(setCharacters(allCharactersFromDb));
+      if (allCharactersFromDb.length > 0) {
+        // Accède au dernier ID de profil dans charactersWaiting
+        const lastProfileId =
+          allCharactersFromDb[allCharactersFromDb.length - 1].id;
+        // Appelle getCharacterProfile pour obtenir le profil détaillé
+        const newProfile = await dbService.getCharacterProfile(lastProfileId);
+        // Ajoute ce profil à charactersProfile
+        console.log('newProfile', newProfile);
+
+        setCharactersWaiting((prevProfiles) => [newProfile]);
+        dispatch(setCharacters(allCharactersFromDb));
+      }
     };
 
     void fetchAllCharacters();
   }, [dispatch, likedCharacters]);
 
-  if (characters.length === 0) {
+  if (charactersWaiting.length === 0) {
     return (
       <View style={styles.centeredContainer}>
         <Text>Pas de profil dans les parages</Text>
@@ -44,7 +54,7 @@ export default function SwipePage() {
   return (
     <View>
       <FlatList
-        data={characters}
+        data={charactersWaiting}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.characterContainer}>

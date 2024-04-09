@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { likeCharacter } from './charactersSlice';
 import Button from '@/components/common/Button';
 import { initializeCharacterChatState } from '../chat/chatSlice';
+import Config from '@/constants/Config';
 
 interface CharacterProps {
   character: Character;
@@ -13,7 +14,43 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
-  console.log('character', character);
+  // Fonction pour le rendu conditionnel basé sur __component
+  const renderProfileRow = (profileRow: CharacterProfile, index: number) => {
+    switch (profileRow.__component) {
+      case 'profile.photo':
+        return (
+          <Image
+            key={index}
+            source={{
+              uri:
+                Config.STRAPI_DOMAIN_URL +
+                profileRow.image?.data?.attributes?.url,
+            }}
+            style={{ width: 100, height: 100 }}
+          />
+        );
+      case 'profile.text-prompt':
+        return (
+          <View>
+            <Text key={index + '-title'} style={styles.characterDescription}>
+              {profileRow.profile_prompt_title?.data?.attributes?.title}
+            </Text>
+            <Text key={index + '-answer'} style={styles.characterDescription}>
+              {profileRow.answer?.map((answer: Answer) =>
+                answer.children.map((answerChild: AnswerChild) =>
+                  answerChild.children.map((answerChildChild, index) => (
+                    <Text key={index}>{answerChildChild.text}</Text>
+                  ))
+                )
+              )}
+            </Text>
+          </View>
+        );
+      // Ajoute d'autres cas ici selon les types de __component que tu as
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -27,6 +64,9 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
       </Text>
       {Boolean(character.birth) && (
         <Text style={styles.characterDescription}>{character.birth}</Text>
+      )}
+      {character.profile?.map((profileRow, index) =>
+        renderProfileRow(profileRow, index as number)
       )}
       <View style={styles.buttonsContainer}>
         <Button

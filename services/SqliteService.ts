@@ -108,6 +108,10 @@ class SQLiteService implements IDatabaseService {
     return allRows as Character[];
   }
 
+  async getCharacterProfile(characterId: number): Promise<Character> {
+    return await this.strapiService.getCharacterProfile(characterId);
+  }
+
   async saveConversationToConversationHistory(
     characterId: number,
     isSentByUser: boolean,

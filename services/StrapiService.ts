@@ -1,20 +1,29 @@
 import {
   fetchDataFromStrapi,
   normalizeCharacterFromStrapi,
+  normalizeCharacterProfileFromStrapi,
   normalizeCurrentConversationStateFromStrapi,
   normalizeDialogueFromStrapi,
 } from '@/utils/strapiUtils';
 
 class StrapiService implements IDatabaseService {
   async getAllCharacters(): Promise<Character[]> {
-    let data = await fetchDataFromStrapi('characters?populate[0]=avatar');
+    let data = await fetchDataFromStrapi('characters?populate=*&');
     data = normalizeCharacterFromStrapi(data);
     return data;
   }
 
   async getAllLikedCharacters(): Promise<Character[]> {
-    let data = await fetchDataFromStrapi('characters?populate[0]=avatar');
+    let data = await fetchDataFromStrapi('characters?populate=*&');
     data = normalizeCharacterFromStrapi(data);
+    return data;
+  }
+
+  async getCharacterProfile(characterId: number): Promise<Character> {
+    let data = await fetchDataFromStrapi(
+      `characters/${characterId}?populate[Profil][populate]=*&populate[avatar]=*`
+    );
+    data = normalizeCharacterProfileFromStrapi(data);
     return data;
   }
 
@@ -62,7 +71,6 @@ class StrapiService implements IDatabaseService {
     currentDialogueWithCharacter = normalizeCurrentConversationStateFromStrapi(
       currentDialogueWithCharacter
     );
-    console.log('currentDialogueWithCharacter', currentDialogueWithCharacter);
 
     return await this.getDialoguesOfId(
       currentDialogueWithCharacter[0].following_dialogues_id as number[]

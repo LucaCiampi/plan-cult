@@ -2,6 +2,7 @@
 interface IDatabaseService {
   getAllCharacters: () => Promise<Character[]>;
   getAllLikedCharacters: () => Promise<Character[]>;
+  getCharacterProfile: (characterId: number) => Promise<Character>;
   saveConversationToConversationHistory: (
     characterId: number,
     isSentByUser: boolean,
