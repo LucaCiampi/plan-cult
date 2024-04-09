@@ -10,13 +10,39 @@ interface Region {
   longitudeDelta: number;
 }
 
+interface MarkerData {
+  title: string;
+  description: string;
+  latlng: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 export default function Map() {
   const [markers] = useState([
     {
-      title: 'titre',
+      title: 'Marqueur 1',
+      description: 'ma description',
       latlng: {
         latitude: 45.767135,
         longitude: 4.833658,
+      },
+    },
+    {
+      title: 'Marqueur 2',
+      description: 'ma description',
+      latlng: {
+        latitude: 45.757,
+        longitude: 4.83,
+      },
+    },
+    {
+      title: 'Marqueur 3',
+      description: 'ma description',
+      latlng: {
+        latitude: 45.777,
+        longitude: 4.83,
       },
     },
   ]);
@@ -28,9 +54,18 @@ export default function Map() {
     longitudeDelta: 0.0421,
   });
 
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+
   // Gestionnaire de changement de région
   const handleRegionChange = (newRegion: Region) => {
     setRegion(newRegion);
+  };
+
+  // Gestionnaire de changement de région
+  const handleMarkerPress = (marker: MarkerData) => {
+    setSelectedMarker(marker);
+
+    // setSelectedMarker(marker);
   };
 
   if (Platform.OS !== 'web') {
@@ -47,6 +82,9 @@ export default function Map() {
               coordinate={marker.latlng}
               title={marker.title}
               image={cursorPinReference}
+              onPress={() => {
+                handleMarkerPress(marker);
+              }}
             />
           ))}
           {/* <Overlay
@@ -57,6 +95,12 @@ export default function Map() {
             image={cursorPinReference}
           /> */}
         </MapView>
+        {selectedMarker !== null && (
+          <View style={styles.placeCard}>
+            <Text>{selectedMarker.title}</Text>
+            <Text>{selectedMarker.description}</Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -80,5 +124,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  placeCard: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 36,
+    backgroundColor: 'red',
   },
 });
