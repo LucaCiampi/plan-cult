@@ -58,10 +58,6 @@ class StrapiService implements IDatabaseService {
     const endpoint = `dialogues?populate=*&${filters}`;
     return await fetchDataFromStrapi(endpoint);
   }
-
-  async syncCharactersData(): Promise<void> {
-    console.log('💽 syncCharactersData');
-  }
 }
 
 export default StrapiService;

@@ -13,8 +13,6 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
-  console.log('CharacterCard character', character);
-
   return (
     <>
       <Image

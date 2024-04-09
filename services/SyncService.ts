@@ -6,36 +6,40 @@ import SQLiteService from './SqliteService';
 class SyncService {
   constructor(private readonly sqliteService: SQLiteService) {}
 
+  tableDefinitions = {
+    characters: {
+      id: 'INTEGER PRIMARY KEY',
+      name: 'TEXT',
+      surname: 'TEXT',
+      birth: 'TEXT',
+      death: 'TEXT',
+      avatarUrl: 'TEXT',
+    },
+    current_conversation_state: {
+      character_id: 'INTEGER PRIMARY KEY',
+      dialogue_id: 'TEXT NOT NULL',
+      following_dialogues_id: 'TEXT',
+    },
+  };
+
   async syncAll(): Promise<void> {
-    await this.syncCharactersData();
+    await this.sqliteService.initializeDB(); // Assure that DB is initialized before syncing
+    await Promise.all([
+      this.syncCharactersData(),
+      this.syncCurrentConversationStateData(),
+    ]);
   }
 
   async syncCharactersData(): Promise<void> {
-    await this.sqliteService.initializeDB();
-    // await this.initializeDB();
-    await this.initializeTable('characters', {
-      id: 'INTEGER PRIMARY KEY',
-      name: 'TEXT',
-      surname: 'TEXT',
-      birth: 'TEXT',
-      death: 'TEXT',
-      avatarUrl: 'TEXT',
-    });
-
-    await this.checkAndAlterTable('characters', {
-      id: 'INTEGER PRIMARY KEY',
-      name: 'TEXT',
-      surname: 'TEXT',
-      birth: 'TEXT',
-      death: 'TEXT',
-      avatarUrl: 'TEXT',
-    });
+    const tableName = 'characters';
+    await this.initializeTable(tableName, this.tableDefinitions[tableName]);
+    await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
 
     const characters = await fetchDataFromStrapi('characters?populate=*');
     console.log('syncCharactersData', characters);
 
     const insertQuery = `
-      INSERT INTO characters (id, name, surname, birth, death, avatarUrl)
+      INSERT INTO ${tableName} (id, name, surname, birth, death, avatarUrl)
       VALUES (?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
       name=excluded.name,
@@ -45,22 +49,16 @@ class SyncService {
       avatarUrl=excluded.avatarUrl
     `;
 
-    if (this.sqliteService.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-
     for (const character of characters) {
       try {
-        const avatarObjectUrl = character.avatar.data.attributes.url;
-
-        const hasAvatar = Boolean(avatarObjectUrl);
-        const distantAvatarUrl = Config.STRAPI_DOMAIN_URL + avatarObjectUrl;
-
+        const avatarAttributeLink = character.avatar.data.attributes.url;
+        const hasAvatar = Boolean(avatarAttributeLink);
+        const avatarUrl = Config.STRAPI_DOMAIN_URL + avatarAttributeLink;
         const localAvatarUri = hasAvatar
-          ? await downloadImage(distantAvatarUrl)
+          ? await this.safeDownloadImage(avatarUrl)
           : null;
 
-        const result = await this.sqliteService.db.runAsync(insertQuery, [
+        await this.sqliteService.db?.runAsync(insertQuery, [
           character.id,
           character.name,
           character.surname,
@@ -68,10 +66,19 @@ class SyncService {
           character.death,
           localAvatarUri,
         ]);
-        console.log('💽 syncCharactersData', result.lastInsertRowId);
+        console.log('💽 Character synced:', character.name);
       } catch (error) {
         console.error('Error processing character:', character.id, error);
       }
+    }
+  }
+
+  async safeDownloadImage(imageUrl: string): Promise<string | null> {
+    try {
+      return await downloadImage(imageUrl);
+    } catch (error) {
+      console.error('Failed to download image:', imageUrl, error);
+      return null; // Return null if the image can't be downloaded
     }
   }
 
@@ -79,21 +86,14 @@ class SyncService {
     tableName: string,
     columns: Record<string, string>
   ): Promise<void> {
-    if (this.sqliteService.db == null) {
-      throw new Error('Database is not initialized.');
-    }
-
     const columnsDefinition = Object.entries(columns)
       .map(([name, type]) => `${name} ${type}`)
       .join(', ');
+
     const createTableQuery = `CREATE TABLE IF NOT EXISTS ${tableName} (${columnsDefinition})`;
 
-    try {
-      await this.sqliteService.db.runAsync(createTableQuery);
-      console.log(`Table \`${tableName}\` is ready.`);
-    } catch (error) {
-      console.error(`Failed to create table \`${tableName}\`:`, error);
-    }
+    await this.sqliteService.db?.runAsync(createTableQuery);
+    console.log(`Table \`${tableName}\` is ready.`);
   }
 
   async checkAndAlterTable(
@@ -132,6 +132,50 @@ class SyncService {
     } catch (error) {
       console.error(`Failed to check or alter table \`${tableName}\`:`, error);
     }
+  }
+
+  async syncCurrentConversationStateData(): Promise<void> {
+    const tableName = 'current_conversation_state';
+    await this.initializeTable(tableName, this.tableDefinitions[tableName]);
+    await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
+
+    const data = await fetchDataFromStrapi(
+      'current-dialogue-states?populate[0]=character&populate[1]=dialogues'
+    );
+
+    const insertQuery = `
+      INSERT INTO ${tableName} (character_id, dialogue_id, following_dialogues_id)
+      VALUES (?, ?, ?)
+      ON CONFLICT(character_id) DO UPDATE SET
+      dialogue_id=excluded.dialogue_id,
+      following_dialogues_id=excluded.following_dialogues_id
+    `;
+
+    for (const currentDialogueState of data) {
+      const followingDialoguesId: number[] =
+        currentDialogueState.dialogues.data.map((element: any) => element.id);
+      const followingDialoguesIdStr = JSON.stringify(followingDialoguesId);
+
+      try {
+        await this.sqliteService.db?.runAsync(insertQuery, [
+          currentDialogueState.character.data.id,
+          followingDialoguesIdStr,
+          followingDialoguesIdStr,
+        ]);
+        console.log(
+          '💽 currentDialogueState synced:',
+          currentDialogueState.character.data.attributes.name
+        );
+      } catch (error) {
+        console.error(
+          'Error processing currentDialogueState:',
+          currentDialogueState.character.data.attributes.name,
+          error
+        );
+      }
+    }
+
+    console.log(`Synced \`${tableName}\` data.`);
   }
 }
 
