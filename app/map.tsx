@@ -1,12 +1,19 @@
 import React from 'react';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
+import cursorPinReference from '@/assets/images/icon.png';
 
 export default function Map() {
+  const coords = {
+    latitude: 45.767135,
+    longitude: 4.833658,
+  };
+
   if (Platform.OS !== 'web') {
     return (
       <View style={styles.container}>
         <MapView style={styles.map} />
+        <Marker coordinate={coords} image={{ uri: cursorPinReference }} />
       </View>
     );
   }
