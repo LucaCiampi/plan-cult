@@ -10,39 +10,39 @@ interface Region {
   longitudeDelta: number;
 }
 
-interface MarkerData {
-  title: string;
-  description: string;
-  latlng: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
 export default function Map() {
-  const [markers] = useState([
+  const [markers] = useState<Landmark[]>([
     {
+      id: 1,
       title: 'Marqueur 1',
       description: 'ma description',
-      latlng: {
-        latitude: 45.767135,
-        longitude: 4.833658,
+      coordinates: {
+        latlng: {
+          latitude: 45.767135,
+          longitude: 4.833658,
+        },
       },
     },
     {
+      id: 1,
       title: 'Marqueur 2',
       description: 'ma description',
-      latlng: {
-        latitude: 45.757,
-        longitude: 4.83,
+      coordinates: {
+        latlng: {
+          latitude: 45.757,
+          longitude: 4.83,
+        },
       },
     },
     {
+      id: 1,
       title: 'Marqueur 3',
       description: 'ma description',
-      latlng: {
-        latitude: 45.777,
-        longitude: 4.83,
+      coordinates: {
+        latlng: {
+          latitude: 45.777,
+          longitude: 4.83,
+        },
       },
     },
   ]);
@@ -54,7 +54,7 @@ export default function Map() {
     longitudeDelta: 0.0421,
   });
 
-  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
 
   // Gestionnaire de changement de région
   const handleRegionChange = (newRegion: Region) => {
@@ -62,7 +62,7 @@ export default function Map() {
   };
 
   // Gestionnaire de changement de région
-  const handleMarkerPress = (marker: MarkerData) => {
+  const handleMarkerPress = (marker: Landmark) => {
     setSelectedMarker(marker);
 
     // setSelectedMarker(marker);
@@ -79,7 +79,7 @@ export default function Map() {
           {markers.map((marker, index) => (
             <Marker
               key={index}
-              coordinate={marker.latlng}
+              coordinate={marker.coordinates.latlng}
               title={marker.title}
               image={cursorPinReference}
               onPress={() => {
