@@ -1,4 +1,9 @@
-interface CharacterProfile {
+type CharacterProfileSection =
+  | PhotoProfileSection
+  | TextPromptProfileSection
+  | AudioPromptProfileSection;
+
+interface CharacterProfileSectionBase {
   id: number;
   __component: 'profile.photo' | 'profile.text-prompt' | 'profile.audio-prompt';
   profile_prompt_title?: {
@@ -8,39 +13,34 @@ interface CharacterProfile {
   };
 }
 
-interface PhotoProfileSection extends CharacterProfile {
+interface PhotoProfileSection extends CharacterProfileSectionBase {
   __component: 'profile.photo';
   image?: {
     data: ImageAttributes;
   };
 }
 
-interface TextPromptProfileSection extends CharacterProfile {
+interface TextPromptProfileSection extends CharacterProfileSectionBase {
   __component: 'profile.text-prompt';
   answer: Answer[];
 }
 
-interface AudioPromptProfileSection extends CharacterProfile {
+interface AudioPromptProfileSection extends CharacterProfileSectionBase {
   __component: 'profile.audio-prompt';
 }
-
-type CharacterProfileSection =
-  | PhotoProfileSection
-  | TextPromptProfileSection
-  | AudioPromptProfileSection;
 
 interface ImageAttributes {
   id: number;
   attributes: {
-    name: string;
     alternativeText: string | null;
     caption: string | null;
-    width: number;
-    height: number;
     formats: Formats;
+    name: string;
     hash: string;
     ext: string;
     mime: string;
+    width: number;
+    height: number;
     size: number;
     url: string;
     previewUrl: string | null;
@@ -57,11 +57,11 @@ interface Formats {
 }
 
 interface ImageFormat {
+  path: string | null;
   name: string;
   hash: string;
   ext: string;
   mime: string;
-  path: string | null;
   width: number;
   height: number;
   size: number;

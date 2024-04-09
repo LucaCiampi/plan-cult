@@ -4,6 +4,6 @@ interface Character {
   surname: string;
   birth: string;
   death: string;
-  avatar_url?: string; // SQLite
-  profile?: CharacterProfile[];
+  avatar_url?: string;
+  profile?: CharacterProfileSection[];
 }
