@@ -5,6 +5,7 @@ export async function downloadImage(imageUrl: string): Promise<string> {
     // Extraction du nom de fichier depuis l'URL
     const filename = imageUrl.split('/').pop();
     // Définition du chemin local où l'image sera sauvegardée
+    // TODO: voir si le chemin de sauvegarde est adapté
     const localUri = `${FileSystem.documentDirectory}${filename}`;
 
     // Téléchargement de l'image vers le chemin local

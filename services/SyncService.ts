@@ -1,3 +1,4 @@
+import { downloadImage } from '@/utils/downloadUtils';
 import SQLiteService from './SqliteService';
 import StrapiService from './StrapiService';
 
@@ -40,9 +41,20 @@ class SyncService {
     await this.initializeTable(tableName, this.tableDefinitions[tableName]);
     await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
 
+    const characters = await this.strapiService.getAllCharacters();
+    // On télécharge les images
+    const dataWithDownloadedImages = await Promise.all(
+      characters.map(async (elem) => ({
+        ...elem,
+        avatar_url:
+          Boolean(elem.avatar_url) &&
+          (await downloadImage((elem.avatar_url as string) ?? '')),
+      }))
+    );
+
     await this.insertDataGeneric(
       tableName,
-      await this.strapiService.getAllCharacters(),
+      dataWithDownloadedImages,
       this.tableDefinitions[tableName]
     );
   }

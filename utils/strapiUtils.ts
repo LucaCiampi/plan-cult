@@ -35,6 +35,7 @@ export const normalizeCharacterFromStrapi = (data: any): Character[] => {
     birth: item.attributes.birth,
     death: item.attributes.death,
     avatar_url:
+      item.attributes.avatar.data != null &&
       Config.STRAPI_DOMAIN_URL + item.attributes.avatar.data.attributes.url,
   }));
 };
