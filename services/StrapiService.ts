@@ -42,6 +42,17 @@ class StrapiService implements IDatabaseService {
     console.log('💽 saveCurrentDialogueNodeProgress');
   }
 
+  async getAllCurrentDialogueStates(): Promise<CurrentConversationState[]> {
+    let allCurrentDialogueStates = await fetchDataFromStrapi(
+      'current-dialogue-states?populate=*'
+    );
+    allCurrentDialogueStates = normalizeCurrentConversationStateFromStrapi(
+      allCurrentDialogueStates
+    );
+
+    return allCurrentDialogueStates;
+  }
+
   async getCurrentDialogueNodeProgress(
     characterId: number
   ): Promise<Dialogue[]> {

@@ -1,9 +1,15 @@
-import Config from '@/constants/Config';
-import { fetchDataFromStrapi } from '@/utils/strapiUtils';
 import SQLiteService from './SqliteService';
+import StrapiService from './StrapiService';
 
 class SyncService {
-  constructor(private readonly sqliteService: SQLiteService) {}
+  private readonly strapiService: StrapiService;
+
+  constructor(
+    private readonly sqliteService: SQLiteService,
+    strapiService?: StrapiService
+  ) {
+    this.strapiService = strapiService ?? new StrapiService();
+  }
 
   tableDefinitions = {
     characters: {
@@ -34,26 +40,9 @@ class SyncService {
     await this.initializeTable(tableName, this.tableDefinitions[tableName]);
     await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
 
-    const characters = await fetchDataFromStrapi('characters?populate=*');
-
-    // Transformation des données reçues pour correspondre à la structure de la table
-    const transformedData: Character[] = characters.map(
-      (character: Character) => ({
-        id: character.id,
-        name: character.name,
-        surname: character.surname,
-        birth: character.birth,
-        death: character.death,
-        avatar_url:
-          character.avatar.data.attributes.url !== null
-            ? Config.STRAPI_DOMAIN_URL + character.avatar.data.attributes.url
-            : null,
-      })
-    );
-
     await this.insertDataGeneric(
       tableName,
-      transformedData,
+      await this.strapiService.getAllCharacters(),
       this.tableDefinitions[tableName]
     );
   }
@@ -63,28 +52,18 @@ class SyncService {
     await this.initializeTable(tableName, this.tableDefinitions[tableName]);
     await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
 
-    const data = await fetchDataFromStrapi(
-      'current-dialogue-states?populate[0]=character&populate[1]=dialogues'
-    );
-
-    // Transformation des données pour qu'elles correspondent à la structure de la table
-    const transformedData: CurrentConversationState[] = data.map(
-      (currentDialogueState: CurrentConversationState) => {
-        const followingDialoguesId: number[] =
-          currentDialogueState.dialogues.data.map((element: any) => element.id);
-        const followingDialoguesIdStr = JSON.stringify(followingDialoguesId);
-
-        return {
-          character_id: currentDialogueState.character.data.id,
-          dialogue_id: followingDialoguesIdStr, // Supposant que cela doit être stocké une fois
-          following_dialogues_id: followingDialoguesIdStr, // Et répété ici selon ton exemple initial
-        };
-      }
+    // On stringify les données afin de les insérer sur SQLite
+    const data = (await this.strapiService.getAllCurrentDialogueStates()).map(
+      (elem) => ({
+        ...elem,
+        dialogue_id: JSON.stringify(elem.dialogue_id),
+        following_dialogues_id: JSON.stringify(elem.following_dialogues_id),
+      })
     );
 
     await this.insertDataGeneric(
       tableName,
-      transformedData,
+      data,
       this.tableDefinitions[tableName],
       'character_id'
     );
