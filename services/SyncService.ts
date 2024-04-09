@@ -6,9 +6,9 @@ class SyncService {
 
   constructor(
     private readonly sqliteService: SQLiteService,
-    strapiService?: StrapiService
+    strapiService: StrapiService
   ) {
-    this.strapiService = strapiService ?? new StrapiService();
+    this.strapiService = strapiService;
   }
 
   tableDefinitions = {

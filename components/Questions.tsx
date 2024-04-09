@@ -16,6 +16,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
   const currentQuestions = useSelector((state) =>
     selectCurrentQuestions(state as RootState, characterId)
   );
+
   const dbService = useDatabaseService();
 
   /**

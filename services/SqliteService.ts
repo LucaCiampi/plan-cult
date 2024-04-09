@@ -2,15 +2,18 @@ import * as SQLite from 'expo-sqlite/next';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
-import { fetchDataFromStrapi } from '@/utils/strapiUtils';
 import SyncService from './SyncService';
+import StrapiService from './StrapiService';
 
 class SQLiteService implements IDatabaseService {
   public dbPromise: Promise<SQLite.SQLiteDatabase>;
+  private readonly strapiService: StrapiService;
 
   constructor() {
     this.dbPromise = this.initializeDB();
-    void this.syncWithStrapi();
+    // TODO: éventuellement utiliser this.strapiService en paramètre dans syncWithStrapi
+    this.strapiService = new StrapiService();
+    void this.syncWithStrapi(this.strapiService);
   }
 
   async initializeDB(): Promise<SQLite.SQLiteDatabase> {
@@ -84,8 +87,8 @@ class SQLiteService implements IDatabaseService {
     return await this.dbPromise;
   }
 
-  async syncWithStrapi() {
-    const syncService = new SyncService(this);
+  async syncWithStrapi(strapiService: StrapiService) {
+    const syncService = new SyncService(this, strapiService);
     void syncService.syncAll();
   }
 
@@ -164,20 +167,12 @@ class SQLiteService implements IDatabaseService {
       (result as CurrentConversationState).following_dialogues_id
     ).map(Number);
     const dialogues = await this.getDialoguesOfId(followingDialoguesId);
-    console.log('💽 getCurrentDialogueNodeProgress');
+    console.log('💽 getCurrentDialogueNodeProgress', dialogues);
     return dialogues;
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
-    // TODO: iOS does not allow HTTP requests by default, see info.plist
-    // TODO: store all of the dialogues in local DB only once
-    const filters = dialoguesId
-      .map((id, index) => `filters[id][$in][${index}]=${id}`)
-      .join('&');
-    // TODO: do not populate "character"
-    const endpoint = `dialogues?populate=*&${filters}`;
-    console.log('💽 getDialoguesOfId :', dialoguesId);
-    return await fetchDataFromStrapi(endpoint);
+    return await this.strapiService.getDialoguesOfId(dialoguesId);
   }
 }
 
