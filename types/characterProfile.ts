@@ -1,16 +1,33 @@
 interface CharacterProfile {
   id: number;
   __component: 'profile.photo' | 'profile.text-prompt' | 'profile.audio-prompt';
-  image?: {
-    data: ImageAttributes;
-  };
   profile_prompt_title?: {
     data: {
       attributes: Title;
     };
   };
-  answer?: Answer[];
 }
+
+interface PhotoProfileSection extends CharacterProfile {
+  __component: 'profile.photo';
+  image?: {
+    data: ImageAttributes;
+  };
+}
+
+interface TextPromptProfileSection extends CharacterProfile {
+  __component: 'profile.text-prompt';
+  answer: Answer[];
+}
+
+interface AudioPromptProfileSection extends CharacterProfile {
+  __component: 'profile.audio-prompt';
+}
+
+type CharacterProfileSection =
+  | PhotoProfileSection
+  | TextPromptProfileSection
+  | AudioPromptProfileSection;
 
 interface ImageAttributes {
   id: number;

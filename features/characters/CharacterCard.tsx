@@ -14,44 +14,6 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
-  // Fonction pour le rendu conditionnel basé sur __component
-  const renderProfileRow = (profileRow: CharacterProfile, index: number) => {
-    switch (profileRow.__component) {
-      case 'profile.photo':
-        return (
-          <Image
-            key={index}
-            source={{
-              uri:
-                Config.STRAPI_DOMAIN_URL +
-                profileRow.image?.data?.attributes?.url,
-            }}
-            style={{ width: 100, height: 100 }}
-          />
-        );
-      case 'profile.text-prompt':
-        return (
-          <View>
-            <Text key={index + '-title'} style={styles.characterDescription}>
-              {profileRow.profile_prompt_title?.data?.attributes?.title}
-            </Text>
-            <Text key={index + '-answer'} style={styles.characterDescription}>
-              {profileRow.answer?.map((answer: Answer) =>
-                answer.children.map((answerChild: AnswerChild) =>
-                  answerChild.children.map((answerChildChild, index) => (
-                    <Text key={index}>{answerChildChild.text}</Text>
-                  ))
-                )
-              )}
-            </Text>
-          </View>
-        );
-      // Ajoute d'autres cas ici selon les types de __component que tu as
-      default:
-        return null;
-    }
-  };
-
   return (
     <>
       <Image
@@ -65,8 +27,11 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
       {Boolean(character.birth) && (
         <Text style={styles.characterDescription}>{character.birth}</Text>
       )}
-      {character.profile?.map((profileRow, index) =>
-        renderProfileRow(profileRow, index as number)
+      {character.profile?.map((profileSection, index) =>
+        renderProfileSection(
+          profileSection as CharacterProfileSection,
+          index as number
+        )
       )}
       <View style={styles.buttonsContainer}>
         <Button
@@ -99,6 +64,65 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   );
 };
 
+const renderProfileSection = (
+  profileSection: CharacterProfileSection,
+  index: number
+) => {
+  // Préparation du titre
+  const titleElement = profileSection.profile_prompt_title?.data?.attributes
+    ?.title != null && (
+    <Text key={index + '-title'} style={styles.characterDescription}>
+      {profileSection.profile_prompt_title.data.attributes.title}
+    </Text>
+  );
+
+  // Génération du contenu spécifique basé sur le __component
+  let content;
+  switch (profileSection.__component) {
+    case 'profile.photo':
+      content = (
+        <Image
+          key={index}
+          source={{
+            uri:
+              Config.STRAPI_DOMAIN_URL +
+              profileSection.image?.data?.attributes?.url,
+          }}
+          style={{ width: 100, height: 100 }}
+        />
+      );
+      break;
+    case 'profile.text-prompt':
+      content = (
+        <Text key={index + '-answer'} style={styles.characterDescription}>
+          {profileSection.answer?.map((answer, answerIndex) =>
+            answer.children.map((answerChild, childIndex) =>
+              answerChild.children.map((answerChildChild, childChildIndex) => (
+                <Text
+                  key={`${index}-${answerIndex}-${childIndex}-${childChildIndex}`}
+                >
+                  {answerChildChild.text}
+                </Text>
+              ))
+            )
+          )}
+        </Text>
+      );
+      break;
+    // Ajoute d'autres cas ici selon les types de __component que tu as
+    default:
+      content = null;
+  }
+
+  // Retourne le titre (si présent) et le contenu spécifique
+  return (
+    <View key={index} style={styles.characterProfileSection}>
+      {titleElement}
+      {content}
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   characterName: {
     fontSize: 18,
@@ -106,6 +130,10 @@ const styles = StyleSheet.create({
   },
   characterDescription: {
     fontSize: 14,
+  },
+  characterProfileSection: {
+    borderBottomColor: '#222',
+    borderBottomWidth: 1,
   },
   buttonsContainer: {
     display: 'flex',
