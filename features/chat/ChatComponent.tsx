@@ -32,7 +32,7 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
     };
 
     // Ne récupère les questions que si le slice redux est vide
-    if (currentQuestionsChatComponent.length === 0) {
+    if (currentQuestionsChatComponent?.length === 0) {
       void fetchCurrentQuestions();
     }
   }, []);
