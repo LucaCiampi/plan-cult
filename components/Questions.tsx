@@ -10,6 +10,7 @@ import {
 import { randomBetween } from '@/utils/randomUtils';
 import { useCallback } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import { router } from 'expo-router';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
@@ -28,8 +29,6 @@ const Questions = ({ characterId }: { characterId: string }) => {
 
     const totalDelayForQuestions =
       question.questions.length * randomBetween(1, 3) * 1000;
-
-    console.log('🥂', question);
 
     setTimeout(() => {
       sendMessagesOrganically(question.answers, false); // Pour les réponses, isUserSent est false
@@ -63,13 +62,17 @@ const Questions = ({ characterId }: { characterId: string }) => {
       );
     } else {
       console.log('✅ Plus de questions');
-
       dispatch(
         setCurrentQuestions({
           characterId,
           questions: null,
         })
       );
+      // TODO: replace with redux
+      router.push({
+        pathname: '/map',
+        params: { selectedLandmarkId: +characterId },
+      });
     }
   };
 
