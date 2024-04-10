@@ -10,7 +10,6 @@ import {
 import { randomBetween } from '@/utils/randomUtils';
 import { useCallback } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import { router } from 'expo-router';
 
 const Questions = ({ characterId }: { characterId: string }) => {
   const dispatch = useDispatch();
@@ -62,7 +61,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
         nextQuestionsId
       );
     } else {
-      console.log('✅ Plus de questions');
+      console.log('💬 Plus de questions');
       dispatch(
         setCurrentQuestions({
           characterId,
@@ -93,21 +92,10 @@ const Questions = ({ characterId }: { characterId: string }) => {
               message: {
                 text: message.text,
                 isUserSent,
-                action: [], // TODO: review
+                action: message.action, // TODO: review
               },
             })
           );
-
-          if (message.action.length > 0) {
-            console.log('HAS ACTION');
-            // TODO: replace with redux
-            router.push({
-              pathname: '/map',
-              params: {
-                selectedLandmarkId: message.action[0].landmark.data.id,
-              },
-            });
-          }
         }, delay);
       });
     },
