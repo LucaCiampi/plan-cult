@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
 import cursorPinReference from '@/assets/images/icon.png';
 import LandmarkCard from '@/components/LandmarkCard';
@@ -65,7 +65,7 @@ export default function Map() {
   ]);
 
   // TODO: don't use useState
-  const [region] = useState<Region>({
+  const [initialRegionView] = useState<Region>({
     latitude: 45.767135,
     longitude: 4.833658,
     latitudeDelta: 0.0922,
@@ -84,19 +84,25 @@ export default function Map() {
       const marker = markers.find((m) => m.id === landmarkId);
 
       if (marker != null) {
-        setSelectedMarker(marker);
         setTimeout(() => {
           mapRef.current?.animateToRegion(
-            selectedMarker?.coordinates.latlng as Region,
+            {
+              ...marker.coordinates.latlng,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            },
             1000
           );
+          setSelectedMarker(marker);
+          console.log('selectedmarker:', marker);
         }, 1000);
       }
     }
   }, [route.params]);
 
   useEffect(() => {
-    // bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
+    // Ouvre la BottomSheet au second snap point
+    // bottomSheetRef.current?.snapToIndex(1);
   }, [selectedMarker]);
 
   // callbacks
@@ -110,6 +116,11 @@ export default function Map() {
     bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
   };
 
+  const handleMarkerDeselect = (marker: Landmark) => {
+    setSelectedMarker(null);
+    bottomSheetRef.current?.collapse();
+  };
+
   // Fonction pour fermer la carte
   const handleLandmarkClose = () => {
     setSelectedMarker(null);
@@ -118,7 +129,7 @@ export default function Map() {
   if (Platform.OS !== 'web') {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <MapView ref={mapRef} style={styles.map} region={region}>
+        <MapView ref={mapRef} style={styles.map} region={initialRegionView}>
           {markers.map((marker, index) => (
             <Marker
               key={index}
@@ -128,7 +139,18 @@ export default function Map() {
               onPress={() => {
                 handleMarkerPress(marker);
               }}
-            />
+              onDeselect={() => {
+                handleMarkerDeselect(marker);
+              }}
+            >
+              {selectedMarker?.id === marker.id && (
+                <Callout tooltip>
+                  <View>
+                    <Text>{marker.title}</Text>
+                  </View>
+                </Callout>
+              )}
+            </Marker>
           ))}
           {/* <Overlay
             bounds={[
