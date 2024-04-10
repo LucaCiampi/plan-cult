@@ -90,5 +90,11 @@ export const normalizeLandmarksFromStrapi = (data: any): Landmark[] => {
       latitude: item.attributes.latitude,
       longitude: item.attributes.longitude,
     },
+    description: item.attributes.description,
+    thumbnail:
+      item.attributes.thumbnail?.data != null
+        ? Config.STRAPI_DOMAIN_URL +
+          item.attributes.thumbnail.data.attributes.url
+        : undefined,
   }));
 };

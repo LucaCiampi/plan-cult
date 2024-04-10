@@ -89,7 +89,9 @@ class StrapiService implements IDatabaseService {
   }
 
   async getAllLandmarks(): Promise<Landmark[]> {
-    return normalizeLandmarksFromStrapi(await fetchDataFromStrapi('landmarks'));
+    return normalizeLandmarksFromStrapi(
+      await fetchDataFromStrapi('landmarks?populate=*')
+    );
   }
 }
 

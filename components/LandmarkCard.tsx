@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -9,8 +9,13 @@ interface LandmarkCardProps {
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   return (
     <View style={styles.card}>
-      <Text style={styles.landmarkTitle}>{landmark?.title}</Text>
+      <Text style={styles.landmarkTitle}>{landmark?.name}</Text>
       <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
+      <Image
+        // TODO: manifestement les images fetchées ne sont pas celles en local
+        source={{ uri: landmark?.thumbnail }}
+        style={{ width: 100, height: 100 }}
+      />
     </View>
   );
 };

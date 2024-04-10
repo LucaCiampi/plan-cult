@@ -42,7 +42,7 @@ export default function Map() {
 
   useEffect(() => {
     // @ts-expect-error: TODO: replace with redux rather than route param
-    const landmarkId = +route.params?.selectedLandmarkId;
+    const landmarkId = route.params?.selectedLandmarkId;
 
     if (landmarkId != null) {
       const marker = markers.find((m) => m.id === landmarkId);
@@ -58,7 +58,6 @@ export default function Map() {
             1000
           );
           setSelectedMarker(marker);
-          console.log('selectedmarker:', marker);
         }, 1000);
       }
     }
