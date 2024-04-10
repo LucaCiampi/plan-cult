@@ -1,11 +1,9 @@
 interface Landmark {
   id: number;
-  title: string;
+  name: string;
   description: string;
   coordinates: {
-    latlng: {
-      latitude: number;
-      longitude: number;
-    };
+    latitude: number;
+    longitude: number;
   };
 }

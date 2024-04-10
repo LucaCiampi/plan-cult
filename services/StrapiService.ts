@@ -4,6 +4,7 @@ import {
   normalizeCharacterProfileFromStrapi,
   normalizeCurrentConversationStateFromStrapi,
   normalizeDialogueFromStrapi,
+  normalizeLandmarksFromStrapi,
 } from '@/utils/strapiUtils';
 
 class StrapiService implements IDatabaseService {
@@ -85,6 +86,10 @@ class StrapiService implements IDatabaseService {
     let dialoguesOfId = await fetchDataFromStrapi(endpoint);
     dialoguesOfId = normalizeDialogueFromStrapi(dialoguesOfId);
     return dialoguesOfId;
+  }
+
+  async getAllLandmarks(): Promise<Landmark[]> {
+    return normalizeLandmarksFromStrapi(await fetchDataFromStrapi('landmarks'));
   }
 }
 

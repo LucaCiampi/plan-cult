@@ -176,7 +176,13 @@ class SQLiteService implements IDatabaseService {
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
+    // TODO
     return await this.strapiService.getDialoguesOfId(dialoguesId);
+  }
+
+  async getAllLandmarks(): Promise<Landmark[]> {
+    // TODO
+    return await this.strapiService.getAllLandmarks();
   }
 }
 

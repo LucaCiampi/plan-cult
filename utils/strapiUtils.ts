@@ -67,7 +67,6 @@ export const normalizeCurrentConversationStateFromStrapi = (
 };
 
 export const normalizeCharacterProfileFromStrapi = (data: any): Character => {
-  console.log(data);
   const item = data.data;
   return {
     id: item.id,
@@ -81,4 +80,15 @@ export const normalizeCharacterProfileFromStrapi = (data: any): Character => {
         : undefined,
     profile: item.attributes.Profil,
   };
+};
+
+export const normalizeLandmarksFromStrapi = (data: any): Landmark[] => {
+  return data.data.map((item: any) => ({
+    id: item.id,
+    name: item.attributes.name,
+    coordinates: {
+      latitude: item.attributes.latitude,
+      longitude: item.attributes.longitude,
+    },
+  }));
 };

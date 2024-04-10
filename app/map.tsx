@@ -6,6 +6,7 @@ import LandmarkCard from '@/components/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 interface Region {
   latitude: number;
@@ -15,54 +16,8 @@ interface Region {
 }
 
 export default function Map() {
+  const dbService = useDatabaseService();
   const route = useRoute();
-
-  const [markers] = useState<Landmark[]>([
-    {
-      id: 1,
-      title: 'Marqueur 1',
-      description: 'lorem ipsum',
-      coordinates: {
-        latlng: {
-          latitude: 45.767135,
-          longitude: 4.833658,
-        },
-      },
-    },
-    {
-      id: 2,
-      title: 'Marqueur 2',
-      description: 'ma description',
-      coordinates: {
-        latlng: {
-          latitude: 45.757,
-          longitude: 4.83,
-        },
-      },
-    },
-    {
-      id: 3,
-      title: 'Marqueur 3',
-      description: 'ma description',
-      coordinates: {
-        latlng: {
-          latitude: 45.777,
-          longitude: 4.83,
-        },
-      },
-    },
-    {
-      id: 4,
-      title: 'Marqueur 4',
-      description: 'ma description',
-      coordinates: {
-        latlng: {
-          latitude: 45.777,
-          longitude: 4.82,
-        },
-      },
-    },
-  ]);
 
   // TODO: don't use useState
   const [initialRegionView] = useState<Region>({
@@ -71,10 +26,19 @@ export default function Map() {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
 
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  useEffect(() => {
+    const fetchAllLandmarks = async () => {
+      const landmarks = await dbService.getAllLandmarks();
+      setMarkers(landmarks);
+    };
+    void fetchAllLandmarks();
+  }, []);
 
   useEffect(() => {
     // @ts-expect-error: TODO: replace with redux rather than route param
@@ -87,7 +51,7 @@ export default function Map() {
         setTimeout(() => {
           mapRef.current?.animateToRegion(
             {
-              ...marker.coordinates.latlng,
+              ...marker.coordinates,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             },
@@ -133,8 +97,8 @@ export default function Map() {
           {markers.map((marker, index) => (
             <Marker
               key={index}
-              coordinate={marker.coordinates.latlng}
-              title={marker.title}
+              coordinate={marker.coordinates}
+              title={marker.name}
               image={cursorPinReference}
               onPress={() => {
                 handleMarkerPress(marker);
@@ -146,7 +110,7 @@ export default function Map() {
               {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
-                    <Text>{marker.title}</Text>
+                    <Text>{marker.name}</Text>
                   </View>
                 </Callout>
               )}
