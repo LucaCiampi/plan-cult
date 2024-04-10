@@ -1,14 +1,5 @@
-interface StrapiMessage {
-  id: number;
-  text: {
-    children: {
-      text: string;
-      type: string;
-    }[];
-  }[];
-}
-
 interface Message {
+  id?: number;
   text: string;
-  isUserSent: boolean;
+  isUserSent?: boolean;
 }

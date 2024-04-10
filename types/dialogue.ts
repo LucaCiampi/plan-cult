@@ -1,8 +1,8 @@
 interface Dialogue {
   id: string;
   question_short: string;
-  questions: StrapiMessage[];
-  answers: StrapiMessage[];
+  questions: Message[];
+  answers: Message[];
   followUp?: Dialogue[] | undefined; // Structure SQLite
   follow_up?: {
     data: { id: number; attributes: Dialogue }[];

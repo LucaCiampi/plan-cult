@@ -80,14 +80,14 @@ const Questions = ({ characterId }: { characterId: string }) => {
    * Sends messages with a small random delay to add authenticity
    */
   const sendMessagesOrganically = useCallback(
-    (messages: StrapiMessage[], isUserSent: boolean) => {
+    (messages: Message[], isUserSent: boolean) => {
       messages.forEach((message, index) => {
         const delay = index * randomBetween(1, 3) * 1000;
 
         void dbService.saveConversationToConversationHistory(
           parseInt(characterId),
           isUserSent,
-          message.text[0].children[0].text
+          message.text
         );
 
         setTimeout(() => {
@@ -95,7 +95,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
             addMessageToConversation({
               characterId,
               message: {
-                text: message.text[0].children[0].text,
+                text: message.text,
                 isUserSent,
               },
             })
