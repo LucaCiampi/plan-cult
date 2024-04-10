@@ -27,6 +27,7 @@ const Questions = ({ characterId }: { characterId: string }) => {
   const handleQuestionClick = (question: Dialogue) => {
     sendMessagesOrganically(question.questions, true); // Pour les questions, isUserSent est true
 
+    // TODO: revoir ce délai
     const totalDelayForQuestions =
       question.questions.length * randomBetween(1, 3) * 1000;
 
@@ -68,11 +69,6 @@ const Questions = ({ characterId }: { characterId: string }) => {
           questions: null,
         })
       );
-      // TODO: replace with redux
-      router.push({
-        pathname: '/map',
-        params: { selectedLandmarkId: +characterId },
-      });
     }
   };
 
@@ -97,9 +93,21 @@ const Questions = ({ characterId }: { characterId: string }) => {
               message: {
                 text: message.text,
                 isUserSent,
+                action: [], // TODO: review
               },
             })
           );
+
+          if (message.action.length > 0) {
+            console.log('HAS ACTION');
+            // TODO: replace with redux
+            router.push({
+              pathname: '/map',
+              params: {
+                selectedLandmarkId: message.action[0].landmark.data.id,
+              },
+            });
+          }
         }, delay);
       });
     },

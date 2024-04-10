@@ -81,8 +81,7 @@ class StrapiService implements IDatabaseService {
     const filters = dialoguesId
       .map((id, index) => `filters[id][$in][${index}]=${id}`)
       .join('&');
-    // TODO: do not populate "character"
-    const endpoint = `dialogues?populate=*&${filters}`;
+    const endpoint = `dialogues?populate[answers][populate]=action.landmark&populate[questions][populate]=action.landmark&${filters}`;
     let dialoguesOfId = await fetchDataFromStrapi(endpoint);
     dialoguesOfId = normalizeDialogueFromStrapi(dialoguesOfId);
     return dialoguesOfId;

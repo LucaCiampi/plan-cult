@@ -28,10 +28,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
         <Text style={styles.characterDescription}>{character.birth}</Text>
       )}
       {character.profile?.map((profileSection, index) =>
-        renderProfileSection(
-          profileSection as CharacterProfileSection,
-          index as number
-        )
+        renderProfileSection(profileSection, index)
       )}
       <View style={styles.buttonsContainer}>
         <Button
