@@ -42,6 +42,8 @@ export const normalizeCharacterFromStrapi = (data: any): Character[] => {
 };
 
 export const normalizeDialogueFromStrapi = (data: any): Dialogue[] => {
+  console.log('DIALOGUE', data.data[0].attributes);
+
   return data.data.map((item: any) => ({
     id: item.id,
     answers: item.attributes.answers,

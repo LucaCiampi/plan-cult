@@ -54,7 +54,7 @@ class StrapiService implements IDatabaseService {
 
   async getAllCurrentDialogueStates(): Promise<CurrentConversationState[]> {
     let allCurrentDialogueStates = await fetchDataFromStrapi(
-      'current-dialogue-states?populate=*'
+      'current-dialogue-states?populate[dialogues][populate]=*&populate=character'
     );
     allCurrentDialogueStates = normalizeCurrentConversationStateFromStrapi(
       allCurrentDialogueStates
@@ -67,7 +67,7 @@ class StrapiService implements IDatabaseService {
     characterId: number
   ): Promise<Dialogue[]> {
     let currentDialogueWithCharacter = await fetchDataFromStrapi(
-      `current-dialogue-states?populate=*&filters[character][id][$eq]=${characterId}`
+      `current-dialogue-states?populate[dialogues][populate]=*&populate=character&filters[character][id][$eq]=${characterId}`
     );
     currentDialogueWithCharacter = normalizeCurrentConversationStateFromStrapi(
       currentDialogueWithCharacter
@@ -82,7 +82,7 @@ class StrapiService implements IDatabaseService {
     const filters = dialoguesId
       .map((id, index) => `filters[id][$in][${index}]=${id}`)
       .join('&');
-    const endpoint = `dialogues?populate[answers][populate]=action.landmark&populate[questions][populate]=action.landmark&${filters}`;
+    const endpoint = `dialogues?populate[answers][populate]=action.landmark&populate[questions][populate]=action.landmark&populate=follow_up&${filters}`;
     let dialoguesOfId = await fetchDataFromStrapi(endpoint);
     dialoguesOfId = normalizeDialogueFromStrapi(dialoguesOfId);
     return dialoguesOfId;

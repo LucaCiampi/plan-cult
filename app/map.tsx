@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import MapView, { Callout, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
 import LandmarkCard from '@/components/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -82,10 +82,10 @@ export default function Map() {
     bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
   };
 
-  const handleMarkerDeselect = (marker: Landmark) => {
-    setSelectedMarker(null);
-    bottomSheetRef.current?.collapse();
-  };
+  // const handleMarkerDeselect = (marker: Landmark) => {
+  //   setSelectedMarker(null);
+  //   bottomSheetRef.current?.collapse();
+  // };
 
   // Fonction pour fermer la carte
   const handleLandmarkClose = () => {
@@ -105,18 +105,18 @@ export default function Map() {
               onPress={() => {
                 handleMarkerPress(marker);
               }}
-              onDeselect={() => {
-                handleMarkerDeselect(marker);
-              }}
+              // onDeselect={() => {
+              //   handleMarkerDeselect(marker);
+              // }}
             >
               {getPinFromType(marker.category)}
-              {selectedMarker?.id === marker.id && (
+              {/* {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
                     <Text>{marker.name}</Text>
                   </View>
                 </Callout>
-              )}
+              )} */}
             </Marker>
           ))}
           {/* <Overlay

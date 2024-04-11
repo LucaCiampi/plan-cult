@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
+import Button from './common/Button';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -16,6 +17,13 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         source={{ uri: landmark?.thumbnail }}
         style={{ width: 100, height: 100 }}
       />
+      <Button
+        onPress={() => {
+          console.log('ok');
+        }}
+      >
+        Coucou
+      </Button>
     </View>
   );
 };
