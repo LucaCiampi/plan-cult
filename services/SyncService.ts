@@ -48,7 +48,7 @@ class SyncService {
         ...elem,
         avatar_url:
           Boolean(elem.avatar_url) &&
-          (await downloadImage((elem.avatar_url as string) ?? '')),
+          (await downloadImage(elem.avatar_url ?? '')),
       }))
     );
 

@@ -1,3 +1,5 @@
+type LandmarkCategory = 'culture' | 'museum' | 'food';
+
 interface Landmark {
   id: number;
   name: string;
@@ -7,4 +9,5 @@ interface Landmark {
     longitude: number;
   };
   thumbnail?: string;
+  category: LandmarkCategory;
 }

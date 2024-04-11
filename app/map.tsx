@@ -1,12 +1,15 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { Platform, StyleSheet, View, Text } from 'react-native';
-import cursorPinReference from '@/assets/images/icon.png';
 import LandmarkCard from '@/components/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import DefaultPin from '@/assets/images/map/default.svg';
+import CulturePin from '@/assets/images/map/culture.svg';
+import FoodPin from '@/assets/images/map/food.svg';
+import MuseumPin from '@/assets/images/map/museum.svg';
 
 interface Region {
   latitude: number;
@@ -98,7 +101,7 @@ export default function Map() {
               key={index}
               coordinate={marker.coordinates}
               title={marker.name}
-              image={cursorPinReference}
+              // image={} // unused
               onPress={() => {
                 handleMarkerPress(marker);
               }}
@@ -106,6 +109,7 @@ export default function Map() {
                 handleMarkerDeselect(marker);
               }}
             >
+              {getPinFromType(marker.category)}
               {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
@@ -120,7 +124,7 @@ export default function Map() {
               [45.72, 4.8],
               [45.78, 4.87],
             ]}
-            image={cursorPinReference}
+            image={cursorPin}
           /> */}
         </MapView>
         <BottomSheet
@@ -147,10 +151,28 @@ export default function Map() {
   );
 }
 
+// Objet de mappage pour associer chaque catégorie de Landmark à sa référence d'image
+const pinsByCategory: Record<LandmarkCategory, any> = {
+  culture: CulturePin,
+  museum: MuseumPin,
+  food: FoodPin,
+};
+
+// Fonction pour obtenir la référence d'image en fonction de la catégorie du repère
+function getPinFromType(category: LandmarkCategory): any {
+  const PinComponent =
+    pinsByCategory[category] !== null ? pinsByCategory[category] : DefaultPin;
+  return <PinComponent style={styles.mapMarker} />;
+}
+
 const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  mapMarker: {
+    maxHeight: 24,
+    maxWidth: 24,
   },
   centeredContainer: {
     flex: 1,

@@ -96,5 +96,6 @@ export const normalizeLandmarksFromStrapi = (data: any): Landmark[] => {
         ? Config.STRAPI_DOMAIN_URL +
           item.attributes.thumbnail.data.attributes.url
         : undefined,
+    category: item.attributes.category,
   }));
 };
