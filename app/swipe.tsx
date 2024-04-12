@@ -33,8 +33,6 @@ export default function SwipePage() {
         // Appelle getCharacterProfile pour obtenir le profil détaillé
         const newProfile = await dbService.getCharacterProfile(lastProfileId);
         // Ajoute ce profil à charactersProfile
-        console.log('newProfile', newProfile);
-
         setCharactersWaiting((prevProfiles) => [newProfile]);
         dispatch(setCharacters(allCharactersFromDb));
       }

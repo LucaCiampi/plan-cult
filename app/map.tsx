@@ -73,7 +73,7 @@ export default function Map() {
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    // console.log('handleSheetChanges', index);
   }, []);
 
   const handleMarkerPress = (marker: Landmark) => {

@@ -20,6 +20,7 @@ class SyncService {
       birth: 'TEXT',
       death: 'TEXT',
       avatar_url: 'TEXT',
+      trust_level: 'INTEGER NOT NULL',
     },
     dialogue_anchor: {
       id: 'INTEGER PRIMARY KEY',
@@ -50,18 +51,19 @@ class SyncService {
 
     const characters = await this.strapiService.getAllCharacters();
     // On télécharge les images
-    const dataWithDownloadedImages = await Promise.all(
+    const data = await Promise.all(
       characters.map(async (elem) => ({
         ...elem,
         avatar_url:
           Boolean(elem.avatar_url) &&
           (await downloadImage(elem.avatar_url ?? '')),
+        trust_level: 0,
       }))
     );
 
     await this.insertDataGeneric(
       tableName,
-      dataWithDownloadedImages,
+      data,
       this.tableDefinitions[tableName]
     );
   }
@@ -78,8 +80,6 @@ class SyncService {
         dialogues_id: JSON.stringify(elem.dialogues_id),
       })
     );
-
-    console.log('MA DATA 🤢', data);
 
     await this.insertDataGeneric(
       tableName,

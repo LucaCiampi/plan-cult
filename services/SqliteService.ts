@@ -164,12 +164,11 @@ class SQLiteService implements IDatabaseService {
     characterId: number
   ): Promise<Dialogue[]> {
     const db = await this.getDb();
+    console.log('🤢 getCurrentConversationStateWithCharacter db', db);
     const result = await db.getFirstAsync(
       'SELECT following_dialogues_id FROM current_conversation_state WHERE character_id = ?',
       characterId
     );
-    console.log('RESULT', result);
-
     const followingDialoguesId: number[] = JSON.parse(
       (result as CurrentConversationState).following_dialogues_id
     ).map(Number);
@@ -183,15 +182,19 @@ class SQLiteService implements IDatabaseService {
     trustLevel: number
   ): Promise<Dialogue[]> {
     const db = await this.getDb();
-    const firstDialoguesOfTrustLevel = await db.getFirstAsync(
-      'SELECT dialogues_id FROM current_conversation_state WHERE character_id = ?',
-      characterId
+    console.log('getFirstDialoguesOfTrustLevel(', characterId, trustLevel, ')');
+
+    const result = await db.getFirstAsync(
+      'SELECT dialogues_id FROM dialogue_anchor WHERE character_id = ? AND trust_level = ?',
+      characterId,
+      trustLevel
     );
-    console.log('firstDialoguesOfTrustLevel', firstDialoguesOfTrustLevel);
-    const dialogues = await this.getDialoguesOfId(
-      firstDialoguesOfTrustLevel as number[]
-    );
-    return dialogues;
+    console.log('🤢 result', result);
+
+    const followingDialoguesId: number[] = JSON.parse(
+      (result as DialogueAnchor).dialogues_id as string
+    ).map(Number);
+    return await this.getDialoguesOfId(followingDialoguesId);
   }
 
   async getAllDialogueAnchors(): Promise<DialogueAnchor[]> {
@@ -208,7 +211,6 @@ class SQLiteService implements IDatabaseService {
       'SELECT * FROM dialogue_anchor WHERE trust_level = ?',
       trustLevel
     );
-    console.log('dialoguesAnchorsOfTrustLevel', dialoguesAnchorsOfTrustLevel);
     return dialoguesAnchorsOfTrustLevel as DialogueAnchor[];
   }
 

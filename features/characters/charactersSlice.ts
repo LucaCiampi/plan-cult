@@ -1,6 +1,7 @@
 // features/characters/charactersSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '@/app/store';
+import { setCurrentQuestions } from '@/features/chat/chatSlice';
 
 interface CharactersState {
   allCharacters: Character[];
@@ -40,6 +41,53 @@ export const charactersSlice = createSlice({
 
 export const { setCharacters, likeCharacter, removeCharacter } =
   charactersSlice.actions;
+
+// Ajoutez une action thunk pour gérer l'augmentation du niveau de confiance
+export const increaseTrustLevel = createAsyncThunk(
+  'characters/increaseTrustLevel',
+  async (
+    {
+      characterId,
+      dbService,
+    }: { characterId: number; dbService: IDatabaseService },
+    { getState, dispatch }
+  ) => {
+    const state: RootState = getState() as RootState;
+    const { likedCharacters } = state.characters;
+    const character = likedCharacters.find((c) => c.id === characterId);
+
+    if (character != null) {
+      // TODO: rendre trust_level obligatoire dans le type Character
+      let trustLevel: number = character.trust_level ?? 0;
+      ++trustLevel;
+      console.log(
+        '🍕 increaseTrustLevel of character',
+        character.name,
+        'now',
+        trustLevel
+      );
+
+      const newQuestions = await dbService.getFirstDialoguesOfTrustLevel(
+        characterId,
+        trustLevel
+      );
+
+      console.log('newQuestions', newQuestions);
+
+      dispatch(
+        setCurrentQuestions({
+          characterId: String(characterId),
+          questions: newQuestions,
+        })
+      );
+    } else {
+      console.log(
+        '🍕 increaseTrustLevel: character not found or not in likedCharacters. ID:',
+        characterId
+      );
+    }
+  }
+);
 
 export const selectAllCharacters = (state: RootState) =>
   state.characters.allCharacters;

@@ -27,7 +27,7 @@ const chatSlice = createSlice({
         initialChatState: CharacterChatState;
       }>
     ) => {
-      console.log('🍰 initializeCharacterChatState');
+      console.log('🍕 initializeCharacterChatState');
 
       const { characterId, initialChatState } = action.payload;
       state.chatsByCharacter[characterId] = initialChatState;
@@ -36,7 +36,7 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<{ characterId: string; message: Message }>
     ) => {
-      console.log('🍰 addMessageToConversation');
+      console.log('🍕 addMessageToConversation');
 
       const { characterId, message } = action.payload;
       state.chatsByCharacter[characterId].conversation.push(message);
@@ -45,7 +45,7 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<{ characterId: string }>
     ) => {
-      console.log('🍰 clearMessagesFromConversation');
+      console.log('🍕 clearMessagesFromConversation');
 
       const { characterId } = action.payload;
       // Réinitialisez la conversation pour le characterId spécifié à un tableau vide
@@ -60,7 +60,7 @@ const chatSlice = createSlice({
         questions: Dialogue[] | null;
       }>
     ) => {
-      console.log('🍰 setCurrentQuestions');
+      console.log('🍕 setCurrentQuestions');
 
       const { characterId, questions } = action.payload;
       state.chatsByCharacter[characterId].currentQuestions = questions;
