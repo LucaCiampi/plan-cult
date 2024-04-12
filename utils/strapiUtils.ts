@@ -54,17 +54,31 @@ export const normalizeDialogueFromStrapi = (data: any): Dialogue[] => {
   }));
 };
 
+// TODO: deprecated
 export const normalizeCurrentConversationStateFromStrapi = (
   data: any
 ): CurrentConversationState[] => {
   return data.data.map((item: any) => ({
     character_id: item.attributes.character.data.id,
-    dialogue_id: item.attributes.dialogues.data.map(
+    dialogues_id: item.attributes.dialogues.data.map(
       (dialogue: any) => dialogue.id
     ),
     following_dialogues_id: item.attributes.dialogues.data.map(
       (dialogue: any) => dialogue.id
     ),
+  }));
+};
+
+export const normalizeDialogueAnchorFromStrapi = (
+  data: any
+): DialogueAnchor[] => {
+  return data.data.map((item: any) => ({
+    id: item.id,
+    character_id: item.attributes.character.data.id,
+    dialogues_id: item.attributes.dialogues.data.map(
+      (dialogue: any) => dialogue.id
+    ),
+    trust_level: item.attributes.trust_level,
   }));
 };
 

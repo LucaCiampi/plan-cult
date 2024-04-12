@@ -3,6 +3,7 @@ import {
   normalizeCharacterFromStrapi,
   normalizeCharacterProfileFromStrapi,
   normalizeCurrentConversationStateFromStrapi,
+  normalizeDialogueAnchorFromStrapi,
   normalizeDialogueFromStrapi,
   normalizeLandmarksFromStrapi,
 } from '@/utils/strapiUtils';
@@ -52,22 +53,22 @@ class StrapiService implements IDatabaseService {
     console.log('💽 saveCurrentDialogueNodeProgress');
   }
 
-  async getAllCurrentDialogueStates(): Promise<CurrentConversationState[]> {
+  async getAllDialogueAnchors(): Promise<DialogueAnchor[]> {
     let allCurrentDialogueStates = await fetchDataFromStrapi(
-      'current-dialogue-states?populate[dialogues][populate]=*&populate=character'
+      'dialogue-anchors?populate[dialogues][populate]=*&populate=character'
     );
-    allCurrentDialogueStates = normalizeCurrentConversationStateFromStrapi(
+    allCurrentDialogueStates = normalizeDialogueAnchorFromStrapi(
       allCurrentDialogueStates
     );
 
     return allCurrentDialogueStates;
   }
 
-  async getCurrentDialogueNodeProgress(
+  async getCurrentConversationStateWithCharacter(
     characterId: number
   ): Promise<Dialogue[]> {
     let currentDialogueWithCharacter = await fetchDataFromStrapi(
-      `current-dialogue-states?populate[dialogues][populate]=*&populate=character&filters[character][id][$eq]=${characterId}`
+      `dialogue-anchors?populate[dialogues][populate]=*&populate=character&filters[character][id][$eq]=${characterId}`
     );
     currentDialogueWithCharacter = normalizeCurrentConversationStateFromStrapi(
       currentDialogueWithCharacter
@@ -75,6 +76,22 @@ class StrapiService implements IDatabaseService {
 
     return await this.getDialoguesOfId(
       currentDialogueWithCharacter[0].following_dialogues_id as number[]
+    );
+  }
+
+  async getFirstDialoguesOfTrustLevel(
+    characterId: number,
+    trustLevel: number
+  ): Promise<Dialogue[]> {
+    let currentDialogueWithCharacter = await fetchDataFromStrapi(
+      `dialogue-anchors?populate[dialogues][populate]=*&populate=character&filters[character][id][$eq]=${characterId}&filters[trust_level][$eq]=${trustLevel}`
+    );
+    currentDialogueWithCharacter = normalizeCurrentConversationStateFromStrapi(
+      currentDialogueWithCharacter
+    );
+
+    return await this.getDialoguesOfId(
+      currentDialogueWithCharacter.following_dialogues_id as number[]
     );
   }
 

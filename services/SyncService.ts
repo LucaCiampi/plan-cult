@@ -21,9 +21,15 @@ class SyncService {
       death: 'TEXT',
       avatar_url: 'TEXT',
     },
+    dialogue_anchor: {
+      id: 'INTEGER PRIMARY KEY',
+      character_id: 'INTEGER NOT NULL',
+      dialogues_id: 'TEXT NOT NULL',
+      trust_level: 'INTEGER NOT NULL',
+    },
     current_conversation_state: {
       character_id: 'INTEGER PRIMARY KEY',
-      dialogue_id: 'TEXT NOT NULL',
+      dialogue_id: 'TEXT',
       following_dialogues_id: 'TEXT',
     },
   };
@@ -32,8 +38,9 @@ class SyncService {
     // Exécute des tâches en parallèle étant donné qu'elles sont indépendantes
     await Promise.all([
       this.syncCharactersData(),
-      this.syncCurrentConversationStateData(),
+      this.syncDialogueAnchorData(),
     ]);
+    await this.syncCurrentConversationStateData();
   }
 
   async syncCharactersData(): Promise<void> {
@@ -59,19 +66,39 @@ class SyncService {
     );
   }
 
+  async syncDialogueAnchorData(): Promise<void> {
+    const tableName = 'dialogue_anchor';
+    await this.initializeTable(tableName, this.tableDefinitions[tableName]);
+    await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
+
+    // On stringify les données afin de les insérer sur SQLite
+    const data = (await this.strapiService.getAllDialogueAnchors()).map(
+      (elem) => ({
+        ...elem,
+        dialogues_id: JSON.stringify(elem.dialogues_id),
+      })
+    );
+
+    console.log('MA DATA 🤢', data);
+
+    await this.insertDataGeneric(
+      tableName,
+      data,
+      this.tableDefinitions[tableName]
+    );
+  }
+
   async syncCurrentConversationStateData(): Promise<void> {
     const tableName = 'current_conversation_state';
     await this.initializeTable(tableName, this.tableDefinitions[tableName]);
     await this.checkAndAlterTable(tableName, this.tableDefinitions[tableName]);
 
     // On stringify les données afin de les insérer sur SQLite
-    const data = (await this.strapiService.getAllCurrentDialogueStates()).map(
-      (elem) => ({
-        ...elem,
-        dialogue_id: JSON.stringify(elem.dialogue_id),
-        following_dialogues_id: JSON.stringify(elem.following_dialogues_id),
-      })
-    );
+    let data = await this.sqliteService.getAllDialogueAnchorsOfTrustLevel(0);
+    data = data.map((elem) => ({
+      ...elem,
+      following_dialogues_id: elem.dialogues_id,
+    }));
 
     await this.insertDataGeneric(
       tableName,

@@ -16,7 +16,14 @@ interface IDatabaseService {
     dialogueId: string,
     followingDialoguesId: number[]
   ) => Promise<void>;
-  getCurrentDialogueNodeProgress: (characterId: number) => Promise<Dialogue[]>;
+  getCurrentConversationStateWithCharacter: (
+    characterId: number
+  ) => Promise<Dialogue[]>;
+  getFirstDialoguesOfTrustLevel: (
+    characterId: number,
+    trustLevel: number
+  ) => Promise<Dialogue[]>;
+  getAllDialogueAnchors: () => Promise<DialogueAnchor[]>;
   getDialoguesOfId: (dialoguesId: number[]) => Promise<Dialogue[]>;
   getAllLandmarks: () => Promise<Landmark[]>;
 }

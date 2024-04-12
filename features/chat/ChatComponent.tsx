@@ -17,9 +17,10 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
 
   useEffect(() => {
     const fetchCurrentQuestions = async () => {
-      const currentQuestions = await dbService.getCurrentDialogueNodeProgress(
-        parseInt(characterId)
-      );
+      const currentQuestions =
+        await dbService.getCurrentConversationStateWithCharacter(
+          parseInt(characterId)
+        );
 
       dispatch(
         setCurrentQuestions({

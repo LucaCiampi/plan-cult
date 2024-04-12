@@ -102,12 +102,13 @@ class SQLiteService implements IDatabaseService {
   async getAllLikedCharacters(): Promise<Character[]> {
     const db = await this.getDb();
     const allRows = await db.getAllAsync(
-      'SELECT * FROM CHARACTERS WHERE liked = true'
+      'SELECT * FROM CHARACTERS WHERE liked = 1'
     );
     console.log('💽 getAllLikedCharacters');
     return allRows as Character[];
   }
 
+  // TODO
   async getCharacterProfile(characterId: number): Promise<Character> {
     return await this.strapiService.getCharacterProfile(characterId);
   }
@@ -159,20 +160,56 @@ class SQLiteService implements IDatabaseService {
     console.log('💽 saveCurrentDialogueNodeProgress', result.changes);
   }
 
-  async getCurrentDialogueNodeProgress(
+  async getCurrentConversationStateWithCharacter(
     characterId: number
   ): Promise<Dialogue[]> {
     const db = await this.getDb();
     const result = await db.getFirstAsync(
-      'SELECT following_dialogues_id FROM current_conversation_state where character_id = ?',
+      'SELECT following_dialogues_id FROM current_conversation_state WHERE character_id = ?',
       characterId
     );
+    console.log('RESULT', result);
+
     const followingDialoguesId: number[] = JSON.parse(
       (result as CurrentConversationState).following_dialogues_id
     ).map(Number);
     const dialogues = await this.getDialoguesOfId(followingDialoguesId);
-    console.log('💽 getCurrentDialogueNodeProgress', dialogues);
+    console.log('💽 getCurrentConversationStateWithCharacter', dialogues);
     return dialogues;
+  }
+
+  async getFirstDialoguesOfTrustLevel(
+    characterId: number,
+    trustLevel: number
+  ): Promise<Dialogue[]> {
+    const db = await this.getDb();
+    const firstDialoguesOfTrustLevel = await db.getFirstAsync(
+      'SELECT dialogues_id FROM current_conversation_state WHERE character_id = ?',
+      characterId
+    );
+    console.log('firstDialoguesOfTrustLevel', firstDialoguesOfTrustLevel);
+    const dialogues = await this.getDialoguesOfId(
+      firstDialoguesOfTrustLevel as number[]
+    );
+    return dialogues;
+  }
+
+  async getAllDialogueAnchors(): Promise<DialogueAnchor[]> {
+    // TODO
+    return await this.strapiService.getAllDialogueAnchors();
+  }
+
+  async getAllDialogueAnchorsOfTrustLevel(
+    trustLevel: number
+  ): Promise<DialogueAnchor[]> {
+    // TODO
+    const db = await this.getDb();
+    const dialoguesAnchorsOfTrustLevel = await db.getAllAsync(
+      'SELECT * FROM dialogue_anchor WHERE trust_level = ?',
+      trustLevel
+    );
+    console.log('dialoguesAnchorsOfTrustLevel', dialoguesAnchorsOfTrustLevel);
+    return dialoguesAnchorsOfTrustLevel as DialogueAnchor[];
   }
 
   async getDialoguesOfId(dialoguesId: number[]): Promise<Dialogue[]> {
