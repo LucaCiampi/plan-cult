@@ -164,7 +164,6 @@ class SQLiteService implements IDatabaseService {
     characterId: number
   ): Promise<Dialogue[]> {
     const db = await this.getDb();
-    console.log('🤢 getCurrentConversationStateWithCharacter db', db);
     const result = await db.getFirstAsync(
       'SELECT following_dialogues_id FROM current_conversation_state WHERE character_id = ?',
       characterId
@@ -189,7 +188,6 @@ class SQLiteService implements IDatabaseService {
       characterId,
       trustLevel
     );
-    console.log('🤢 result', result);
 
     const followingDialoguesId: number[] = JSON.parse(
       (result as DialogueAnchor).dialogues_id as string

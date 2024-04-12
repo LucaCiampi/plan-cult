@@ -36,11 +36,25 @@ export const charactersSlice = createSlice({
         (character) => character.id !== action.payload
       );
     },
+    increaseCharacterTrustLevel: (
+      state,
+      action: PayloadAction<{ characterId: number; newTrustLevel: number }>
+    ) => {
+      const { characterId, newTrustLevel } = action.payload;
+      const character = state.likedCharacters.find((c) => c.id === characterId);
+      if (character != null) {
+        character.trust_level = newTrustLevel;
+      }
+    },
   },
 });
 
-export const { setCharacters, likeCharacter, removeCharacter } =
-  charactersSlice.actions;
+export const {
+  setCharacters,
+  likeCharacter,
+  removeCharacter,
+  increaseCharacterTrustLevel,
+} = charactersSlice.actions;
 
 // Ajoutez une action thunk pour gérer l'augmentation du niveau de confiance
 export const increaseTrustLevel = createAsyncThunk(
@@ -67,12 +81,14 @@ export const increaseTrustLevel = createAsyncThunk(
         trustLevel
       );
 
+      dispatch(
+        increaseCharacterTrustLevel({ characterId, newTrustLevel: trustLevel })
+      );
+
       const newQuestions = await dbService.getFirstDialoguesOfTrustLevel(
         characterId,
         trustLevel
       );
-
-      console.log('newQuestions', newQuestions);
 
       dispatch(
         setCurrentQuestions({
