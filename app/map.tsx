@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Platform, StyleSheet, View, Text } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import LandmarkCard from '@/components/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -145,9 +145,37 @@ export default function Map() {
   }
 
   return (
-    <View style={styles.centeredContainer}>
-      <Text>La carte n&apos;est pas encore dispo sur navigateur</Text>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {markers.map((marker, index) => (
+        <TouchableOpacity
+          style={styles.webMarker}
+          key={marker.id}
+          onPress={() => {
+            setSelectedMarker(marker);
+          }}
+        >
+          <h4>{marker.name}</h4>
+        </TouchableOpacity>
+      ))}
+      {/* <Image
+        source={mapBackgroundReference}
+        style={styles.mapBackground}
+      /> */}
+      <BottomSheet
+        // snapPoints={[36, 160, '100%']}
+        snapPoints={[160, '100%']}
+        ref={bottomSheetRef}
+        onChange={handleSheetChanges}
+      >
+        {/* TODO: remove BottomSheetView ? */}
+        <BottomSheetView style={styles.contentContainer}>
+          <LandmarkCard
+            landmark={selectedMarker}
+            onClose={handleLandmarkClose}
+          />
+        </BottomSheetView>
+      </BottomSheet>
+    </GestureHandlerRootView>
   );
 }
 
@@ -173,6 +201,11 @@ const styles = StyleSheet.create({
   mapMarker: {
     maxHeight: 24,
     maxWidth: 24,
+  },
+  webMarker: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
   },
   centeredContainer: {
     flex: 1,
