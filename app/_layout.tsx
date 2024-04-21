@@ -67,6 +67,15 @@ export default function AppLayout() {
             }}
           />
           <Tabs.Screen
+            name="profile"
+            options={{
+              title: 'Profil',
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="person" size={24} color="black" />
+              ),
+            }}
+          />
+          <Tabs.Screen
             // Name of the route to hide.
             name="index"
             options={{

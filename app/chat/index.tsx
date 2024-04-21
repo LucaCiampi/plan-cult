@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import CharacterChatItem from '@/features/characters/CharacterChatItem';
 import { selectLikedCharacters } from '@/features/characters/charactersSlice';
 
-export default function ChatPage() {
+export default function Page() {
   const likedCharacters = useSelector(selectLikedCharacters);
 
   if (likedCharacters.length === 0) {
