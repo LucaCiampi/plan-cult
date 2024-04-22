@@ -3,7 +3,7 @@ name: Deploy Expo Project on VPS
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
