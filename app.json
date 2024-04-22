@@ -7,6 +7,7 @@
     "scheme": "acme",
     "icon": "./assets/images/icon.png",
     "web": {
+      "output": "server",
       "bundler": "metro"
     },
     "plugins": [
@@ -21,6 +22,6 @@
       "typedRoutes": true,
       "tsconfigPaths": true
     },
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic"   
   }
 }
