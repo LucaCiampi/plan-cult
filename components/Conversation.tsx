@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.purple,
     color: 'white',
   },
   characterMessage: {

@@ -113,7 +113,7 @@ const renderProfileSection = (
 
   // Retourne le titre (si présent) et le contenu spécifique
   return (
-    <View key={index} style={styles.characterProfileSection}>
+    <View key={index}>
       {titleElement}
       {content}
     </View>
@@ -127,10 +127,6 @@ const styles = StyleSheet.create({
   },
   characterDescription: {
     fontSize: 14,
-  },
-  characterProfileSection: {
-    borderBottomColor: '#222',
-    borderBottomWidth: 1,
   },
   buttonsContainer: {
     display: 'flex',
