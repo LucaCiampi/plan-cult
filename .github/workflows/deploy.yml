@@ -28,7 +28,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        password: ${{ secrets.VPS_PASSWORD }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         source: "build/" # ou le dossier de build de ton Expo Web
-        target: "/home/debian/plancult/"
+        target: "/home/debian/plancult"
