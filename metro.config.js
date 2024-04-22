@@ -4,7 +4,7 @@ const { getDefaultConfig } = require('expo/metro-config');
 module.exports = (() => {
   const config = getDefaultConfig(__dirname);
 
-  // Base de données
+  // Adds support for `.db` files for SQLite databases
   config.resolver.assetExts.push('db');
 
   // React SVG transformer

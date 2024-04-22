@@ -38,6 +38,7 @@ module.exports = {
     'package-lock.json',
     'README.md',
     'app.json',
+    'server.js',
     'assets/**',
     'expo-env.d.ts',
     'tsconfig.json',

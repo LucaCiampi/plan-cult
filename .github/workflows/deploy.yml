@@ -21,7 +21,9 @@ jobs:
       run: npm install
 
     - name: Build Expo Web
-      run: npm run build:web # Assure-toi que ton package.json contient un script pour build l'appli web
+      env:
+        EXPO_PUBLIC_STRAPI_TOKEN: ${{ secrets.EXPO_PUBLIC_STRAPI_TOKEN }}
+      run: npm run build:web
 
     - name: Deploy to VPS
       uses: appleboy/scp-action@master
