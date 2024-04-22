@@ -1,0 +1,34 @@
+name: Deploy Expo Project on VPS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.12.0' # Assure-toi que cette version de Node.js est compatible avec ton projet
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Expo Web
+      run: npm run build:web # Assure-toi que ton package.json contient un script pour build l'appli web
+
+    - name: Deploy to VPS
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: 22
+        source: "build/" # ou le dossier de build de ton Expo Web
+        target: "/home/debian/plancult/"
