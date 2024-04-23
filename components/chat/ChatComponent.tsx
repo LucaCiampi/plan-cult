@@ -5,8 +5,8 @@ import {
   selectCurrentQuestions,
   setCurrentQuestions,
 } from '@/slices/chatSlice';
-import Conversation from '@/components/Conversation';
-import Questions from '@/components/Questions';
+import Conversation from '@/components/chat/Conversation';
+import Questions from '@/components/chat/Questions';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { RootState } from '@/app/store';
 
