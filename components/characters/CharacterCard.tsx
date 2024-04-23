@@ -6,6 +6,7 @@ import { likeCharacter } from '@/slices/charactersSlice';
 import Button from '@/components/common/Button';
 import { initializeCharacterChatState } from '@/slices/chatSlice';
 import Config from '@/constants/Config';
+import Colors from '@/constants/Colors';
 
 interface CharacterProps {
   character: Character;
@@ -15,11 +16,12 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
   const dispatch = useDispatch();
 
   return (
-    <>
+    <View style={styles.characterCard}>
       <Image
         // TODO: manifestement les images fetchées ne sont pas celles en local
         source={{ uri: character.avatar_url }}
-        style={{ width: 100, height: 100 }}
+        style={styles.profilePhoto}
+        resizeMode="contain"
       />
       <Text style={styles.characterName}>
         {character.name} {character.surname}
@@ -57,7 +59,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
           Like
         </Button>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -85,7 +87,7 @@ const renderProfileSection = (
               Config.STRAPI_DOMAIN_URL +
               profileSection.image?.data?.attributes?.url,
           }}
-          style={{ width: 100, height: 100 }}
+          style={styles.profilePhoto}
         />
       );
       break;
@@ -121,6 +123,16 @@ const renderProfileSection = (
 };
 
 const styles = StyleSheet.create({
+  characterCard: {
+    backgroundColor: Colors.white,
+  },
+  profilePhoto: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+  },
   characterName: {
     fontSize: 18,
     fontWeight: 'bold',

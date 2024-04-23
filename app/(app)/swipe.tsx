@@ -4,6 +4,7 @@ import CharacterCard from '@/components/characters/CharacterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCharacters, selectLikedCharacters } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import Sizes from '@/constants/Sizes';
 
 export default function SwipePage() {
   const [charactersWaiting, setCharactersWaiting] = useState<Character[]>([]);
@@ -47,25 +48,22 @@ export default function SwipePage() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={charactersWaiting}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.characterContainer}>
-            <CharacterCard character={item} />
-          </View>
-        )}
+        // contentContainerStyle={styles.characterContainer}
+        renderItem={({ item }) => <CharacterCard character={item} />}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  characterContainer: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
+  container: {
+    flex: 1,
+    marginHorizontal: Sizes.pageContentHorizontalMargin,
+    marginVertical: Sizes.pageContentVerticalMargin,
   },
   centeredContainer: {
     flex: 1,

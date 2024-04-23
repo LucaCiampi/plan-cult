@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.white,
     padding: Sizes.padding,
+    borderRadius: Sizes.borderRadius,
   },
   content: {
     flex: 1,
