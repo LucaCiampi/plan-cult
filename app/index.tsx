@@ -1,9 +1,24 @@
-import { View, Text } from 'react-native';
+import Button from '@/components/common/Button';
+import { Redirect } from 'expo-router';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 export default function Page() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  if (isLoaded) {
+    return <Redirect href={'/swipe'} />;
+  }
+
   return (
     <View>
-      <Text>Index / onboarding</Text>
+      <Button
+        onPress={() => {
+          setIsLoaded(true);
+        }}
+      >
+        Je suis prêt
+      </Button>
     </View>
   );
 }
