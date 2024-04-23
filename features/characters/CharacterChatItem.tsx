@@ -9,7 +9,7 @@ interface CharacterProps {
 
 const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
   return (
-    <Link push href={`/chat/${character.id}`}>
+    <Link push href={`/(app)/chat/${character.id}`}>
       <View style={styles.characterItem}>
         <Text style={styles.characterName}>
           {character.name} {character.surname}

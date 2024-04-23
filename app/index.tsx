@@ -7,7 +7,7 @@ export default function Page() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   if (isLoaded) {
-    return <Redirect href={'/swipe'} />;
+    return <Redirect href={'/(app)/swipe'} />;
   }
 
   return (
