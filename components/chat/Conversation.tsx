@@ -6,10 +6,14 @@ import Colors from '@/constants/Colors';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { router } from 'expo-router';
-import Dimensions from '@/constants/Dimensions';
+import Dimensions from '@/constants/Sizes';
 import Avatar from '@/components/common/Avatar';
 
-const Conversation = ({ characterId }: { characterId: string }) => {
+interface Props {
+  characterId: string;
+}
+
+const Conversation = ({ characterId }: Props) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);

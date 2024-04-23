@@ -3,8 +3,9 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import CharacterChatItem from '@/components/characters/CharacterChatItem';
 import { selectLikedCharacters } from '@/slices/charactersSlice';
+import Sizes from '@/constants/Sizes';
 
-export default function Page() {
+export default function ChatIndexPage() {
   const likedCharacters = useSelector(selectLikedCharacters);
 
   if (likedCharacters.length === 0) {
@@ -13,6 +14,7 @@ export default function Page() {
         <Stack.Screen
           options={{
             headerShown: false,
+            presentation: 'transparentModal',
           }}
         />
         <Text>Pas de matchs, pas de chocolat…</Text>
@@ -25,16 +27,14 @@ export default function Page() {
       <Stack.Screen
         options={{
           headerShown: false,
+          presentation: 'transparentModal',
         }}
       />
       <FlatList
         data={likedCharacters}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.characterContainer}>
-            <CharacterChatItem character={item} />
-          </View>
-        )}
+        contentContainerStyle={styles.CharacterChatItemContainer}
+        renderItem={({ item }) => <CharacterChatItem character={item} />}
       />
     </View>
   );
@@ -43,14 +43,15 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  characterContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
+    marginHorizontal: Sizes.pageContentHorizontalMargin,
+    marginVertical: Sizes.pageContentVerticalMargin,
   },
   centeredContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  CharacterChatItemContainer: {
+    gap: 6,
   },
 });

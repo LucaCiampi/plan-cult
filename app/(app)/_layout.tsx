@@ -5,6 +5,7 @@ import { SplashScreen } from 'expo-router';
 import { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
 
 const customLightTheme = {
   dark: false,
@@ -25,6 +26,7 @@ export default function AppLayout() {
 
   return (
     <Tabs
+      sceneContainerStyle={styles.tabsBackground}
       screenOptions={{
         tabBarActiveTintColor: Colors.purple,
         tabBarLabelStyle: {
@@ -87,3 +89,9 @@ export default function AppLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabsBackground: {
+    backgroundColor: 'transparent',
+  },
+});

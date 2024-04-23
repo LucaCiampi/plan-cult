@@ -11,7 +11,11 @@ import { randomBetween } from '@/utils/randomUtils';
 import { useCallback } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
-const Questions = ({ characterId }: { characterId: string }) => {
+interface Props {
+  characterId: string;
+}
+
+const Questions = ({ characterId }: Props) => {
   const dispatch = useDispatch();
   const currentQuestions = useSelector((state) =>
     selectCurrentQuestions(state as RootState, characterId)

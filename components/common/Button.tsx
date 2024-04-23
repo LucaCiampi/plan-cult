@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import Sizes from '@/constants/Sizes';
 import React from 'react';
 import { Text, StyleSheet, Pressable, PressableProps } from 'react-native';
 
@@ -23,11 +24,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.purple,
   },
   text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    letterSpacing: 0.25,
-    color: 'black',
+    fontSize: Sizes.regularFontSize,
+    lineHeight: Sizes.regularFontSize,
+    color: Colors.lightBeige,
   },
 });
 

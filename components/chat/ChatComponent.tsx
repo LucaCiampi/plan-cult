@@ -10,7 +10,11 @@ import Questions from '@/components/chat/Questions';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { RootState } from '@/app/store';
 
-const ChatComponent = ({ characterId }: { characterId: string }) => {
+interface Props {
+  characterId: string;
+}
+
+const ChatComponent = ({ characterId }: Props) => {
   const dispatch = useDispatch();
   const dbService = useDatabaseService();
 
@@ -42,12 +46,10 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
   }, []);
 
   return (
-    <>
-      <View style={styles.chatView}>
-        <Conversation characterId={characterId} />
-        <Questions characterId={characterId} />
-      </View>
-    </>
+    <View style={styles.chatView}>
+      <Conversation characterId={characterId} />
+      <Questions characterId={characterId} />
+    </View>
   );
 };
 
