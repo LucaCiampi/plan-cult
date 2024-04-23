@@ -15,7 +15,7 @@ export default function ChatWithCharacterPage() {
   useEffect(() => {
     // Trouve le personnage par id
     const currentCharacter = likedCharacters.find(
-      (c) => c.id.toString() === id
+      (c: Character) => c.id.toString() === id
     );
     setCharacter(currentCharacter ?? null);
 
