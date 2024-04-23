@@ -38,12 +38,8 @@ export default function AppLayout() {
         name="map"
         options={{
           title: 'Map',
-          tabBarIcon: () => (
-            <FontAwesome5
-              name="map-marked-alt"
-              size={24}
-              color={currentTheme.colors.text}
-            />
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="map-marked-alt" size={24} color={color} />
           ),
         }}
       />
@@ -51,12 +47,8 @@ export default function AppLayout() {
         name="swipe"
         options={{
           title: 'Swipe',
-          tabBarIcon: () => (
-            <MaterialIcons
-              name="swipe"
-              size={24}
-              color={currentTheme.colors.text}
-            />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="swipe" size={24} color={color} />
           ),
         }}
       />
@@ -64,12 +56,8 @@ export default function AppLayout() {
         name="chat"
         options={{
           title: 'Chat',
-          tabBarIcon: () => (
-            <Ionicons
-              name="chatbubble"
-              size={24}
-              color={currentTheme.colors.text}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbubble" size={24} color={color} />
           ),
         }}
       />
@@ -77,12 +65,8 @@ export default function AppLayout() {
         name="profile"
         options={{
           title: 'Profil',
-          tabBarIcon: () => (
-            <Ionicons
-              name="person"
-              size={24}
-              color={currentTheme.colors.text}
-            />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={24} color={color} />
           ),
         }}
       />
