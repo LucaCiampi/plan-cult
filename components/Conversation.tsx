@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { selectConversations } from '@/features/chat/chatSlice';
+import { selectConversations } from '@/slices/chatSlice';
 import Colors from '@/constants/Colors';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectLikedCharacters } from '@/features/characters/charactersSlice';
-import ChatComponent from '@/features/chat/ChatComponent';
-import { clearMessagesFromConversation } from '@/features/chat/chatSlice';
+import { selectLikedCharacters } from '@/slices/charactersSlice';
+import ChatComponent from '@/components/chat/ChatComponent';
+import { clearMessagesFromConversation } from '@/slices/chatSlice';
 
 export default function ChatWithCharacterPage() {
   const { id } = useLocalSearchParams();

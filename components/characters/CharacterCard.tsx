@@ -2,9 +2,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { likeCharacter } from './charactersSlice';
+import { likeCharacter } from '@/slices/charactersSlice';
 import Button from '@/components/common/Button';
-import { initializeCharacterChatState } from '../chat/chatSlice';
+import { initializeCharacterChatState } from '@/slices/chatSlice';
 import Config from '@/constants/Config';
 
 interface CharacterProps {

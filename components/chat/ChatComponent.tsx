@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentQuestions, setCurrentQuestions } from './chatSlice';
+import {
+  selectCurrentQuestions,
+  setCurrentQuestions,
+} from '@/slices/chatSlice';
 import Conversation from '@/components/Conversation';
 import Questions from '@/components/Questions';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';

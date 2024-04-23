@@ -6,7 +6,7 @@ import {
   addMessageToConversation,
   setCurrentQuestions,
   selectCurrentQuestions,
-} from '@/features/chat/chatSlice';
+} from '@/slices/chatSlice';
 import { randomBetween } from '@/utils/randomUtils';
 import { useCallback } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';

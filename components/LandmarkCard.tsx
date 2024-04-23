@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import Button from './common/Button';
 import { useDispatch } from 'react-redux';
-import { increaseTrustLevel } from '@/features/characters/charactersSlice';
+import { increaseTrustLevel } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { AppDispatch } from '@/app/store'; // Assurez-vous que le chemin est correct
 

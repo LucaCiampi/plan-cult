@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
-import CharacterChatItem from '@/features/characters/CharacterChatItem';
-import { selectLikedCharacters } from '@/features/characters/charactersSlice';
+import CharacterChatItem from '@/components/characters/CharacterChatItem';
+import { selectLikedCharacters } from '@/slices/charactersSlice';
 
 export default function Page() {
   const likedCharacters = useSelector(selectLikedCharacters);

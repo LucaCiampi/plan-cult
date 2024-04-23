@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import CharacterCard from '@/features/characters/CharacterCard';
+import CharacterCard from '@/components/characters/CharacterCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setCharacters,
-  selectLikedCharacters,
-} from '@/features/characters/charactersSlice';
+import { setCharacters, selectLikedCharacters } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 export default function SwipePage() {
