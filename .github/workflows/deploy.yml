@@ -18,7 +18,7 @@ jobs:
         node-version: '20.12.0' # Assure-toi que cette version de Node.js est compatible avec ton projet
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci # TODO: remplacer par ci pour "clean install" qui ne modifie pas le package-lock.json
 
     - name: Build Expo Web
       env:
