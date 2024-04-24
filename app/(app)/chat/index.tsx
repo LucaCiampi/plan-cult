@@ -17,6 +17,9 @@ export default function ChatIndexPage() {
           options={{
             headerShown: false,
             presentation: 'transparentModal',
+            contentStyle: {
+              backgroundColor: 'transparent',
+            },
           }}
         />
         <Text>Pas de matchs, pas de chocolat…</Text>
@@ -30,6 +33,9 @@ export default function ChatIndexPage() {
         options={{
           headerShown: false,
           presentation: 'transparentModal',
+          contentStyle: {
+            backgroundColor: 'transparent',
+          },
         }}
       />
       <FlatList
