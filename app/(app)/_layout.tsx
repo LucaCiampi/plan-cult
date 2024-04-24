@@ -8,6 +8,7 @@ import MapIcon from '@/assets/images/map.svg';
 import SparklesIcon from '@/assets/images/sparkles.svg';
 import MessageIcon from '@/assets/images/message.svg';
 import ProfileIcon from '@/assets/images/profile.svg';
+import Sizes from '@/constants/Sizes';
 
 const customLightTheme = {
   dark: false,
@@ -35,6 +36,23 @@ export default function AppLayout() {
         tabBarInactiveTintColor: Colors.darkGrey,
         tabBarLabelStyle: {
           fontFamily: 'ITCAvantGardeMd',
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          paddingBottom: 10,
+        },
+        tabBarStyle: {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: -1,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 6,
+          borderTopWidth: 0,
+          justifyContent: 'center',
+          height: 60,
         },
       }}
     >
