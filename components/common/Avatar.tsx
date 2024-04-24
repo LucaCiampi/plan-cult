@@ -11,7 +11,7 @@ interface Props {
 const Avatar = ({ src, size = 'mini', style, ...rest }: Props) => {
   const sizeStyle = styles[size]; // Sélectionne dynamiquement le style basé sur la prop `size`
 
-  if (src === null) {
+  if (src === null || (src !== undefined && src.length <= 1)) {
     return <View style={[style, styles.avatar, sizeStyle]} {...rest}></View>;
   }
   return (

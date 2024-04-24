@@ -23,7 +23,7 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
     <View style={styles.characterChatItem}>
       <TouchableOpacity onPress={handleCharacterChatItemPress}>
         <View style={styles.content}>
-          <Avatar size="medium" />
+          <Avatar src={character.avatar_url} size="medium" />
           <View style={styles.textContent}>
             <Text style={styles.characterName}>
               {character.name} {character.surname}

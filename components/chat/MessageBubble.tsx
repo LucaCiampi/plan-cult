@@ -14,6 +14,7 @@ import { router } from 'expo-router';
 interface Props extends PressableProps {
   text: string;
   userSent: boolean;
+  avatarUrl?: string;
   action?: MessageAction[];
   selectedLandmarkId?: number;
 }
@@ -21,6 +22,7 @@ interface Props extends PressableProps {
 const MessageBubble = ({
   text,
   userSent,
+  avatarUrl,
   action,
   selectedLandmarkId,
   ...rest
@@ -42,7 +44,7 @@ const MessageBubble = ({
 
   return (
     <View style={[styles.message, userSent && styles.userMessage]}>
-      {userSent ? null : <Avatar />}
+      {userSent ? null : <Avatar src={avatarUrl} />}
       <Pressable
         style={[styles.messageContent]}
         onPress={handleMessagePress}

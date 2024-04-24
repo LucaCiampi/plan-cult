@@ -4,13 +4,14 @@ import { ScrollView } from 'react-native';
 import { selectConversations } from '@/slices/chatSlice';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import MessageBubble from './MessageBubble';
+import MessageBubble from '@/components/chat/MessageBubble';
 
 interface Props {
   characterId: string;
+  character: Character;
 }
 
-const Conversation = ({ characterId }: Props) => {
+const Conversation = ({ characterId, character }: Props) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -55,6 +56,7 @@ const Conversation = ({ characterId }: Props) => {
           key={index}
           userSent={message.isUserSent}
           text={message.text}
+          avatarUrl={character.avatar_url}
         />
       ))}
       {conversation?.map((message: Message, index: number) => (
@@ -63,6 +65,7 @@ const Conversation = ({ characterId }: Props) => {
           userSent={message.isUserSent}
           text={message.text}
           action={message.action}
+          avatarUrl={character.avatar_url}
         />
       ))}
     </ScrollView>
