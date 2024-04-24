@@ -1,68 +1,42 @@
 // CharacterCard.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { likeCharacter } from '@/slices/charactersSlice';
-import Button from '@/components/common/Button';
-import { initializeCharacterChatState } from '@/slices/chatSlice';
 import Config from '@/constants/Config';
 import Colors from '@/constants/Colors';
 import { Image } from 'expo-image';
 import Sizes from '@/constants/Sizes';
+import LikeButton from '@/components/characters/LikeButton';
 
 interface CharacterProps {
   character: Character;
 }
 
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
-  const dispatch = useDispatch();
   console.log(character.avatar_url);
 
   return (
     <View style={styles.characterCard}>
-      <View style={styles.section}>
-        <Image
-          // TODO: manifestement les images fetchées ne sont pas celles en local
-          source={{ uri: character.avatar_url }}
-          style={styles.profilePhoto}
-          contentFit="cover"
-        />
-        <Text style={styles.characterName}>
-          {character.name} {character.surname}
-        </Text>
-        {Boolean(character.birth) && (
-          <Text style={styles.characterDescription}>{character.birth}</Text>
+      <View style={styles.characterCardContent}>
+        <View style={styles.section}>
+          <Image
+            // TODO: manifestement les images fetchées ne sont pas celles en local
+            source={{ uri: character.avatar_url }}
+            style={styles.profilePhoto}
+            contentFit="cover"
+          />
+          <View style={styles.textSection}>
+            <Text style={styles.characterName}>
+              {character.name} {character.surname}
+            </Text>
+            {Boolean(character.birth) && (
+              <Text style={styles.characterDescription}>{character.birth}</Text>
+            )}
+          </View>
+          <LikeButton characterId={character.id} />
+        </View>
+        {character.profile?.map((profileSection, index) =>
+          renderProfileSection(profileSection, index, character.id)
         )}
-      </View>
-      {character.profile?.map((profileSection, index) =>
-        renderProfileSection(profileSection, index)
-      )}
-      <View style={[styles.section, styles.buttonsContainer]}>
-        <Button
-          style={styles.button}
-          onPress={() => {
-            console.log(`${character.name} disliked, no effect`);
-          }}
-        >
-          Dislike
-        </Button>
-        <Button
-          style={styles.button}
-          onPress={() => {
-            dispatch(likeCharacter(character.id));
-            const initialChatState = {
-              conversation: [],
-              currentQuestions: [],
-              previousQuestions: [],
-            };
-            const characterId = character.id.toString();
-            dispatch(
-              initializeCharacterChatState({ characterId, initialChatState })
-            );
-          }}
-        >
-          Like
-        </Button>
       </View>
     </View>
   );
@@ -70,7 +44,8 @@ const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
 
 const renderProfileSection = (
   profileSection: CharacterProfileSection,
-  index: number
+  index: number,
+  characterId: number
 ) => {
   // Préparation du titre
   const titleElement = profileSection.profile_prompt_title?.data?.attributes
@@ -129,12 +104,18 @@ const renderProfileSection = (
     <View style={styles.section} key={index}>
       {titleElement}
       {content}
+      <LikeButton characterId={characterId} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   characterCard: {
+    flex: 1,
+    paddingHorizontal: Sizes.pageContentHorizontalMargin,
+    paddingVertical: Sizes.pageContentVerticalMargin,
+  },
+  characterCardContent: {
     flex: 1,
     gap: Sizes.padding,
   },
@@ -148,6 +129,8 @@ const styles = StyleSheet.create({
   section: {
     borderRadius: Sizes.borderRadius,
     backgroundColor: Colors.white,
+    overflow: 'hidden',
+    gap: Sizes.padding,
   },
   sectionPromptTitle: {
     // TODO: pas pris en compte
@@ -161,20 +144,12 @@ const styles = StyleSheet.create({
   characterName: {
     fontSize: Sizes.subtitleFontSize,
     fontWeight: 'bold',
+    fontFamily: 'ITCAvantGardeMd',
   },
   characterDescription: {
     fontSize: Sizes.regularFontSize,
   },
-  buttonsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-    gap: Sizes.padding * 2,
-  },
-  button: {
-    flex: 1,
-  },
+  likeButton: {},
 });
 
 export default CharacterCard;

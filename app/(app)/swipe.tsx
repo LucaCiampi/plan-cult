@@ -4,7 +4,6 @@ import CharacterCard from '@/components/characters/CharacterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCharacters, selectLikedCharacters } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import Sizes from '@/constants/Sizes';
 
 export default function SwipePage() {
   const [charactersWaiting, setCharactersWaiting] = useState<Character[]>([]);
@@ -62,8 +61,6 @@ export default function SwipePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: Sizes.pageContentHorizontalMargin,
-    marginVertical: Sizes.pageContentVerticalMargin,
   },
   centeredContainer: {
     flex: 1,
