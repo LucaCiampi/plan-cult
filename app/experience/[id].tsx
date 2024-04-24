@@ -1,6 +1,9 @@
 import {
+  ViroARImageMarker,
   ViroARScene,
   ViroARSceneNavigator,
+  ViroARTrackingTargets,
+  ViroBox,
   ViroText,
   ViroTrackingReason,
   ViroTrackingStateConstants,
@@ -12,23 +15,43 @@ import { StyleSheet, View } from 'react-native';
 const HelloWorldSceneAR = () => {
   const [text, setText] = useState('Initializing AR...');
 
-  function onInitialized(state: any, reason: ViroTrackingReason) {
-    console.log('onInitialized', state, reason);
+  function onInitialized(
+    state: ViroTrackingStateConstants,
+    reason: ViroTrackingReason
+  ) {
+    console.log('🥽 onInitialized', state, reason);
     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
       setText('Hello World!');
     } else if (state === ViroTrackingStateConstants.TRACKING_UNAVAILABLE) {
       // Handle loss of tracking
+      console.warn('🥽 ViroTrackingStateConstants.TRACKING_UNAVAILABLE');
     }
   }
 
+  ViroARTrackingTargets.createTargets({
+    statue: {
+      source: require('@/assets/experiences/statue.jpg'),
+      orientation: 'Up',
+      physicalWidth: 0.16,
+      type: 'Image',
+    },
+  });
+
+  const anchorFound = () => {
+    console.log('🥽 anchorFound');
+  };
+
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
-      <ViroText
-        text={text}
-        scale={[0.5, 0.5, 0.5]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
-      />
+      <ViroARImageMarker target={'statue'} onAnchorFound={anchorFound}>
+        <ViroText
+          text={text}
+          scale={[0.5, 0.5, 0.5]}
+          position={[0, 0, 0.5]}
+          style={styles.helloWorldTextStyle}
+        />
+        <ViroBox position={[0, 0, 0]} scale={[0.1, 0.1, 0.1]} />
+      </ViroARImageMarker>
     </ViroARScene>
   );
 };
