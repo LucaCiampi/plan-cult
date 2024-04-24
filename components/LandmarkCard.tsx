@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { increaseTrustLevel } from '@/features/characters/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { AppDispatch } from '@/app/store'; // Assurez-vous que le chemin est correct
+import { router } from 'expo-router';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -16,7 +17,14 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const dbService = useDatabaseService();
 
+  const experienceId = 1;
+
   const handleClick = () => {
+    router.push({
+      pathname: '/experience/[id]',
+      params: { id: experienceId },
+    });
+
     // Dispatch de la thunk action en passant l'instance dbService
     void dispatch(increaseTrustLevel({ characterId: 4, dbService }));
   };
@@ -31,7 +39,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         style={{ width: 100, height: 100 }}
       />
 
-      <Button onPress={handleClick}>J&apos;y suis allé</Button>
+      <Button onPress={handleClick}>Commencer l&apos;expérience</Button>
     </View>
   );
 };
