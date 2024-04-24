@@ -15,7 +15,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/ITCAvantGardeStd-Md.otf"]
+          "fonts": [
+            "./assets/fonts/ITCAvantGardeStd-Md.otf"
+          ]
         }
       ]
     ],
@@ -28,6 +30,9 @@
       "typedRoutes": true,
       "tsconfigPaths": true
     },
-    "userInterfaceStyle": "automatic"   
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.lucaciampi.plancult"
+    }
   }
 }

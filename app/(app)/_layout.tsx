@@ -8,7 +8,6 @@ import MapIcon from '@/assets/images/map.svg';
 import SparklesIcon from '@/assets/images/sparkles.svg';
 import MessageIcon from '@/assets/images/message.svg';
 import ProfileIcon from '@/assets/images/profile.svg';
-import Sizes from '@/constants/Sizes';
 
 const customLightTheme = {
   dark: false,
@@ -53,6 +52,21 @@ export default function AppLayout() {
           borderTopWidth: 0,
           justifyContent: 'center',
           height: 60,
+        },
+        headerStyle: {
+          borderBottomWidth: 0,
+          borderWidth: 0,
+          borderColor: 'red',
+          shadowColor: '#191919',
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+        },
+        headerTitleStyle: {
+          fontFamily: 'ITCAvantGardeMd',
         },
       }}
     >
