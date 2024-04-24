@@ -11,7 +11,13 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/ITCAvantGardeStd-Md.otf"]
+        }
+      ]
     ],
     "splash": {
       "image": "./assets/images/splash.png",

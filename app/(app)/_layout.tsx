@@ -3,9 +3,11 @@ import { Tabs } from 'expo-router/tabs';
 import Colors from '@/constants/Colors';
 import { SplashScreen } from 'expo-router';
 import { useState } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
+import MapIcon from '@/assets/images/map.svg';
+import SparklesIcon from '@/assets/images/sparkles.svg';
+import MessageIcon from '@/assets/images/message.svg';
+import ProfileIcon from '@/assets/images/profile.svg';
 
 const customLightTheme = {
   dark: false,
@@ -23,14 +25,16 @@ const customLightTheme = {
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
   const [currentTheme] = useState(customLightTheme);
+  console.log('TODO :', currentTheme);
 
   return (
     <Tabs
       sceneContainerStyle={styles.tabsBackground}
       screenOptions={{
         tabBarActiveTintColor: Colors.purple,
+        tabBarInactiveTintColor: Colors.darkGrey,
         tabBarLabelStyle: {
-          fontFamily: 'RobotoLight',
+          fontFamily: 'ITCAvantGardeMd',
         },
       }}
     >
@@ -38,36 +42,28 @@ export default function AppLayout() {
         name="map"
         options={{
           title: 'Map',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="map-marked-alt" size={24} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <MapIcon color={color} />,
         }}
       />
       <Tabs.Screen
         name="swipe"
         options={{
           title: 'Swipe',
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="swipe" size={24} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <SparklesIcon color={color} />,
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
           title: 'Chat',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="chatbubble" size={24} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <MessageIcon color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profil',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={24} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <ProfileIcon color={color} />,
         }}
       />
     </Tabs>

@@ -42,6 +42,7 @@ export default function AppLayout() {
   const [currentTheme, setCurrentTheme] = useState(customLightTheme);
   const [loaded, error] = useFonts({
     RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
+    ITCAvantGardeMd: require('@/assets/fonts/ITCAvantGardeStd-Md.otf'),
   });
   const colorScheme = useColorScheme();
 
@@ -94,5 +95,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: '100%',
+    fontFamily: 'ITCAvantGardeMd',
   },
 });
