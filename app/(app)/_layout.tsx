@@ -25,7 +25,7 @@ const customLightTheme = {
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
   const [currentTheme] = useState(customLightTheme);
-  console.log('TODO :', currentTheme);
+  console.log(currentTheme);
 
   return (
     <Tabs

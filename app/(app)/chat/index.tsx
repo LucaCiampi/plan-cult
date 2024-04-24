@@ -8,6 +8,8 @@ import Sizes from '@/constants/Sizes';
 export default function ChatIndexPage() {
   const likedCharacters = useSelector(selectLikedCharacters);
 
+  console.log(likedCharacters);
+
   if (likedCharacters.length === 0) {
     return (
       <View style={styles.centeredContainer}>
@@ -35,6 +37,7 @@ export default function ChatIndexPage() {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.CharacterChatItemContainer}
         renderItem={({ item }) => <CharacterChatItem character={item} />}
+        // renderItem={({ item }) => <Text>{item.name}</Text>}
       />
     </View>
   );
