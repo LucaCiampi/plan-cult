@@ -42,28 +42,28 @@ export default function AppLayout() {
         name="map"
         options={{
           title: 'Map',
-          tabBarIcon: ({ color }) => <MapIcon color={color} />,
+          tabBarIcon: ({ color }) => <MapIcon style={{ color }} />,
         }}
       />
       <Tabs.Screen
         name="swipe"
         options={{
           title: 'Swipe',
-          tabBarIcon: ({ color }) => <SparklesIcon color={color} />,
+          tabBarIcon: ({ color }) => <SparklesIcon style={{ color }} />,
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
           title: 'Chat',
-          tabBarIcon: ({ color }) => <MessageIcon color={color} />,
+          tabBarIcon: ({ color }) => <MessageIcon style={{ color }} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profil',
-          tabBarIcon: ({ color }) => <ProfileIcon color={color} />,
+          tabBarIcon: ({ color }) => <ProfileIcon style={{ color }} />,
         }}
       />
     </Tabs>
