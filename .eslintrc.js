@@ -43,5 +43,8 @@ module.exports = {
     'expo-env.d.ts',
     'tsconfig.json',
     'types/**',
+    'dist/**',
+    'android/**',
+    'ios/**',
   ],
 };

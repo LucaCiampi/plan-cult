@@ -7,7 +7,9 @@ import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import { DatabaseServiceProvider } from '@/contexts/DatabaseServiceContext';
 import { ThemeProvider } from '@react-navigation/native';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, ImageBackground, StyleSheet } from 'react-native';
+import backgroundLightReference from '@/assets/images/background-light.jpg';
+import backgroundDarkReference from '@/assets/images/background-dark.jpg';
 
 const customDarkTheme = {
   dark: true,
@@ -40,6 +42,7 @@ export default function AppLayout() {
   const [currentTheme, setCurrentTheme] = useState(customLightTheme);
   const [loaded, error] = useFonts({
     RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
+    ITCAvantGardeMd: require('@/assets/fonts/ITCAvantGardeStd-Md.otf'),
   });
   const colorScheme = useColorScheme();
 
@@ -68,9 +71,30 @@ export default function AppLayout() {
     <Provider store={store}>
       <ThemeProvider value={currentTheme}>
         <DatabaseServiceProvider>
-          <Slot />
+          <ImageBackground
+            source={
+              colorScheme === 'dark'
+                ? backgroundDarkReference
+                : backgroundLightReference
+            }
+            resizeMode="cover"
+            style={styles.backgroundImage}
+          >
+            <Slot />
+          </ImageBackground>
         </DatabaseServiceProvider>
       </ThemeProvider>
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    fontFamily: 'ITCAvantGardeMd',
+  },
+});

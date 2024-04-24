@@ -8,5 +8,5 @@ export default {
   purple: '#5D5DF0',
   darkGrey: '#242424',
   black: '#1A1A1A',
-  white: '#FAFAFA',
+  white: '#FEFDFB',
 };

@@ -7,6 +7,7 @@ export default function Page() {
       <Stack.Screen
         options={{
           headerShown: false,
+          presentation: 'transparentModal',
         }}
       />
       <Text>Profile</Text>

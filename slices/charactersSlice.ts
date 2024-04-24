@@ -1,7 +1,7 @@
 // features/characters/charactersSlice.ts
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
-import { setCurrentQuestions } from '@/features/chat/chatSlice';
+import { setCurrentQuestions } from '@/slices/chatSlice';
 
 interface CharactersState {
   allCharacters: Character[];

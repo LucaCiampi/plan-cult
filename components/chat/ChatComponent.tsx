@@ -1,13 +1,20 @@
 import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentQuestions, setCurrentQuestions } from './chatSlice';
-import Conversation from '@/components/Conversation';
-import Questions from '@/components/Questions';
+import {
+  selectCurrentQuestions,
+  setCurrentQuestions,
+} from '@/slices/chatSlice';
+import Conversation from '@/components/chat/Conversation';
+import Questions from '@/components/chat/Questions';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { RootState } from '@/app/store';
 
-const ChatComponent = ({ characterId }: { characterId: string }) => {
+interface Props {
+  characterId: string;
+}
+
+const ChatComponent = ({ characterId }: Props) => {
   const dispatch = useDispatch();
   const dbService = useDatabaseService();
 
@@ -39,12 +46,10 @@ const ChatComponent = ({ characterId }: { characterId: string }) => {
   }, []);
 
   return (
-    <>
-      <View style={styles.chatView}>
-        <Conversation characterId={characterId} />
-        <Questions characterId={characterId} />
-      </View>
-    </>
+    <View style={styles.chatView}>
+      <Conversation characterId={characterId} />
+      <Questions characterId={characterId} />
+    </View>
   );
 };
 

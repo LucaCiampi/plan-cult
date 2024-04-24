@@ -1,13 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { selectConversations } from '@/features/chat/chatSlice';
+import { selectConversations } from '@/slices/chatSlice';
 import Colors from '@/constants/Colors';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { router } from 'expo-router';
+import Dimensions from '@/constants/Sizes';
+import Avatar from '@/components/common/Avatar';
 
-const Conversation = ({ characterId }: { characterId: string }) => {
+interface Props {
+  characterId: string;
+}
+
+const Conversation = ({ characterId }: Props) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [conversationHistory, setConversationHistory] = useState<Message[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -98,35 +104,69 @@ const MessageComponent = ({
   }
   return (
     <View
-      key={index}
       style={[
         styles.message,
         message.isUserSent ? styles.userMessage : styles.characterMessage,
       ]}
     >
-      <Text>{message.text}</Text>
+      {message.isUserSent ? null : <Avatar />}
+      <View
+        key={index}
+        style={[
+          styles.messageBubble,
+          message.isUserSent
+            ? styles.userMessageBubble
+            : styles.characterMessageBubble,
+        ]}
+      >
+        <Text
+          style={[
+            styles.messageText,
+            message.isUserSent ? styles.userMessageText : null,
+          ]}
+        >
+          {message.text}
+        </Text>
+      </View>
+      {message.isUserSent ? <Avatar /> : null}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   message: {
-    padding: 10,
-    borderRadius: 10,
-    margin: 5,
+    margin: 7,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 8,
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: Colors.purple,
-    color: 'white',
   },
   characterMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: 'white',
-    color: 'black',
+  },
+  messageBubble: {
+    padding: Dimensions.padding,
+    borderRadius: Dimensions.borderRadius,
+  },
+  userMessageBubble: {
+    backgroundColor: Colors.purple,
+    borderBottomEndRadius: 0,
+  },
+  characterMessageBubble: {
+    backgroundColor: Colors.white,
+    borderBottomStartRadius: 0,
+  },
+  messageText: {
+    color: Colors.darkGrey,
+  },
+  userMessageText: {
+    color: Colors.lightGrey,
   },
   actionMessage: {
-    backgroundColor: 'yellow',
+    backgroundColor: Colors.yellow,
   },
 });
 

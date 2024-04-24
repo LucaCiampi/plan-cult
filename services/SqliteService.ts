@@ -35,7 +35,7 @@ class SQLiteService implements IDatabaseService {
 
     // const dbAsset = Asset.fromModule(require('../assets/databases/db.db'));
     const dbAsset = Asset.fromModule(
-      require('../assets/databases/db.db') as string
+      require('@/assets/databases/db.db') as string
     );
 
     try {
@@ -190,7 +190,7 @@ class SQLiteService implements IDatabaseService {
     );
 
     const followingDialoguesId: number[] = JSON.parse(
-      (result as DialogueAnchor).dialogues_id as string
+      (result as DialogueAnchor).dialogues_id
     ).map(Number);
     return await this.getDialoguesOfId(followingDialoguesId);
   }
