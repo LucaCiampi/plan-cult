@@ -105,6 +105,11 @@ const Questions = ({ characterId }: Props) => {
                 },
               })
             );
+            void dbService.saveConversationToConversationHistory(
+              Number(characterId),
+              isUserSent,
+              message.text
+            );
             resolve();
           }, delay);
         });
