@@ -10,6 +10,7 @@ import DefaultPin from '@/assets/images/map/default.svg';
 import CulturePin from '@/assets/images/map/culture.svg';
 import FoodPin from '@/assets/images/map/food.svg';
 import MuseumPin from '@/assets/images/map/museum.svg';
+import Colors from '@/constants/Colors';
 
 interface Region {
   latitude: number;
@@ -431,6 +432,10 @@ export default function Map() {
           snapPoints={[36, 160, '100%']}
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
+          handleIndicatorStyle={{
+            backgroundColor: Colors.orange,
+            width: '20%',
+          }}
         >
           {/* TODO: remove BottomSheetView ? */}
           <BottomSheetView style={styles.contentContainer}>
