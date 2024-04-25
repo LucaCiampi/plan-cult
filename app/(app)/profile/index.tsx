@@ -8,6 +8,9 @@ export default function Page() {
         options={{
           headerShown: false,
           presentation: 'transparentModal',
+          contentStyle: {
+            backgroundColor: 'transparent',
+          },
         }}
       />
       <Text>Profile</Text>

@@ -12,9 +12,10 @@ import { RootState } from '@/app/store';
 
 interface Props {
   characterId: string;
+  character: Character;
 }
 
-const ChatComponent = ({ characterId }: Props) => {
+const ChatComponent = ({ characterId, character }: Props) => {
   const dispatch = useDispatch();
   const dbService = useDatabaseService();
 
@@ -47,7 +48,7 @@ const ChatComponent = ({ characterId }: Props) => {
 
   return (
     <View style={styles.chatView}>
-      <Conversation characterId={characterId} />
+      <Conversation character={character} characterId={characterId} />
       <Questions characterId={characterId} />
     </View>
   );

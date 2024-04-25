@@ -15,6 +15,9 @@ export default function ChatIndexPage() {
           options={{
             headerShown: false,
             presentation: 'transparentModal',
+            contentStyle: {
+              backgroundColor: 'transparent',
+            },
           }}
         />
         <Text>Pas de matchs, pas de chocolat…</Text>
@@ -28,6 +31,9 @@ export default function ChatIndexPage() {
         options={{
           headerShown: false,
           presentation: 'transparentModal',
+          contentStyle: {
+            backgroundColor: 'transparent',
+          },
         }}
       />
       <FlatList
@@ -35,6 +41,7 @@ export default function ChatIndexPage() {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.CharacterChatItemContainer}
         renderItem={({ item }) => <CharacterChatItem character={item} />}
+        // renderItem={({ item }) => <Text>{item.name}</Text>}
       />
     </View>
   );
