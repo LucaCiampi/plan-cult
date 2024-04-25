@@ -6,6 +6,9 @@ module.exports = (() => {
 
   // Adds support for `.db` files for SQLite databases
   config.resolver.assetExts.push('db');
+  config.resolver.assetExts.push('mp3');
+  config.resolver.assetExts.push('obj');
+  config.resolver.assetExts.push('glb');
 
   // React SVG transformer
   const { transformer, resolver } = config;
