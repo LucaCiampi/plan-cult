@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     padding: Sizes.pageContentHorizontalMargin * 1.5,
     flex: 1,
     gap: Sizes.padding,
-    justifyContent: 'center',
   },
   landmarkMainPhoto: {
     flex: 1,

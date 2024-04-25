@@ -451,7 +451,7 @@ export default function Map() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {markers.map((marker, index) => (
+      {markers.map((marker) => (
         <TouchableOpacity
           style={styles.webMarker}
           key={marker.id}
