@@ -341,10 +341,10 @@ export default function Map() {
 
   useEffect(() => {
     // @ts-expect-error: TODO: replace with redux rather than route param
-    const landmarkId = route.params?.selectedLandmarkId;
+    const landmarkId = route.params?.landmarkId;
 
     if (landmarkId != null) {
-      const marker = markers.find((m) => m.id === landmarkId);
+      const marker = markers.find((m) => m.id === Number(landmarkId));
 
       if (marker != null) {
         setTimeout(() => {
@@ -358,6 +358,9 @@ export default function Map() {
           );
           setSelectedMarker(marker);
         }, 1000);
+        setTimeout(() => {
+          bottomSheetRef.current?.snapToIndex(2); // Ouvre la BottomSheet au second snap point
+        }, 2000);
       }
     }
   }, [route.params]);
