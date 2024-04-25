@@ -12,8 +12,6 @@ interface CharacterProps {
 }
 
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
-  console.log(character.avatar_url);
-
   return (
     <View style={styles.characterCard}>
       <View style={styles.characterCardContent}>
@@ -82,11 +80,13 @@ const renderProfileSection = (
         >
           {profileSection.answer?.map((answer, answerIndex) =>
             answer.children.map((answerChild, childIndex) =>
-              answerChild.children.map((answerChildChild, childChildIndex) => (
+              answerChild.children?.map((answerChildChild, childChildIndex) => (
                 <Text
                   key={`${index}-${answerIndex}-${childIndex}-${childChildIndex}`}
                 >
-                  {answerChildChild.text}
+                  {answerChildChild?.text !== undefined
+                    ? answerChildChild.text
+                    : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus nobis pariatur, placeat a voluptate, nemo accusantium atque repudiandae porro, fuga doloremque eius deleniti. Possimus, hic totam ab dignissimos sapiente maiores.'}
                 </Text>
               ))
             )
