@@ -5,7 +5,9 @@ import Button from './common/Button';
 import { useDispatch } from 'react-redux';
 import { increaseTrustLevel } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import { AppDispatch } from '@/app/store'; // Assurez-vous que le chemin est correct
+import { AppDispatch } from '@/app/store';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Sizes from '@/constants/Sizes';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -23,41 +25,38 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.landmarkTitle}>{landmark?.name}</Text>
-      <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
       <Image
         // TODO: manifestement les images fetchées ne sont pas celles en local
         source={{ uri: landmark?.thumbnail }}
-        style={{ width: 100, height: 100 }}
+        style={styles.landmarkMainPhoto}
       />
+      <Text style={styles.landmarkTitle}>{landmark?.name}</Text>
+      <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
 
-      <Button onPress={handleClick}>J&apos;y suis allé</Button>
+      <Button onPress={handleClick}>J&apos;y suis</Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '100%',
+    padding: Sizes.pageContentHorizontalMargin * 1.5,
+    flex: 1,
+    gap: Sizes.padding,
+    justifyContent: 'center',
+  },
+  landmarkMainPhoto: {
+    flex: 1,
     width: '100%',
-    position: 'relative',
-    padding: 12,
+    // TODO: auto aspect-ratio
+    aspectRatio: 1,
+    backgroundColor: Colors.grey,
   },
   landmarkTitle: {
     fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 12,
   },
   landmarkDescription: {
     fontSize: 16,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 0,
-    right: 12,
   },
 });
 
