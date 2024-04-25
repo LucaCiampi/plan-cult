@@ -67,7 +67,7 @@ const MessageBubble = ({
           </Text>
         </View>
       </Pressable>
-      {userSent ? <Avatar /> : null}
+      {userSent ? <Avatar isUser /> : null}
     </View>
   );
 };

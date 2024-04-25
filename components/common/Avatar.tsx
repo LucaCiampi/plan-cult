@@ -1,18 +1,28 @@
 import Colors from '@/constants/Colors';
 import React from 'react';
 import { StyleSheet, Image, View, ImageStyle } from 'react-native';
+import defaultUserAvatar from '@/assets/images/user.jpg';
 
 interface Props {
   src?: string;
   size?: 'mini' | 'medium';
+  isUser?: boolean; // TODO: remove this
   style?: ImageStyle;
 }
 
-const Avatar = ({ src, size = 'mini', style, ...rest }: Props) => {
+const Avatar = ({ src, size = 'mini', isUser, style, ...rest }: Props) => {
   const sizeStyle = styles[size]; // Sélectionne dynamiquement le style basé sur la prop `size`
 
   if (src === null || (src !== undefined && src.length <= 1)) {
     return <View style={[style, styles.avatar, sizeStyle]} {...rest}></View>;
+  } else if (isUser === true) {
+    return (
+      <Image
+        source={defaultUserAvatar}
+        style={[style, styles.avatar, sizeStyle]}
+        {...rest}
+      />
+    );
   }
   return (
     <Image
