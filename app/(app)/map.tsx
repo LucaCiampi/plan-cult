@@ -6,7 +6,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import DefaultPin from '@/assets/images/map/default.svg';
+import DefaultPin from '@/assets/images/map/pin.svg';
 import CulturePin from '@/assets/images/map/culture.svg';
 import FoodPin from '@/assets/images/map/food.svg';
 import MuseumPin from '@/assets/images/map/museum.svg';
@@ -496,8 +496,9 @@ const pinsByCategory: Record<LandmarkCategory, any> = {
 
 // Fonction pour obtenir la référence d'image en fonction de la catégorie du repère
 function getPinFromType(category: LandmarkCategory): any {
-  const PinComponent =
-    pinsByCategory[category] !== null ? pinsByCategory[category] : DefaultPin;
+  // const PinComponent =
+  //   pinsByCategory[category] !== null ? pinsByCategory[category] : DefaultPin;
+  const PinComponent = DefaultPin;
   return <PinComponent style={styles.mapMarker} />;
 }
 

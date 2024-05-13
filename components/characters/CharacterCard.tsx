@@ -81,15 +81,13 @@ const renderProfileSection = (
           style={[styles.textSection, styles.characterDescription]}
         >
           {profileSection.answer?.map((answer, answerIndex) =>
-            answer.children.map((answerChild, childIndex) =>
-              answerChild.children.map((answerChildChild, childChildIndex) => (
-                <Text
-                  key={`${index}-${answerIndex}-${childIndex}-${childChildIndex}`}
-                >
-                  {answerChildChild.text}
-                </Text>
-              ))
-            )
+            answer.children.map((answerChild, childIndex) => (
+              <Text
+                key={`${index}-${answerIndex}-${childIndex}-${answerChild.text}`}
+              >
+                {answerChild?.text}
+              </Text>
+            ))
           )}
         </Text>
       );
