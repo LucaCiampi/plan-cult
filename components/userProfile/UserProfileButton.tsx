@@ -7,11 +7,17 @@ import { router } from 'expo-router';
 
 interface Props {
   color?: 'orange' | 'purple';
+  isLarge?: boolean;
   text: string;
   link?: string;
 }
 
-const UserProfileButton = ({ color = 'orange', text, link }: Props) => {
+const UserProfileButton = ({
+  color = 'orange',
+  isLarge,
+  text,
+  link,
+}: Props) => {
   const colorStyle = styles[color]; // Sélectionne dynamiquement le style basé sur la prop `color`
 
   const handlePress = () => {
@@ -24,7 +30,7 @@ const UserProfileButton = ({ color = 'orange', text, link }: Props) => {
   return (
     <TouchableOpacity
       onPress={handlePress}
-      style={[styles.container, colorStyle]}
+      style={[styles.container, colorStyle, isLarge === true && styles.large]}
     >
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
@@ -39,6 +45,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     flexBasis: 120,
+  },
+  large: {
+    flexBasis: 240,
   },
   text: {
     textAlign: 'center',
