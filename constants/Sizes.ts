@@ -1,4 +1,5 @@
 export default {
+  buttonBorderRadius: 4,
   borderRadius: 10,
   padding: 12,
   pageContentHorizontalMargin: 20,
