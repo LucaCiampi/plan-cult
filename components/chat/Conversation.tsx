@@ -33,6 +33,8 @@ const Conversation = ({ characterId, character }: Props) => {
         parseInt(characterId)
       );
 
+      console.log(history, 'history');
+
       const historyAsMessages: Message[] = history.map((record: any) => {
         return {
           text: record.message,

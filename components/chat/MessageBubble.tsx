@@ -15,7 +15,7 @@ import ChatBubbleEndpoint from '@/assets/images/chatbubble-endpoint.svg';
 
 interface Props extends PressableProps {
   text: string;
-  userSent: boolean;
+  userSent: boolean | number;
   avatarUrl?: string;
   action?: MessageAction[];
   selectedLandmarkId?: number;
@@ -29,6 +29,8 @@ const MessageBubble = ({
   selectedLandmarkId,
   ...rest
 }: Props) => {
+  userSent = userSent === 1;
+
   const handleMessagePress = useCallback(() => {
     if (action !== undefined && action.length > 0) {
       const landmarkId = action[0].landmark.data.id;
