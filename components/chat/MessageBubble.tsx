@@ -29,7 +29,7 @@ const MessageBubble = ({
   selectedLandmarkId,
   ...rest
 }: Props) => {
-  userSent = userSent === 1;
+  userSent = userSent === 1 || userSent;
 
   const handleMessagePress = useCallback(() => {
     if (action !== undefined && action.length > 0) {
