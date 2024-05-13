@@ -23,9 +23,15 @@ const AnimatedCharacter = ({ characterId }: Props) => {
   }, [currentCharacterSpeakingState]);
 
   return (
-    <View style={styles.view}>
+    <View
+      style={[
+        styles.view,
+        currentCharacterSpeakingState === SpeakingState.Idle &&
+          styles.viewSmaller,
+      ]}
+    >
       {currentCharacterSpeakingState === SpeakingState.Thinking && (
-        <MessageBubble text={'    ...     '} />
+        <MessageBubble text={'    ...     '} userSent={false} />
       )}
       <Image
         style={[
@@ -49,6 +55,9 @@ const styles = StyleSheet.create({
   view: {
     position: 'relative',
     // backgroundColor: 'red',
+  },
+  viewSmaller: {
+    marginBottom: -60,
   },
   hand: {
     height: 190,

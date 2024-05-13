@@ -15,7 +15,7 @@ import ChatBubbleEndpoint from '@/assets/images/chatbubble-endpoint.svg';
 
 interface Props extends PressableProps {
   text: string;
-  userSent?: boolean;
+  userSent: boolean;
   avatarUrl?: string;
   action?: MessageAction[];
   selectedLandmarkId?: number;

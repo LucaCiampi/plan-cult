@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ScrollView } from 'react-native';
-import { selectConversations } from '@/slices/chatSlice';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  SpeakingState,
+  selectConversations,
+  selectSpeakingState,
+} from '@/slices/chatSlice';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import MessageBubble from '@/components/chat/MessageBubble';
@@ -19,6 +23,9 @@ const Conversation = ({ characterId, character }: Props) => {
     selectConversations(state as RootState, characterId)
   );
   const dbService = useDatabaseService();
+  const currentCharacterSpeakingState = useSelector((state) =>
+    selectSpeakingState(state as RootState, characterId)
+  );
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -29,11 +36,17 @@ const Conversation = ({ characterId, character }: Props) => {
       const historyAsMessages: Message[] = history.map((record: any) => {
         return {
           text: record.message,
-          isUserSent: record.from_user,
+          isUserSent: record.from_user ?? 0,
         };
       });
 
-      setConversationHistory(historyAsMessages);
+      try {
+        console.log(historyAsMessages, 'historyAsMessages');
+
+        setConversationHistory(historyAsMessages);
+      } catch (e) {
+        console.error('Could not save conversation history', e);
+      }
 
       setIsInitialLoad(false);
     };
@@ -51,6 +64,7 @@ const Conversation = ({ characterId, character }: Props) => {
 
   return (
     <ScrollView ref={scrollViewRef}>
+      <View style={styles.topSpacer} />
       {conversationHistory?.map((message: Message, index: number) => (
         <MessageBubble
           key={index}
@@ -68,8 +82,27 @@ const Conversation = ({ characterId, character }: Props) => {
           // avatarUrl={character.avatar_url}
         />
       ))}
+      <View
+        style={[
+          styles.bottomSpacer,
+          currentCharacterSpeakingState !== SpeakingState.Idle &&
+            styles.bottomSpacerTaller,
+        ]}
+      />
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  topSpacer: {
+    height: 10,
+  },
+  bottomSpacer: {
+    height: 180,
+  },
+  bottomSpacerTaller: {
+    height: 240,
+  },
+});
 
 export default Conversation;
