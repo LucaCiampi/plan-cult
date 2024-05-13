@@ -1,8 +1,8 @@
 import UserProfileHeader from '@/components/userProfile/UserProfileHeader';
 import UserProfileButton from '@/components/userProfile/UserProfileButton';
 import Sizes from '@/constants/Sizes';
-import { Stack, router } from 'expo-router';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Stack } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
 
 export default function Page() {
   return (
@@ -18,38 +18,18 @@ export default function Page() {
       />
       <UserProfileHeader />
       <View style={styles.buttons}>
-        <TouchableOpacity
-          style={styles.singleButton}
-          onPress={() => {
-            router.push('/profile/anecdotes');
-          }}
-        >
-          <UserProfileButton text="Anecdotes" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.singleButton}
-          onPress={() => {
-            router.push('/profile/trophies');
-          }}
-        >
-          <UserProfileButton color="purple" text="Trophées" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.singleButton}
-          onPress={() => {
-            router.push('/profile/anecdotes');
-          }}
-        >
-          <UserProfileButton color="purple" text="Anecdotes" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.singleButton}
-          onPress={() => {
-            router.push('/profile/trophies');
-          }}
-        >
-          <UserProfileButton text="Trophées" />
-        </TouchableOpacity>
+        <UserProfileButton text="Anecdotes" link="/profile/anecdotes" />
+        <UserProfileButton
+          color="purple"
+          text="Trophées"
+          link="/profile/trophies"
+        />
+        <UserProfileButton
+          color="purple"
+          text="Anecdotes"
+          link="/profile/anecdotes"
+        />
+        <UserProfileButton text="Trophées" link="/profile/trophies" />
       </View>
     </View>
   );
@@ -66,9 +46,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: Sizes.padding,
-  },
-  singleButton: {
-    flex: 1,
-    flexBasis: 120,
   },
 });

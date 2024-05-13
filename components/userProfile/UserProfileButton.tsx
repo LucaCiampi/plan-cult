@@ -2,21 +2,32 @@
 import Colors from '@/constants/Colors';
 import Sizes from '@/constants/Sizes';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 interface Props {
   color?: 'orange' | 'purple';
   text: string;
-  // link?: string;
+  link?: string;
 }
 
-const UserProfileButton = ({ color = 'orange', text }: Props) => {
+const UserProfileButton = ({ color = 'orange', text, link }: Props) => {
   const colorStyle = styles[color]; // Sélectionne dynamiquement le style basé sur la prop `color`
 
+  const handlePress = () => {
+    if (link !== null) {
+      // Routes are static, this is a trick to pass route as prop
+      router.push(link as any);
+    }
+  };
+
   return (
-    <View style={[styles.container, colorStyle]}>
+    <TouchableOpacity
+      onPress={handlePress}
+      style={[styles.container, colorStyle]}
+    >
       <Text style={styles.text}>{text}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -26,6 +37,8 @@ const styles = StyleSheet.create({
     minHeight: 160,
     flexDirection: 'column',
     justifyContent: 'center',
+    flex: 1,
+    flexBasis: 120,
   },
   text: {
     textAlign: 'center',
