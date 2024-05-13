@@ -2,8 +2,8 @@ import * as SQLite from 'expo-sqlite/next';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import Config from '@/constants/Config';
-import SyncService from './SyncService';
-import StrapiService from './StrapiService';
+import SyncService from '@/services/SyncService';
+import StrapiService from '@/services/StrapiService';
 
 class SQLiteService implements IDatabaseService {
   public dbPromise: Promise<SQLite.SQLiteDatabase>;

@@ -1,6 +1,6 @@
 import { downloadImage } from '@/utils/downloadUtils';
-import SQLiteService from './SqliteService';
-import StrapiService from './StrapiService';
+import SQLiteService from '@/services/SqliteService';
+import StrapiService from '@/services/StrapiService';
 
 class SyncService {
   private readonly strapiService: StrapiService;
