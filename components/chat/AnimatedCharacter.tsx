@@ -3,9 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import handReference from '@/assets/images/hand.png';
 import edouardHerriotReference from '@/assets/images/edouard-herriot.png';
-import { selectSpeakingState } from '@/slices/chatSlice';
+import { SpeakingState, selectSpeakingState } from '@/slices/chatSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
+import MessageBubble from '@/components/chat/MessageBubble';
 
 interface Props {
   characterId: string;
@@ -23,10 +24,14 @@ const AnimatedCharacter = ({ characterId }: Props) => {
 
   return (
     <View style={styles.view}>
+      {currentCharacterSpeakingState === SpeakingState.Thinking && (
+        <MessageBubble text={'    ...     '} />
+      )}
       <Image
         style={[
           styles.hand,
-          currentCharacterSpeakingState === 1 && styles.isTalking,
+          currentCharacterSpeakingState === SpeakingState.Speaking &&
+            styles.isSpeaking,
         ]}
         source={handReference}
         alt="Hand"
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
     // zIndex: 22,
   },
-  isTalking: {
+  isSpeaking: {
     transform: [{ rotate: '-110deg' }],
   },
   character: {

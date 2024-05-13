@@ -56,7 +56,7 @@ const Conversation = ({ characterId, character }: Props) => {
           key={index}
           userSent={message.isUserSent}
           text={message.text}
-          avatarUrl={character.avatar_url}
+          // avatarUrl={character.avatar_url}
         />
       ))}
       {conversation?.map((message: Message, index: number) => (
@@ -65,7 +65,7 @@ const Conversation = ({ characterId, character }: Props) => {
           userSent={message.isUserSent}
           text={message.text}
           action={message.action}
-          avatarUrl={character.avatar_url}
+          // avatarUrl={character.avatar_url}
         />
       ))}
     </ScrollView>

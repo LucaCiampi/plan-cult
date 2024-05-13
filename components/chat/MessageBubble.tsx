@@ -15,7 +15,7 @@ import ChatBubbleEndpoint from '@/assets/images/chatbubble-endpoint.svg';
 
 interface Props extends PressableProps {
   text: string;
-  userSent: boolean;
+  userSent?: boolean;
   avatarUrl?: string;
   action?: MessageAction[];
   selectedLandmarkId?: number;
@@ -23,7 +23,7 @@ interface Props extends PressableProps {
 
 const MessageBubble = ({
   text,
-  userSent,
+  userSent = false,
   avatarUrl,
   action,
   selectedLandmarkId,
@@ -51,7 +51,7 @@ const MessageBubble = ({
 
   return (
     <View style={[styles.message, userSent && styles.userMessage]}>
-      {userSent ? null : <Avatar src={avatarUrl} />}
+      {!userSent && <Avatar style={styles.characterAvatar} src={avatarUrl} />}
       <Pressable
         style={[styles.messageContent]}
         onPress={handleMessagePress}
@@ -84,7 +84,7 @@ const MessageBubble = ({
         </View>
         <ChatBubbleEndpoint style={getDynamicStyle()} />
       </Pressable>
-      {userSent ? <Avatar isUser /> : null}
+      {userSent && <Avatar isUser />}
     </View>
   );
 };
@@ -168,6 +168,9 @@ const styles = StyleSheet.create({
     marginVertical: Sizes.padding,
     borderWidth: 0,
     alignSelf: 'flex-start',
+  },
+  characterAvatar: {
+    opacity: 0,
   },
 });
 

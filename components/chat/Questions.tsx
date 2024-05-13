@@ -41,10 +41,19 @@ const Questions = ({ characterId }: Props) => {
 
     // Attendre un délai avant d'envoyer les réponses du character
     await new Promise((resolve) =>
-      setTimeout(resolve, randomBetween(2, 5) * 1000)
+      setTimeout(resolve, randomBetween(1, 3) * 1000)
     );
 
     // Envoi des réponses du character
+    dispatch(
+      setSpeakingState({
+        characterId,
+        speakingState: SpeakingState.Thinking,
+      })
+    );
+    await new Promise((resolve) =>
+      setTimeout(resolve, randomBetween(2, 5) * 1000)
+    );
     await sendMessagesOrganically(question.answers, false);
     setTimeout(() => {
       dispatch(
