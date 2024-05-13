@@ -73,8 +73,13 @@ const MessageBubble = ({
             {text}
           </Text>
           {action !== undefined && action.length > 0 && (
-            // TODO: Replace with function 'getActionButtonLabel()'
-            <Button color="orange">Voir sur la carte</Button>
+            <Button
+              onPress={handleMessagePress}
+              style={styles.button}
+              color="orange"
+            >
+              Voir sur la carte
+            </Button>
           )}
         </View>
         <ChatBubbleEndpoint style={getDynamicStyle()} />
@@ -87,8 +92,8 @@ const MessageBubble = ({
 const styles = StyleSheet.create({
   message: {
     marginBottom: Sizes.pageContentVerticalMargin,
+    // marginVertical: Sizes.pageContentVerticalMargin,
     marginHorizontal: Sizes.pageContentHorizontalMargin,
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: 8,
@@ -97,7 +102,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   messageContent: {
-    display: 'flex',
     gap: 8,
     flexShrink: 1,
     paddingBottom: 16,
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange,
   },
   actionMessage: {
-    backgroundColor: Colors.yellow,
+    // backgroundColor: Colors.yellow,
   },
   messageText: {
     color: Colors.darkGrey,
@@ -159,6 +163,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 0,
+  },
+  button: {
+    marginVertical: Sizes.padding,
+    borderWidth: 0,
+    alignSelf: 'flex-start',
   },
 });
 

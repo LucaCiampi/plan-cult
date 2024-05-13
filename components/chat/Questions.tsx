@@ -6,6 +6,8 @@ import {
   addMessageToConversation,
   setCurrentQuestions,
   selectCurrentQuestions,
+  setSpeakingState,
+  SpeakingState,
 } from '@/slices/chatSlice';
 import { randomBetween } from '@/utils/randomUtils';
 import { useCallback, useState } from 'react';
@@ -44,6 +46,14 @@ const Questions = ({ characterId }: Props) => {
 
     // Envoi des réponses du character
     await sendMessagesOrganically(question.answers, false);
+    setTimeout(() => {
+      dispatch(
+        setSpeakingState({
+          characterId,
+          speakingState: SpeakingState.Idle,
+        })
+      );
+    }, 2000);
 
     // Attendre un délai avant d'autoriser l'envoi de nouvelles questions
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -107,6 +117,14 @@ const Questions = ({ characterId }: Props) => {
                 },
               })
             );
+            if (!isUserSent) {
+              dispatch(
+                setSpeakingState({
+                  characterId,
+                  speakingState: SpeakingState.Speaking,
+                })
+              );
+            }
             void dbService.saveConversationToConversationHistory(
               Number(characterId),
               isUserSent,

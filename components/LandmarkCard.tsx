@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 import { increaseTrustLevel } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { AppDispatch } from '@/app/store';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Sizes from '@/constants/Sizes';
+import Colors from '@/constants/Colors';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;

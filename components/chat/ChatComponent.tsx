@@ -9,6 +9,7 @@ import Conversation from '@/components/chat/Conversation';
 import Questions from '@/components/chat/Questions';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { RootState } from '@/app/store';
+import AnimatedCharacter from '@/components/chat/AnimatedCharacter';
 
 interface Props {
   characterId: string;
@@ -49,6 +50,9 @@ const ChatComponent = ({ characterId, character }: Props) => {
   return (
     <View style={styles.chatView}>
       <Conversation character={character} characterId={characterId} />
+      <View style={styles.animatedCharacter}>
+        <AnimatedCharacter characterId={characterId} />
+      </View>
       <Questions characterId={characterId} />
     </View>
   );
@@ -57,6 +61,12 @@ const ChatComponent = ({ characterId, character }: Props) => {
 const styles = StyleSheet.create({
   chatView: {
     height: '100%',
+  },
+  animatedCharacter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    zIndex: -1,
   },
 });
 

@@ -1,11 +1,11 @@
 // UserProfileHeader.tsx
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Sizes from '@/constants/Sizes';
 import Avatar from '@/components/common/Avatar';
 import SettingsIcon from '@/assets/images/settings.svg';
 import KeyNumber from '@/components/userProfile/KeyNumber';
+import Colors from '@/constants/Colors';
 
 const UserProfileHeader = () => {
   return (
