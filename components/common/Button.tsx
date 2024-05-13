@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     fontSize: Sizes.regularFontSize,
     lineHeight: Sizes.regularFontSize,
     color: Colors.darkGrey,
+    fontWeight: 'bold',
   },
   white: {
     backgroundColor: Colors.white,
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
   },
   orange: {
     backgroundColor: Colors.orange,
+    color: Colors.white,
   },
 });
 

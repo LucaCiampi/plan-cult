@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import Avatar from '@/components/common/Avatar';
 import { router } from 'expo-router';
+import Button from '@/components/common/Button';
+import ChatBubbleEndpoint from '@/assets/images/chatbubble-endpoint.svg';
 
 interface Props extends PressableProps {
   text: string;
@@ -28,9 +30,7 @@ const MessageBubble = ({
   ...rest
 }: Props) => {
   const handleMessagePress = useCallback(() => {
-    const hasAction = action !== undefined && action.length > 0;
-
-    if (hasAction) {
+    if (action !== undefined && action.length > 0) {
       const landmarkId = action[0].landmark.data.id;
 
       router.push({
@@ -40,6 +40,13 @@ const MessageBubble = ({
         },
       });
     }
+  }, []);
+
+  /**
+   * Style array is impossible with SVG transformer so we have to use a function
+   */
+  const getDynamicStyle = useCallback((): any => {
+    return userSent ? styles.userBubbleEndpoint : styles.bubbleEndpoint;
   }, []);
 
   return (
@@ -65,7 +72,12 @@ const MessageBubble = ({
           >
             {text}
           </Text>
+          {action !== undefined && action.length > 0 && (
+            // TODO: Replace with function 'getActionButtonLabel()'
+            <Button color="orange">Voir sur la carte</Button>
+          )}
         </View>
+        <ChatBubbleEndpoint style={getDynamicStyle()} />
       </Pressable>
       {userSent ? <Avatar isUser /> : null}
     </View>
@@ -74,7 +86,8 @@ const MessageBubble = ({
 
 const styles = StyleSheet.create({
   message: {
-    margin: 7,
+    marginBottom: Sizes.pageContentVerticalMargin,
+    marginHorizontal: Sizes.pageContentHorizontalMargin,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -87,17 +100,25 @@ const styles = StyleSheet.create({
     display: 'flex',
     gap: 8,
     flexShrink: 1,
+    paddingBottom: 16,
     // TODO: le background color ne prends que la largeur de la plus longue ligne de texte
   },
   messageBubble: {
     padding: Sizes.padding,
     borderRadius: Sizes.borderRadius,
-    backgroundColor: Colors.white,
-    borderBottomStartRadius: 0,
+    backgroundColor: Colors.lightBeige,
+    borderWidth: 2,
+    borderColor: Colors.darkGrey,
+    shadowColor: Colors.darkGrey,
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
   },
   userMessageBubble: {
-    backgroundColor: Colors.purple,
-    borderBottomEndRadius: 0,
+    backgroundColor: Colors.orange,
   },
   actionMessage: {
     backgroundColor: Colors.yellow,
@@ -107,6 +128,37 @@ const styles = StyleSheet.create({
   },
   userMessageText: {
     color: Colors.lightGrey,
+  },
+  bubbleEndpoint: {
+    position: 'absolute',
+    top: '100%',
+    marginTop: -2,
+    zIndex: 2,
+    left: 4,
+    color: Colors.lightBeige,
+    shadowColor: Colors.darkGrey,
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+  },
+  userBubbleEndpoint: {
+    position: 'absolute',
+    top: '100%',
+    marginTop: -2,
+    zIndex: 2,
+    right: 4,
+    color: Colors.orange,
+    transform: [{ scaleX: -1 }],
+    shadowColor: Colors.darkGrey,
+    shadowOffset: {
+      width: -4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
   },
 });
 
