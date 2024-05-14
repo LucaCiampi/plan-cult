@@ -15,7 +15,8 @@ import ChatBubbleEndpoint from '@/assets/images/chatbubble-endpoint.svg';
 
 interface Props extends PressableProps {
   text: string;
-  userSent: boolean | number;
+  userSent?: boolean | number;
+  avatarHidden?: boolean;
   avatarUrl?: string;
   action?: MessageAction[];
   selectedLandmarkId?: number;
@@ -24,12 +25,13 @@ interface Props extends PressableProps {
 const MessageBubble = ({
   text,
   userSent = false,
+  avatarHidden = false,
   avatarUrl,
   action,
   selectedLandmarkId,
   ...rest
 }: Props) => {
-  userSent = userSent === 1 || userSent;
+  if (typeof userSent === 'number') userSent = userSent === 1;
 
   const handleMessagePress = useCallback(() => {
     if (action !== undefined && action.length > 0) {
@@ -53,7 +55,12 @@ const MessageBubble = ({
 
   return (
     <View style={[styles.message, userSent && styles.userMessage]}>
-      {!userSent && <Avatar style={styles.characterAvatar} src={avatarUrl} />}
+      {!userSent && (
+        <Avatar
+          style={StyleSheet.flatten([avatarHidden && styles.avatarHidden])}
+          src={avatarUrl}
+        />
+      )}
       <Pressable
         style={[styles.messageContent]}
         onPress={handleMessagePress}
@@ -86,7 +93,6 @@ const MessageBubble = ({
         </View>
         <ChatBubbleEndpoint style={getDynamicStyle()} />
       </Pressable>
-      {userSent && <Avatar isUser />}
     </View>
   );
 };
@@ -171,8 +177,9 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     alignSelf: 'flex-start',
   },
-  characterAvatar: {
+  avatarHidden: {
     opacity: 0,
+    backfaceVisibility: 'hidden',
   },
 });
 

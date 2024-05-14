@@ -9,6 +9,7 @@ import {
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import MessageBubble from '@/components/chat/MessageBubble';
+import Sizes from '@/constants/Sizes';
 
 interface Props {
   characterId: string;
@@ -72,7 +73,11 @@ const Conversation = ({ characterId, character }: Props) => {
           key={index}
           userSent={message.isUserSent}
           text={message.text}
-          // avatarUrl={character.avatar_url}
+          avatarUrl={character.avatar_url}
+          avatarHidden={
+            character.detoured_character !== undefined &&
+            character.detoured_character !== '0'
+          }
         />
       ))}
       {conversation?.map((message: Message, index: number) => (
@@ -81,7 +86,11 @@ const Conversation = ({ characterId, character }: Props) => {
           userSent={message.isUserSent}
           text={message.text}
           action={message.action}
-          // avatarUrl={character.avatar_url}
+          avatarUrl={character.avatar_url}
+          avatarHidden={
+            character.detoured_character !== undefined &&
+            character.detoured_character !== '0'
+          }
         />
       ))}
       <View
@@ -89,6 +98,8 @@ const Conversation = ({ characterId, character }: Props) => {
           styles.bottomSpacer,
           currentCharacterSpeakingState !== SpeakingState.Idle &&
             styles.bottomSpacerTaller,
+          character.detoured_character === undefined &&
+            styles.bottomSpacerNoDetouredCharacter,
         ]}
       />
     </ScrollView>
@@ -97,13 +108,16 @@ const Conversation = ({ characterId, character }: Props) => {
 
 const styles = StyleSheet.create({
   topSpacer: {
-    height: 10,
+    height: Sizes.padding,
   },
   bottomSpacer: {
     height: 180,
   },
   bottomSpacerTaller: {
     height: 240,
+  },
+  bottomSpacerNoDetouredCharacter: {
+    height: Sizes.padding,
   },
 });
 

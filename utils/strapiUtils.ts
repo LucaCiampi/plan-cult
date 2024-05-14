@@ -33,9 +33,14 @@ export const normalizeCharacterFromStrapi = (data: any): Character[] => {
     name: item.attributes.name,
     surname: item.attributes.surname,
     birth: item.attributes.birth,
+    detoured_character:
+      item.attributes.detoured_character.data !== null
+        ? Config.STRAPI_DOMAIN_URL +
+          item.attributes.detoured_character.data.attributes.url
+        : undefined,
     death: item.attributes.death,
     avatar_url:
-      item.attributes.avatar.data != null
+      item.attributes.avatar.data !== null
         ? Config.STRAPI_DOMAIN_URL + item.attributes.avatar.data.attributes.url
         : undefined,
   }));
@@ -82,6 +87,8 @@ export const normalizeDialogueAnchorFromStrapi = (
 
 export const normalizeCharacterProfileFromStrapi = (data: any): Character => {
   const item = data.data;
+  console.log(item);
+
   return {
     id: item.id,
     name: item.attributes.name,

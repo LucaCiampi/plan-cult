@@ -20,6 +20,7 @@ class SyncService {
       birth: 'TEXT',
       death: 'TEXT',
       avatar_url: 'TEXT',
+      detoured_character: 'TEXT',
       trust_level: 'INTEGER NOT NULL',
     },
     dialogue_anchor: {
@@ -57,6 +58,9 @@ class SyncService {
         avatar_url:
           Boolean(elem.avatar_url) &&
           (await downloadImage(elem.avatar_url ?? '')),
+        detoured_character:
+          Boolean(elem.detoured_character) &&
+          (await downloadImage(elem.detoured_character ?? '')),
         trust_level: 0,
       }))
     );

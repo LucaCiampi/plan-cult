@@ -12,8 +12,6 @@ interface CharacterProps {
 }
 
 const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
-  console.log(character.avatar_url);
-
   return (
     <View style={styles.characterCard}>
       <View style={styles.characterCardContent}>

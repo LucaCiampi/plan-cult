@@ -51,7 +51,7 @@ const ChatComponent = ({ characterId, character }: Props) => {
     <View style={styles.chatView}>
       <Conversation character={character} characterId={characterId} />
       <View style={styles.animatedCharacter}>
-        <AnimatedCharacter characterId={characterId} />
+        <AnimatedCharacter character={character} characterId={characterId} />
       </View>
       <Questions characterId={characterId} />
     </View>
