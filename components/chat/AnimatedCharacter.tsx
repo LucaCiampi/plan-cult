@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     width: 132,
     position: 'absolute',
     left: '65%',
-    bottom: -90,
+    bottom: -108,
     transform: [{ rotate: '0deg' }],
     transformOrigin: '25% 25%',
     // backgroundColor: 'green',
