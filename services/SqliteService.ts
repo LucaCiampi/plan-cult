@@ -7,13 +7,41 @@ import StrapiService from '@/services/StrapiService';
 
 class SQLiteService implements IDatabaseService {
   public dbPromise: Promise<SQLite.SQLiteDatabase>;
+  public isSyncComplete: boolean = false;
   private readonly strapiService: StrapiService;
+  private readonly syncListeners: Array<() => void> = [];
 
   constructor() {
     this.dbPromise = this.initializeDB();
-    // TODO: éventuellement utiliser this.strapiService en paramètre dans syncWithStrapi
     this.strapiService = new StrapiService();
-    void this.syncWithStrapi(this.strapiService);
+    this.syncWithStrapi(this.strapiService)
+      .then(() => {
+        this.isSyncComplete = true;
+        this.notifySyncComplete();
+      })
+      .catch((error) => {
+        console.error('Sync failed', error);
+        this.isSyncComplete = false;
+      });
+  }
+
+  private async syncWithStrapi(strapiService: StrapiService): Promise<void> {
+    const syncService = new SyncService(this, strapiService);
+    await syncService.syncAll();
+  }
+
+  private notifySyncComplete() {
+    this.syncListeners.forEach((listener) => {
+      listener();
+    });
+  }
+
+  public onSyncComplete(listener: () => void) {
+    if (this.isSyncComplete) {
+      listener();
+    } else {
+      this.syncListeners.push(listener);
+    }
   }
 
   async initializeDB(): Promise<SQLite.SQLiteDatabase> {
@@ -72,7 +100,7 @@ class SQLiteService implements IDatabaseService {
       }
 
       console.log('Ouverture de la base de données...');
-      return await SQLite.openDatabaseAsync(databaseFilename);
+      return SQLite.openDatabaseAsync(databaseFilename);
     } catch (error) {
       console.error(
         `Erreur lors de la préparation de la base de données : ${
@@ -85,11 +113,6 @@ class SQLiteService implements IDatabaseService {
 
   private async getDb(): Promise<SQLite.SQLiteDatabase> {
     return await this.dbPromise;
-  }
-
-  async syncWithStrapi(strapiService: StrapiService) {
-    const syncService = new SyncService(this, strapiService);
-    void syncService.syncAll();
   }
 
   async getAllCharacters(): Promise<Character[]> {

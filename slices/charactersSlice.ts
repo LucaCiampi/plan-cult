@@ -1,7 +1,5 @@
-// features/characters/charactersSlice.ts
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
-import { setCurrentQuestions } from '@/slices/chatSlice';
 import { generateRandomPositionInBoundaries } from '@/utils/randomUtils';
 import { lyonBoundary } from '@/constants/Coordinates';
 
@@ -14,6 +12,44 @@ const initialState: CharactersState = {
   allCharacters: [],
   likedCharacters: [],
 };
+
+// Créer l'action asynchrone pour récupérer tous les personnages
+export const fetchAllCharacters = createAsyncThunk<
+  Character[],
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  { state: RootState; extra: { dbService: IDatabaseService } }
+>('characters/fetchAllCharacters', async (_, { extra }) => {
+  console.log('🪨 fetchAllCharacters');
+
+  const { dbService } = extra;
+  const allCharacters = await dbService.getAllCharacters();
+  return allCharacters;
+});
+
+export const updateCharacterCoordinates = createAsyncThunk<
+  Character[],
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  { state: RootState }
+>('characters/updateCharacterCoordinates', async (_, { getState }) => {
+  console.log('🪨 updateCharacterCoordinates');
+
+  const state: RootState = getState();
+  const { allCharacters } = state.characters;
+
+  const updatedCharacters = allCharacters.map((character) => ({
+    ...character,
+    coordinates: generateRandomPositionInBoundaries(
+      lyonBoundary.north,
+      lyonBoundary.south,
+      lyonBoundary.east,
+      lyonBoundary.west
+    ),
+  }));
+
+  return updatedCharacters;
+});
 
 export const charactersSlice = createSlice({
   name: 'characters',
@@ -33,7 +69,7 @@ export const charactersSlice = createSlice({
         state.likedCharacters.push(character);
       }
     },
-    removeCharacter: (state, action: PayloadAction<number>) => {
+    dislikeCharacter: (state, action: PayloadAction<number>) => {
       state.allCharacters = state.allCharacters.filter(
         (character) => character.id !== action.payload
       );
@@ -56,86 +92,21 @@ export const charactersSlice = createSlice({
         state.allCharacters = action.payload;
       }
     );
+    builder.addCase(
+      fetchAllCharacters.fulfilled,
+      (state, action: PayloadAction<Character[]>) => {
+        state.allCharacters = action.payload;
+      }
+    );
   },
 });
 
 export const {
   setCharacters,
   likeCharacter,
-  removeCharacter,
+  dislikeCharacter,
   increaseCharacterTrustLevel,
 } = charactersSlice.actions;
-
-// Ajoutez une action thunk pour gérer l'augmentation du niveau de confiance
-export const increaseTrustLevel = createAsyncThunk(
-  'characters/increaseTrustLevel',
-  async (
-    {
-      characterId,
-      dbService,
-    }: { characterId: number; dbService: IDatabaseService },
-    { getState, dispatch }
-  ) => {
-    const state: RootState = getState() as RootState;
-    const { likedCharacters } = state.characters;
-    const character = likedCharacters.find((c) => c.id === characterId);
-
-    if (character != null) {
-      // TODO: rendre trust_level obligatoire dans le type Character
-      let trustLevel: number = character.trust_level ?? 0;
-      ++trustLevel;
-      console.log(
-        '🍕 increaseTrustLevel of character',
-        character.name,
-        'now',
-        trustLevel
-      );
-
-      dispatch(
-        increaseCharacterTrustLevel({ characterId, newTrustLevel: trustLevel })
-      );
-
-      const newQuestions = await dbService.getFirstDialoguesOfTrustLevel(
-        characterId,
-        trustLevel
-      );
-
-      dispatch(
-        setCurrentQuestions({
-          characterId: String(characterId),
-          questions: newQuestions,
-        })
-      );
-    } else {
-      console.log(
-        '🍕 increaseTrustLevel: character not found or not in likedCharacters. ID:',
-        characterId
-      );
-    }
-  }
-);
-
-export const updateCharacterCoordinates = createAsyncThunk<
-  Character[],
-  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-  void,
-  { state: RootState }
->('characters/updateCharacterCoordinates', async (_, { getState }) => {
-  const state: RootState = getState();
-  const { allCharacters } = state.characters;
-
-  const updatedCharacters = allCharacters.map((character) => ({
-    ...character,
-    coordinates: generateRandomPositionInBoundaries(
-      lyonBoundary.north,
-      lyonBoundary.south,
-      lyonBoundary.east,
-      lyonBoundary.west
-    ),
-  }));
-
-  return updatedCharacters;
-});
 
 export const selectAllCharacters = (state: RootState) =>
   state.characters.allCharacters;

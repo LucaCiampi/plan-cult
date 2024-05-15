@@ -124,7 +124,7 @@ class SyncService {
 
     const db = await this.sqliteService.dbPromise;
     await db.runAsync(createTableQuery);
-    console.log(`Table \`${tableName}\` is ready.`);
+    // console.log(`Table \`${tableName}\` is ready.`);
   }
 
   async checkAndAlterTable(
@@ -139,7 +139,7 @@ class SyncService {
       const existingColumns = tableInfo.map((column: any) => column.name);
 
       const missingColumns = Object.entries(requiredColumns).filter(
-        ([columnName]) => !existingColumns.includes(columnName)
+        ([columnName]) => existingColumns.includes(columnName) === false
       );
 
       for (const [columnName, columnType] of missingColumns) {
@@ -193,7 +193,7 @@ class SyncService {
       const values = columns.map((column) => item[column] ?? null);
       try {
         await db.runAsync(insertQuery, values);
-        console.log(`💽 Data synced in ${tableName}:`, item);
+        // console.log(`💽 Data synced in ${tableName}:`, item);
       } catch (error) {
         console.error(`Error processing item in ${tableName}:`, item, error);
       }

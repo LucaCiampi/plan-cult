@@ -16,14 +16,22 @@ import { customMapStyle } from '@/constants/Styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCharacterCoordinates } from '@/slices/charactersSlice';
 import { AppDispatch, RootState } from '@/app/store'; // Importer les types
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useUserLocation } from '@/hooks/useUserLocation';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
-  const dispatch = useDispatch<AppDispatch>(); // Utiliser le type AppDispatch
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { location } = useUserLocation();
+  // const { location } = useUserLocation();
+  const location = {
+    coords: {
+      latitude: 45.767135,
+      longitude: 4.833658,
+    },
+  };
 
   const characters = useSelector(
     (state: RootState) => state.characters.allCharacters
@@ -164,30 +172,33 @@ export default function Map() {
             ]}
             image={cursorPin}
           /> */}
-          {characters.map((character, index) => (
-            <Marker
-              key={index}
-              coordinate={character.coordinates}
-              title={character.name}
-              // image={} // unused
-              onPress={() => {
-                handleMarkerPress(character);
-              }}
-              // onDeselect={() => {
-              //   handleMarkerDeselect(character);
-              // }}
-            >
-              {/* {getPinFromType(character.category)} */}
-              {getPinFromType('character')}
-              {/* {selectedMarker?.id === character.id && (
+          {characters.map(
+            (character, index) =>
+              character.coordinates !== undefined && (
+                <Marker
+                  key={index}
+                  coordinate={character.coordinates}
+                  title={character.name}
+                  // image={} // unused
+                  onPress={() => {
+                    handleMarkerPress(character);
+                  }}
+                  // onDeselect={() => {
+                  //   handleMarkerDeselect(character);
+                  // }}
+                >
+                  {/* {getPinFromType(character.category)} */}
+                  {getPinFromType('character')}
+                  {/* {selectedMarker?.id === character.id && (
                 <Callout tooltip>
                   <View>
                     <Text>{character.name}</Text>
                   </View>
                 </Callout>
               )} */}
-            </Marker>
-          ))}
+                </Marker>
+              )
+          )}
         </MapView>
         <BottomSheet
           snapPoints={[36, 160, '100%']}
