@@ -17,7 +17,6 @@ export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
     Character[]
   >([]);
-  const [charactersNearby, setCharactersNearby] = useState<Character[]>([]);
   const [charactersNearbyNotLiked, setCharactersNearbyNotLiked] = useState<
     Character[]
   >([]);
@@ -33,12 +32,6 @@ export default function SwipePage() {
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
 
-  console.log('💚 allCharacters', allCharacters);
-  console.log('💚 likedCharacters', likedCharacters);
-  console.log('💚 loadedCharactersProfiles', loadedCharactersProfiles);
-  console.log('💚 charactersNearby', charactersNearby);
-  console.log('💚 charactersNearbyNotLiked', charactersNearbyNotLiked);
-
   /**
    * Récupère les profils à proximité
    */
@@ -50,11 +43,11 @@ export default function SwipePage() {
             userLocation,
             character.coordinates
           );
-          return distance <= minDistanceToSwipeCharacter; // Périmètre défini de 500 mètres
+          return distance <= minDistanceToSwipeCharacter; // Profils dans un périmètre défini
         }
         return false;
       });
-      setCharactersNearby(nearbyCharacters);
+
       const notLikedNearbyCharacters = nearbyCharacters.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)
@@ -74,7 +67,9 @@ export default function SwipePage() {
       const profilesToLoad = charactersNearbyNotLiked
         .slice(-2)
         .map(async (character) => {
-          const profile = await dbService.getCharacterProfile(character.id);
+          const profile = await dbService.getCharacterProfile(
+            Number(character.id)
+          );
           return profile;
         });
       const newProfiles = await Promise.all(profilesToLoad);

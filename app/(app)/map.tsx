@@ -13,9 +13,8 @@ import CharacterPin from '@/assets/images/map/character.svg';
 import Colors from '@/constants/Colors';
 import { initialRegionView } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateCharacterCoordinates } from '@/slices/charactersSlice';
-import { AppDispatch, RootState } from '@/app/store'; // Importer les types
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store'; // Importer les types
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useUserLocation } from '@/hooks/useUserLocation';
@@ -23,7 +22,6 @@ import { useUserLocation } from '@/hooks/useUserLocation';
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
-  const dispatch = useDispatch<AppDispatch>();
 
   // const { location } = useUserLocation();
   const location = {
@@ -36,11 +34,6 @@ export default function Map() {
   const characters = useSelector(
     (state: RootState) => state.characters.allCharacters
   ); // Typage de useSelector
-
-  useEffect(() => {
-    // Met à jour les coordonnées des personnages au chargement du composant
-    void dispatch(updateCharacterCoordinates());
-  }, []);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
