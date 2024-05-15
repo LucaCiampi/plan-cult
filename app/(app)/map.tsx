@@ -16,11 +16,14 @@ import { customMapStyle } from '@/constants/Styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCharacterCoordinates } from '@/slices/charactersSlice';
 import { AppDispatch, RootState } from '@/app/store'; // Importer les types
+import { useUserLocation } from '@/hooks/useUserLocation';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
   const dispatch = useDispatch<AppDispatch>(); // Utiliser le type AppDispatch
+
+  const { location } = useUserLocation();
 
   const characters = useSelector(
     (state: RootState) => state.characters.allCharacters
@@ -143,6 +146,17 @@ export default function Map() {
               )} */}
             </Marker>
           ))}
+          {location !== null && (
+            <Marker
+              coordinate={{
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              }}
+              title={'User'}
+            >
+              {getPinFromType('anecdote')}
+            </Marker>
+          )}
           {/* <Overlay
             bounds={[
               [45.72, 4.8],
