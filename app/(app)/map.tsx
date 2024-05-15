@@ -117,6 +117,8 @@ export default function Map() {
           style={styles.map}
           region={initialRegionView}
           customMapStyle={customMapStyle}
+          mapType="mutedStandard"
+          showsPointsOfInterest={false}
         >
           {markers.map((marker, index) => (
             <Marker
