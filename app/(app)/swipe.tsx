@@ -17,6 +17,7 @@ export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
     Character[]
   >([]);
+  const [charactersNearby, setCharactersNearby] = useState<Character[]>([]);
   const [charactersNearbyNotLiked, setCharactersNearbyNotLiked] = useState<
     Character[]
   >([]);
@@ -32,6 +33,12 @@ export default function SwipePage() {
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
 
+  console.log('💚 allCharacters', allCharacters);
+  console.log('💚 likedCharacters', likedCharacters);
+  console.log('💚 loadedCharactersProfiles', loadedCharactersProfiles);
+  console.log('💚 charactersNearby', charactersNearby);
+  console.log('💚 charactersNearbyNotLiked', charactersNearbyNotLiked);
+
   /**
    * Récupère les profils à proximité
    */
@@ -43,11 +50,11 @@ export default function SwipePage() {
             userLocation,
             character.coordinates
           );
-          return distance <= minDistanceToSwipeCharacter; // Profils dans un périmètre défini
+          return distance <= minDistanceToSwipeCharacter; // Périmètre défini de 500 mètres
         }
         return false;
       });
-
+      setCharactersNearby(nearbyCharacters);
       const notLikedNearbyCharacters = nearbyCharacters.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)
@@ -80,6 +87,17 @@ export default function SwipePage() {
   useEffect(() => {
     void loadCharacterProfiles();
   }, [charactersNearbyNotLiked, loadCharacterProfiles]);
+
+  /**
+   * Met à jour loadedCharactersProfiles lorsque les profils likés changent
+   */
+  useEffect(() => {
+    setLoadedCharacterProfiles((prevProfiles) =>
+      prevProfiles.filter(
+        (profile) => !likedCharacters.some((liked) => liked.id === profile.id)
+      )
+    );
+  }, [likedCharacters]);
 
   if (loadedCharactersProfiles.length === 0) {
     return (
