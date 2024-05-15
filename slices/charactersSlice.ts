@@ -2,6 +2,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
 import { setCurrentQuestions } from '@/slices/chatSlice';
+import { generateRandomPositionInBoundaries } from '@/utils/randomUtils';
+import { lyonBoundary } from '@/constants/Coordinates';
 
 interface CharactersState {
   allCharacters: Character[];
@@ -46,6 +48,14 @@ export const charactersSlice = createSlice({
         character.trust_level = newTrustLevel;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      updateCharacterCoordinates.fulfilled,
+      (state, action: PayloadAction<Character[]>) => {
+        state.allCharacters = action.payload;
+      }
+    );
   },
 });
 
@@ -104,6 +114,28 @@ export const increaseTrustLevel = createAsyncThunk(
     }
   }
 );
+
+export const updateCharacterCoordinates = createAsyncThunk<
+  Character[],
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  { state: RootState }
+>('characters/updateCharacterCoordinates', async (_, { getState }) => {
+  const state: RootState = getState();
+  const { allCharacters } = state.characters;
+
+  const updatedCharacters = allCharacters.map((character) => ({
+    ...character,
+    coordinates: generateRandomPositionInBoundaries(
+      lyonBoundary.north,
+      lyonBoundary.south,
+      lyonBoundary.east,
+      lyonBoundary.west
+    ),
+  }));
+
+  return updatedCharacters;
+});
 
 export const selectAllCharacters = (state: RootState) =>
   state.characters.allCharacters;

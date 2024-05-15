@@ -16,6 +16,7 @@ export default function SwipePage() {
   useEffect(() => {
     const fetchAllCharacters = async () => {
       let allCharactersFromDb = await dbService.getAllCharacters();
+      dispatch(setCharacters(allCharactersFromDb));
 
       // Filtre les personnages likés de la liste à afficher
       allCharactersFromDb = allCharactersFromDb.filter(
@@ -31,7 +32,6 @@ export default function SwipePage() {
         const newProfile = await dbService.getCharacterProfile(lastProfileId);
         // Ajoute ce profil à charactersProfile
         setCharactersWaiting((prevProfiles) => [newProfile]);
-        dispatch(setCharacters(allCharactersFromDb));
       }
     };
 

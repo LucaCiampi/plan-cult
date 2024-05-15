@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 0,
+    elevation: 1,
   },
   userMessageBubble: {
     backgroundColor: Colors.orange,
@@ -155,6 +156,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 0,
+    elevation: 2,
   },
   userBubbleEndpoint: {
     position: 'absolute',
@@ -171,6 +173,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 0,
+    elevation: 2,
   },
   button: {
     marginVertical: Sizes.padding,

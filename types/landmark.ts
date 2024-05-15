@@ -1,4 +1,4 @@
-type LandmarkCategory = 'culture' | 'museum' | 'food';
+type PinCategory = 'anecdote' | 'date' | 'character';
 
 interface Landmark {
   id: number;
@@ -9,5 +9,5 @@ interface Landmark {
     longitude: number;
   };
   thumbnail?: string;
-  category: LandmarkCategory;
+  category: PinCategory;
 }
