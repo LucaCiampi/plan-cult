@@ -11,6 +11,7 @@ import AnecdotePin from '@/assets/images/map/anecdote.svg';
 import DatePin from '@/assets/images/map/date.svg';
 import CharacterPin from '@/assets/images/map/character.svg';
 import Colors from '@/constants/Colors';
+import { initialRegionView } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCharacterCoordinates } from '@/slices/charactersSlice';
@@ -30,13 +31,6 @@ export default function Map() {
     void dispatch(updateCharacterCoordinates());
   }, []);
 
-  // TODO: don't use useState
-  const [initialRegionView] = useState<Region>({
-    latitude: 45.767135,
-    longitude: 4.833658,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
   const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
 
