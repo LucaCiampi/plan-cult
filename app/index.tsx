@@ -1,5 +1,5 @@
 import Button from '@/components/common/Button';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -11,21 +11,36 @@ import {
 import { useSyncComplete } from '@/contexts/DatabaseServiceContext';
 
 export default function Page() {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const dispatch = useDispatch<AppDispatch>(); // Utiliser le type AppDispatch
+  const [isCharactersLoaded, setIsCharactersLoaded] = useState(false);
+  const [isCoordinatesUpdated, setIsCoordinatesUpdated] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const isSyncComplete = useSyncComplete();
 
   useEffect(() => {
     if (isSyncComplete) {
-      setIsLoaded(true);
-      void dispatch(fetchAllCharacters());
-      void dispatch(updateCharacterCoordinates());
+      dispatch(fetchAllCharacters())
+        .unwrap()
+        .then(() => {
+          setIsCharactersLoaded(true);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
-  }, [isSyncComplete]);
+  }, [isSyncComplete, dispatch]);
 
-  // if (isLoaded) {
-  //   return <Redirect href={'/(app)/swipe'} />;
-  // }
+  useEffect(() => {
+    if (isCharactersLoaded) {
+      dispatch(updateCharacterCoordinates())
+        .unwrap()
+        .then(() => {
+          setIsCoordinatesUpdated(true);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [isCharactersLoaded, dispatch]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -34,7 +49,7 @@ export default function Page() {
           <ActivityIndicator size="large" />
           <Text>Loading database...</Text>
         </>
-      ) : (
+      ) : isCoordinatesUpdated ? (
         <Button
           onPress={() => {
             router.navigate('/swipe');
@@ -42,6 +57,8 @@ export default function Page() {
         >
           Je suis prêt
         </Button>
+      ) : (
+        <ActivityIndicator size="large" />
       )}
     </View>
   );

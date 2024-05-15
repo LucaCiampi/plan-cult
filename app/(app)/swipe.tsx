@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import CharacterCard from '@/components/characters/CharacterCard';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   selectLikedCharacters,
-  updateCharacterCoordinates,
   selectAllCharacters,
 } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import { AppDispatch } from '@/app/store';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectLocation } from '@/slices/locationSlice';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { haversineDistance } from '@/utils/randomUtils';
+import { minDistanceToSwipeCharacter } from '@/constants/Coordinates';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -23,10 +22,8 @@ export default function SwipePage() {
     Character[]
   >([]);
   const dbService = useDatabaseService();
-  const dispatch = useDispatch<AppDispatch>(); // Utiliser le type AppDispatch
 
   // Récupération de la position de l'utilisateur depuis Redux
-  // const userLocation = useSelector(selectLocation);
   const [userLocation] = useState({
     latitude: 45.767135,
     longitude: 4.833658,
@@ -36,48 +33,58 @@ export default function SwipePage() {
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
 
+  console.log('💚 allCharacters', allCharacters);
+  console.log('💚 likedCharacters', likedCharacters);
+  console.log('💚 loadedCharactersProfiles', loadedCharactersProfiles);
+  console.log('💚 charactersNearby', charactersNearby);
+  console.log('💚 charactersNearbyNotLiked', charactersNearbyNotLiked);
+
   /**
    * Récupère les profils à proximité
    */
   useEffect(() => {
-    if (userLocation != null && allCharacters.length > 0) {
+    if (userLocation !== undefined && allCharacters.length > 0) {
       const nearbyCharacters = allCharacters.filter((character) => {
         if (character.coordinates !== undefined) {
           const distance = haversineDistance(
             userLocation,
             character.coordinates
           );
-          return distance <= 500; // Périmètre défini de 500 mètres
-        } else return false;
+          return distance <= minDistanceToSwipeCharacter; // Périmètre défini de 500 mètres
+        }
+        return false;
       });
       setCharactersNearby(nearbyCharacters);
-      const charactersNearbyNotLiked = nearbyCharacters.filter(
+      const notLikedNearbyCharacters = nearbyCharacters.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)
       );
-      setCharactersNearbyNotLiked(charactersNearbyNotLiked);
+      setCharactersNearbyNotLiked(notLikedNearbyCharacters);
     } else {
       console.log('👺 Pas de profils à proximité', userLocation, allCharacters);
     }
-  }, [userLocation, allCharacters]);
+  }, [userLocation, allCharacters, likedCharacters]);
 
   /**
-   * Charge le profil complet des 2 derniers profils
-   * parmi les profils à proximité
+   * Charge les profils complets des 2 premiers ou derniers profils
+   * parmi les profils à proximité non likés
    */
+  const loadCharacterProfiles = useCallback(async () => {
+    if (charactersNearbyNotLiked.length > 0) {
+      const profilesToLoad = charactersNearbyNotLiked
+        .slice(-2)
+        .map(async (character) => {
+          const profile = await dbService.getCharacterProfile(character.id);
+          return profile;
+        });
+      const newProfiles = await Promise.all(profilesToLoad);
+      setLoadedCharacterProfiles(newProfiles);
+    }
+  }, [charactersNearbyNotLiked, dbService]);
+
   useEffect(() => {
-    void (async () => {
-      if (charactersNearbyNotLiked.length > 0) {
-        // Accède au dernier ID de profil dans loadedCharactersProfiles
-        const lastProfileId =
-          charactersNearbyNotLiked[charactersNearbyNotLiked.length - 1].id;
-        // Appelle getCharacterProfile pour obtenir le profil détaillé
-        const newProfile = await dbService.getCharacterProfile(lastProfileId);
-        // Ajoute ce profil à charactersProfile
-        setLoadedCharacterProfiles((prevProfiles) => [newProfile]);
-      }
-    })();
-  }, [charactersNearbyNotLiked]);
+    void loadCharacterProfiles();
+  }, [charactersNearbyNotLiked, loadCharacterProfiles]);
 
   if (loadedCharactersProfiles.length === 0) {
     return (
@@ -92,7 +99,6 @@ export default function SwipePage() {
       <FlatList
         data={loadedCharactersProfiles}
         keyExtractor={(item) => item.id.toString()}
-        // contentContainerStyle={styles.characterContainer}
         renderItem={({ item }) => <CharacterCard character={item} />}
       />
     </View>

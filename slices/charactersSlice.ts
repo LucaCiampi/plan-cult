@@ -86,18 +86,25 @@ export const charactersSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      updateCharacterCoordinates.fulfilled,
-      (state, action: PayloadAction<Character[]>) => {
-        state.allCharacters = action.payload;
-      }
-    );
-    builder.addCase(
-      fetchAllCharacters.fulfilled,
-      (state, action: PayloadAction<Character[]>) => {
-        state.allCharacters = action.payload;
-      }
-    );
+    builder
+      .addCase(
+        updateCharacterCoordinates.fulfilled,
+        (state, action: PayloadAction<Character[]>) => {
+          state.allCharacters = action.payload;
+        }
+      )
+      .addCase(
+        fetchAllCharacters.fulfilled,
+        (state, action: PayloadAction<Character[]>) => {
+          state.allCharacters = action.payload;
+        }
+      )
+      .addCase(fetchAllCharacters.rejected, (state, action) => {
+        console.error('Failed to fetch characters:', action.error);
+      })
+      .addCase(updateCharacterCoordinates.rejected, (state, action) => {
+        console.error('Failed to update character coordinates:', action.error);
+      });
   },
 });
 
