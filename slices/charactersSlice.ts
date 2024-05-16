@@ -56,20 +56,20 @@ export const charactersSlice = createSlice({
   initialState,
   reducers: {
     setCharacters: (state, action: PayloadAction<Character[]>) => {
+      console.log('🏷️ setCharacters');
       state.allCharacters = action.payload;
     },
     likeCharacter: (state, action: PayloadAction<number>) => {
+      console.log('🏷️ likeCharacter');
       const character = state.allCharacters.find(
         (c) => c.id === action.payload
       );
       if (character != null) {
-        state.allCharacters = state.allCharacters.filter(
-          (c) => c.id !== action.payload
-        );
         state.likedCharacters.push(character);
       }
     },
     dislikeCharacter: (state, action: PayloadAction<number>) => {
+      console.log('🏷️ dislikeCharacter');
       state.allCharacters = state.allCharacters.filter(
         (character) => character.id !== action.payload
       );
@@ -78,6 +78,7 @@ export const charactersSlice = createSlice({
       state,
       action: PayloadAction<{ characterId: number; newTrustLevel: number }>
     ) => {
+      console.log('🏷️ increaseCharacterTrustLevel');
       const { characterId, newTrustLevel } = action.payload;
       const character = state.likedCharacters.find((c) => c.id === characterId);
       if (character != null) {

@@ -9,7 +9,6 @@ import {
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectLocation } from '@/slices/locationSlice';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { haversineDistance } from '@/utils/randomUtils';
 import { minDistanceToSwipeCharacter } from '@/constants/Coordinates';
 
@@ -17,7 +16,6 @@ export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
     Character[]
   >([]);
-  const [charactersNearby, setCharactersNearby] = useState<Character[]>([]);
   const [charactersNearbyNotLiked, setCharactersNearbyNotLiked] = useState<
     Character[]
   >([]);
@@ -32,12 +30,6 @@ export default function SwipePage() {
   // Récupération des profils likés depuis Redux
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
-
-  console.log('💚 allCharacters', allCharacters);
-  console.log('💚 likedCharacters', likedCharacters);
-  console.log('💚 loadedCharactersProfiles', loadedCharactersProfiles);
-  console.log('💚 charactersNearby', charactersNearby);
-  console.log('💚 charactersNearbyNotLiked', charactersNearbyNotLiked);
 
   /**
    * Récupère les profils à proximité
@@ -54,7 +46,6 @@ export default function SwipePage() {
         }
         return false;
       });
-      setCharactersNearby(nearbyCharacters);
       const notLikedNearbyCharacters = nearbyCharacters.filter(
         (character) =>
           !likedCharacters.some((liked) => liked.id === character.id)

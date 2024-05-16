@@ -14,10 +14,10 @@ import Colors from '@/constants/Colors';
 import { initialRegionView } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store'; // Importer les types
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useUserLocation } from '@/hooks/useUserLocation';
+import { selectAllCharacters } from '@/slices/charactersSlice';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -31,9 +31,7 @@ export default function Map() {
     },
   };
 
-  const characters = useSelector(
-    (state: RootState) => state.characters.allCharacters
-  ); // Typage de useSelector
+  const allCharacters = useSelector(selectAllCharacters);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
@@ -96,11 +94,10 @@ export default function Map() {
   const handleMarkerPress = (marker: Landmark | Character) => {
     if (isLandmark(marker)) {
       setSelectedMarker(marker);
+      bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
     } else if (isCharacter(marker)) {
       // setSelectedMarker(marker);
     }
-
-    bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
   };
 
   // const handleMarkerDeselect = (marker: Landmark) => {
@@ -165,7 +162,7 @@ export default function Map() {
             ]}
             image={cursorPin}
           /> */}
-          {characters.map(
+          {allCharacters.map(
             (character, index) =>
               character.coordinates !== undefined && (
                 <Marker
