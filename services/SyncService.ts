@@ -1,6 +1,6 @@
 import { downloadImage } from '@/utils/downloadUtils';
-import SQLiteService from './SqliteService';
-import StrapiService from './StrapiService';
+import SQLiteService from '@/services/SqliteService';
+import StrapiService from '@/services/StrapiService';
 
 class SyncService {
   private readonly strapiService: StrapiService;
@@ -20,6 +20,7 @@ class SyncService {
       birth: 'TEXT',
       death: 'TEXT',
       avatar_url: 'TEXT',
+      detoured_character: 'TEXT',
       trust_level: 'INTEGER NOT NULL',
     },
     dialogue_anchor: {
@@ -57,6 +58,9 @@ class SyncService {
         avatar_url:
           Boolean(elem.avatar_url) &&
           (await downloadImage(elem.avatar_url ?? '')),
+        detoured_character:
+          Boolean(elem.detoured_character) &&
+          (await downloadImage(elem.detoured_character ?? '')),
         trust_level: 0,
       }))
     );
@@ -120,7 +124,7 @@ class SyncService {
 
     const db = await this.sqliteService.dbPromise;
     await db.runAsync(createTableQuery);
-    console.log(`Table \`${tableName}\` is ready.`);
+    // console.log(`Table \`${tableName}\` is ready.`);
   }
 
   async checkAndAlterTable(
@@ -135,7 +139,7 @@ class SyncService {
       const existingColumns = tableInfo.map((column: any) => column.name);
 
       const missingColumns = Object.entries(requiredColumns).filter(
-        ([columnName]) => !existingColumns.includes(columnName)
+        ([columnName]) => existingColumns.includes(columnName) === false
       );
 
       for (const [columnName, columnType] of missingColumns) {
@@ -189,7 +193,7 @@ class SyncService {
       const values = columns.map((column) => item[column] ?? null);
       try {
         await db.runAsync(insertQuery, values);
-        console.log(`💽 Data synced in ${tableName}:`, item);
+        // console.log(`💽 Data synced in ${tableName}:`, item);
       } catch (error) {
         console.error(`Error processing item in ${tableName}:`, item, error);
       }

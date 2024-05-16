@@ -1,6 +1,12 @@
 import SQLiteService from '@/services/SqliteService';
 import StrapiService from '@/services/StrapiService';
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import { Platform } from 'react-native';
 
 let databaseService: IDatabaseService;
@@ -11,11 +17,11 @@ if (Platform.OS !== 'web') {
   databaseService = new StrapiService();
 }
 
-// const databaseService = new SQLiteService();
-
 const DatabaseServiceContext = createContext<IDatabaseService>(databaseService);
+const SyncCompleteContext = createContext<boolean>(false);
 
 export const useDatabaseService = () => useContext(DatabaseServiceContext);
+export const useSyncComplete = () => useContext(SyncCompleteContext);
 
 interface DatabaseServiceProviderProps {
   children: ReactNode;
@@ -24,9 +30,23 @@ interface DatabaseServiceProviderProps {
 export const DatabaseServiceProvider: React.FC<
   DatabaseServiceProviderProps
 > = ({ children }) => {
+  const [isSyncComplete, setIsSyncComplete] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (databaseService instanceof SQLiteService) {
+      databaseService.onSyncComplete(() => {
+        setIsSyncComplete(true);
+      });
+    } else {
+      setIsSyncComplete(true);
+    }
+  }, []);
+
   return (
     <DatabaseServiceContext.Provider value={databaseService}>
-      {children}
+      <SyncCompleteContext.Provider value={isSyncComplete}>
+        {children}
+      </SyncCompleteContext.Provider>
     </DatabaseServiceContext.Provider>
   );
 };

@@ -1,59 +1,65 @@
 import Button from '@/components/common/Button';
-import Sizes from '@/constants/Sizes';
-import { Redirect } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/store';
+import {
+  fetchAllCharacters,
+  updateCharacterCoordinates,
+} from '@/slices/charactersSlice';
+import { useSyncComplete } from '@/contexts/DatabaseServiceContext';
 
 export default function Page() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isCharactersLoaded, setIsCharactersLoaded] = useState(false);
+  const [isCoordinatesUpdated, setIsCoordinatesUpdated] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const isSyncComplete = useSyncComplete();
 
-  if (isLoaded) {
-    return <Redirect href={'/(app)/swipe'} />;
-  }
+  useEffect(() => {
+    if (isSyncComplete) {
+      dispatch(fetchAllCharacters())
+        .unwrap()
+        .then(() => {
+          setIsCharactersLoaded(true);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [isSyncComplete, dispatch]);
+
+  useEffect(() => {
+    if (isCharactersLoaded) {
+      dispatch(updateCharacterCoordinates())
+        .unwrap()
+        .then(() => {
+          setIsCoordinatesUpdated(true);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [isCharactersLoaded, dispatch]);
 
   return (
-    <View style={styles.centeredContainer}>
-      <Text style={styles.title}>Onboarding</Text>
-      <Text style={styles.content}>
-        Vous allez maintenant être mis en relation avec ceux qui ont façonné
-        l&apos;histoire de Lyon
-      </Text>
-      <Text style={styles.content}>Sortez votre meilleure tchatche</Text>
-      <View style={styles.buttonWrapper}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {!isSyncComplete ? (
+        <>
+          <ActivityIndicator size="large" />
+          <Text>Loading database...</Text>
+        </>
+      ) : isCoordinatesUpdated ? (
         <Button
           onPress={() => {
-            setIsLoaded(true);
+            router.navigate('/swipe');
           }}
         >
-          Roule ma poule
+          Je suis prêt
         </Button>
-      </View>
+      ) : (
+        <ActivityIndicator size="large" />
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: Sizes.padding,
-    paddingHorizontal: Sizes.pageContentHorizontalMargin,
-    paddingVertical: Sizes.pageContentVerticalMargin,
-  },
-  title: {
-    fontSize: Sizes.subtitleFontSize,
-    fontFamily: 'ITCAvantGardeMd',
-    textAlign: 'center',
-    marginBottom: Sizes.padding * 2,
-  },
-  content: {
-    fontSize: Sizes.regularFontSize,
-    fontFamily: 'ITCAvantGardeMd',
-    textAlign: 'center',
-  },
-  buttonWrapper: {
-    width: '50%',
-    alignSelf: 'center',
-    marginTop: Sizes.padding * 2,
-  },
-});

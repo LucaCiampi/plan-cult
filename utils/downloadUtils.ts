@@ -12,7 +12,11 @@ export async function downloadImage(imageUrl: string): Promise<string> {
     const { uri } = await FileSystem.downloadAsync(imageUrl, localUri);
     return uri;
   } catch (error) {
-    console.error("Erreur lors du téléchargement de l'image:", error);
+    console.error(
+      "Erreur lors du téléchargement de l'image ayant pour URL : ",
+      imageUrl,
+      error
+    );
     throw error;
   }
 }

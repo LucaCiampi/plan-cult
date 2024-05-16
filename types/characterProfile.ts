@@ -78,11 +78,6 @@ interface Title {
 interface Answer {
   type: string;
   format: string;
-  children: AnswerChild[];
-}
-
-interface AnswerChild {
-  type: string;
   children: TextChild[];
 }
 

@@ -79,17 +79,13 @@ const renderProfileSection = (
           style={[styles.textSection, styles.characterDescription]}
         >
           {profileSection.answer?.map((answer, answerIndex) =>
-            answer.children.map((answerChild, childIndex) =>
-              answerChild.children?.map((answerChildChild, childChildIndex) => (
-                <Text
-                  key={`${index}-${answerIndex}-${childIndex}-${childChildIndex}`}
-                >
-                  {answerChildChild?.text !== undefined
-                    ? answerChildChild.text
-                    : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus nobis pariatur, placeat a voluptate, nemo accusantium atque repudiandae porro, fuga doloremque eius deleniti. Possimus, hic totam ab dignissimos sapiente maiores.'}
-                </Text>
-              ))
-            )
+            answer.children.map((answerChild, childIndex) => (
+              <Text
+                key={`${index}-${answerIndex}-${childIndex}-${answerChild.text}`}
+              >
+                {answerChild?.text}
+              </Text>
+            ))
           )}
         </Text>
       );

@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ScrollView } from 'react-native';
-import { selectConversations } from '@/slices/chatSlice';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  SpeakingState,
+  selectConversations,
+  selectSpeakingState,
+} from '@/slices/chatSlice';
 import { RootState } from '@/app/store';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import MessageBubble from '@/components/chat/MessageBubble';
+import Sizes from '@/constants/Sizes';
 
 interface Props {
   characterId: string;
@@ -19,6 +24,9 @@ const Conversation = ({ characterId, character }: Props) => {
     selectConversations(state as RootState, characterId)
   );
   const dbService = useDatabaseService();
+  const currentCharacterSpeakingState = useSelector((state) =>
+    selectSpeakingState(state as RootState, characterId)
+  );
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -29,11 +37,15 @@ const Conversation = ({ characterId, character }: Props) => {
       const historyAsMessages: Message[] = history.map((record: any) => {
         return {
           text: record.message,
-          isUserSent: record.from_user,
+          isUserSent: record.from_user ?? 0,
         };
       });
 
-      setConversationHistory(historyAsMessages);
+      try {
+        setConversationHistory(historyAsMessages);
+      } catch (e) {
+        console.error('Could not save conversation history', e);
+      }
 
       setIsInitialLoad(false);
     };
@@ -51,12 +63,17 @@ const Conversation = ({ characterId, character }: Props) => {
 
   return (
     <ScrollView ref={scrollViewRef}>
+      <View style={styles.topSpacer} />
       {conversationHistory?.map((message: Message, index: number) => (
         <MessageBubble
           key={index}
           userSent={message.isUserSent}
           text={message.text}
           avatarUrl={character.avatar_url}
+          avatarHidden={
+            character.detoured_character !== undefined &&
+            character.detoured_character !== '0'
+          }
         />
       ))}
       {conversation?.map((message: Message, index: number) => (
@@ -66,10 +83,38 @@ const Conversation = ({ characterId, character }: Props) => {
           text={message.text}
           action={message.action}
           avatarUrl={character.avatar_url}
+          avatarHidden={
+            character.detoured_character !== undefined &&
+            character.detoured_character !== '0'
+          }
         />
       ))}
+      <View
+        style={[
+          styles.bottomSpacer,
+          currentCharacterSpeakingState !== SpeakingState.Idle &&
+            styles.bottomSpacerTaller,
+          character.detoured_character === undefined &&
+            styles.bottomSpacerNoDetouredCharacter,
+        ]}
+      />
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  topSpacer: {
+    height: Sizes.padding,
+  },
+  bottomSpacer: {
+    height: 180,
+  },
+  bottomSpacerTaller: {
+    height: 240,
+  },
+  bottomSpacerNoDetouredCharacter: {
+    height: Sizes.padding,
+  },
+});
 
 export default Conversation;

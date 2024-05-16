@@ -2,10 +2,17 @@
 import { RootState } from '@/app/store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum SpeakingState {
+  Idle,
+  Thinking,
+  Speaking,
+}
+
 interface CharacterChatState {
   conversation: Message[];
   currentQuestions: Dialogue[] | null;
   previousQuestions: Dialogue[] | null;
+  speakingState: SpeakingState;
 }
 
 interface ChatState {
@@ -65,6 +72,18 @@ const chatSlice = createSlice({
       const { characterId, questions } = action.payload;
       state.chatsByCharacter[characterId].currentQuestions = questions;
     },
+    setSpeakingState: (
+      state,
+      action: PayloadAction<{
+        characterId: string;
+        speakingState: SpeakingState;
+      }>
+    ) => {
+      console.log('🍕 setSpeakingState');
+
+      const { characterId, speakingState } = action.payload;
+      state.chatsByCharacter[characterId].speakingState = speakingState;
+    },
   },
 });
 
@@ -73,6 +92,7 @@ export const {
   addMessageToConversation,
   clearMessagesFromConversation,
   setCurrentQuestions,
+  setSpeakingState,
 } = chatSlice.actions;
 
 export const selectCurrentQuestions = (state: RootState, characterId: string) =>
@@ -85,5 +105,8 @@ export const selectConversations = (
   const chatState = state.chat.chatsByCharacter[characterId];
   return chatState.conversation;
 };
+
+export const selectSpeakingState = (state: RootState, characterId: string) =>
+  state.chat.chatsByCharacter[characterId].speakingState;
 
 export default chatSlice.reducer;

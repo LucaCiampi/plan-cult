@@ -1,16 +1,22 @@
-// store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import charactersReducer from '@/slices/charactersSlice';
 import chatReducer from '@/slices/chatSlice';
+import locationReducer from '@/slices/locationSlice';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+
+const dbService = useDatabaseService();
 
 export const store = configureStore({
   reducer: {
     characters: charactersReducer,
     chat: chatReducer,
+    location: locationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      // serializableCheck: false, // Vous pouvez conserver cette option si vous passez des objets non sérialisables dans vos actions
+      thunk: {
+        extraArgument: { dbService },
+      },
     }),
 });
 

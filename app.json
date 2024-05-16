@@ -26,11 +26,18 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./assets/fonts/ITCAvantGardeStd-Md.otf"
-          ]
+          "fonts": {
+            "ITCAvantGardeStd-Md": "./assets/fonts/ITCAvantGardeStd-Md.otf"
+          }
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      "expo-asset"
     ],
     "splash": {
       "image": "./assets/images/splash.png",

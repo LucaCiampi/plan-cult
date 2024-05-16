@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Button from '@/components/common/Button';
 import { RootState } from '@/app/store';
 import {
   addMessageToConversation,
   setCurrentQuestions,
   selectCurrentQuestions,
+  setSpeakingState,
+  SpeakingState,
 } from '@/slices/chatSlice';
 import { randomBetween } from '@/utils/randomUtils';
 import { useCallback, useState } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import Colors from '@/constants/Colors';
+import Sizes from '@/constants/Sizes';
 
 interface Props {
   characterId: string;
@@ -29,7 +33,7 @@ const Questions = ({ characterId }: Props) => {
    * Sends the dialogue object with user texts, answers and eventual followUp
    * @param question the current Dialogue node
    */
-  const handleQuestionClick = async (question: Dialogue) => {
+  const handleQuestionClick = useCallback(async (question: Dialogue) => {
     setAllMessagesSent(false);
 
     // Envoi des questions utilisateur de manière graduelle
@@ -37,11 +41,28 @@ const Questions = ({ characterId }: Props) => {
 
     // Attendre un délai avant d'envoyer les réponses du character
     await new Promise((resolve) =>
-      setTimeout(resolve, randomBetween(2, 5) * 1000)
+      setTimeout(resolve, randomBetween(1, 3) * 1000)
     );
 
     // Envoi des réponses du character
+    dispatch(
+      setSpeakingState({
+        characterId,
+        speakingState: SpeakingState.Thinking,
+      })
+    );
+    await new Promise((resolve) =>
+      setTimeout(resolve, randomBetween(2, 5) * 1000)
+    );
     await sendMessagesOrganically(question.answers, false);
+    setTimeout(() => {
+      dispatch(
+        setSpeakingState({
+          characterId,
+          speakingState: SpeakingState.Idle,
+        })
+      );
+    }, 2000);
 
     // Attendre un délai avant d'autoriser l'envoi de nouvelles questions
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -84,7 +105,7 @@ const Questions = ({ characterId }: Props) => {
         })
       );
     }
-  };
+  }, []);
 
   /**
    * Sends messages with a small random delay to add authenticity
@@ -105,6 +126,14 @@ const Questions = ({ characterId }: Props) => {
                 },
               })
             );
+            if (!isUserSent) {
+              dispatch(
+                setSpeakingState({
+                  characterId,
+                  speakingState: SpeakingState.Speaking,
+                })
+              );
+            }
             void dbService.saveConversationToConversationHistory(
               Number(characterId),
               isUserSent,
@@ -122,25 +151,39 @@ const Questions = ({ characterId }: Props) => {
 
   return (
     <View style={styles.questionsOptions}>
-      {allMessagesSent &&
-        currentQuestions?.map((currentQuestion: Dialogue) => (
-          <Button
-            key={currentQuestion.id}
-            onPress={() => {
-              void handleQuestionClick(currentQuestion);
-            }}
-          >
-            {currentQuestion.question_short}
-          </Button>
-        ))}
+      <ScrollView horizontal>
+        {allMessagesSent &&
+          currentQuestions?.map((currentQuestion: Dialogue, index) => (
+            <Button
+              key={currentQuestion.id}
+              style={[
+                styles.questionButton,
+                index === 0 && styles.firstQuestionButton,
+              ]}
+              onPress={() => {
+                void handleQuestionClick(currentQuestion);
+              }}
+            >
+              {currentQuestion.question_short}
+            </Button>
+          ))}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   questionsOptions: {
-    gap: 6,
-    padding: 6,
+    gap: Sizes.padding,
+    flexDirection: 'row',
+    backgroundColor: Colors.orange,
+  },
+  questionButton: {
+    marginEnd: Sizes.padding,
+    marginVertical: Sizes.padding,
+  },
+  firstQuestionButton: {
+    marginStart: Sizes.padding * 2,
   },
 });
 

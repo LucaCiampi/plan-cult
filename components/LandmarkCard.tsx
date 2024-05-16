@@ -1,14 +1,13 @@
 // LandmarkCard.tsx
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import Button from './common/Button';
+import Button from '@/components/common/Button';
 import { useDispatch } from 'react-redux';
-import { increaseTrustLevel } from '@/slices/charactersSlice';
-import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
 import { router } from 'expo-router';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Sizes from '@/constants/Sizes';
+import Colors from '@/constants/Colors';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -17,7 +16,6 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const dbService = useDatabaseService();
 
   const experienceId = 1;
 
@@ -28,7 +26,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
     });
 
     // Dispatch de la thunk action en passant l'instance dbService
-    void dispatch(increaseTrustLevel({ characterId: 4, dbService }));
+    dispatch(increaseCharacterTrustLevel({ characterId: 4, newTrustLevel: 2 }));
   };
 
   return (

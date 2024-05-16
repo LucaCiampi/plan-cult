@@ -2,7 +2,10 @@ import React from 'react';
 import { StyleSheet, PressableProps, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { likeCharacter } from '@/slices/charactersSlice';
-import { initializeCharacterChatState } from '@/slices/chatSlice';
+import {
+  SpeakingState,
+  initializeCharacterChatState,
+} from '@/slices/chatSlice';
 import SendIcon from '@/assets/images/send.svg';
 import Sizes from '@/constants/Sizes';
 
@@ -22,6 +25,7 @@ const Button = ({ characterId, ...rest }: Props) => {
           conversation: [],
           currentQuestions: [],
           previousQuestions: [],
+          speakingState: SpeakingState.Idle,
         };
         const characterIdString = characterId.toString();
         dispatch(
