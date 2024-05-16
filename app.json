@@ -26,9 +26,9 @@
       [
         "expo-font",
         {
-          "fonts": {
-            "ITCAvantGardeStd-Md": "./assets/fonts/ITCAvantGardeStd-Md.otf"
-          }
+          "fonts": [
+            "./assets/fonts/ITCAvantGardeStd-Md.otf"
+          ]
         }
       ],
       [
@@ -53,13 +53,14 @@
       "package": "com.lucaciampi.plancult"
     },
     "ios": {
-      "bundleIdentifier": "com.lucaciampi.plancult",
-      "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) would like to read photos for AR experiences. This is a custom InfoPlist string!",
-        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos",
-        "NSCameraUsageDescription": "$(PRODUCT_NAME) uses your camera for AR experiences. This is a custom InfoPlist string!",
-        "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) uses your microphone for AR experiences. This is a custom InfoPlist string!"
-      }
+      "bundleIdentifier": "com.lucaciampi.plancult"
+    },
+    "android": {
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.lucaciampi.plancult"
     }
   }
 }
