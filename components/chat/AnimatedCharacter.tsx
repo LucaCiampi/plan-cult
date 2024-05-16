@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import handReference from '@/assets/images/hand.png';
@@ -19,10 +18,6 @@ const AnimatedCharacter = ({ characterId, character }: Props) => {
   const currentCharacterSpeakingState = useSelector((state) =>
     selectSpeakingState(state as RootState, characterId)
   );
-
-  useEffect(() => {
-    console.log('currentCharacterSpeakingState', currentCharacterSpeakingState);
-  }, [currentCharacterSpeakingState]);
 
   return (
     <View

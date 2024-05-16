@@ -3,8 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import Button from '@/components/common/Button';
 import { useDispatch } from 'react-redux';
-import { increaseTrustLevel } from '@/slices/charactersSlice';
-import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
@@ -16,11 +15,10 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const dbService = useDatabaseService();
 
   const handleClick = () => {
     // Dispatch de la thunk action en passant l'instance dbService
-    void dispatch(increaseTrustLevel({ characterId: 4, dbService }));
+    dispatch(increaseCharacterTrustLevel({ characterId: 4, newTrustLevel: 2 }));
   };
 
   return (

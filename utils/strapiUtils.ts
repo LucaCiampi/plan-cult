@@ -87,8 +87,6 @@ export const normalizeDialogueAnchorFromStrapi = (
 
 export const normalizeCharacterProfileFromStrapi = (data: any): Character => {
   const item = data.data;
-  console.log(item);
-
   return {
     id: item.id,
     name: item.attributes.name,
