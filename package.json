@@ -6,6 +6,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "device": "expo run:ios -d b0a39b86ddf344e67787da22515e56bfde214762",
     "web": "expo start --web",
     "lint": "npx eslint './**'",
     "lint-fix": "npx eslint './**' --fix",

@@ -15,9 +15,9 @@
       [
         "expo-font",
         {
-          "fonts": {
-            "ITCAvantGardeStd-Md": "./assets/fonts/ITCAvantGardeStd-Md.otf"
-          }
+          "fonts": [
+            "./assets/fonts/ITCAvantGardeStd-Md.otf"
+          ]
         }
       ],
       [
@@ -40,6 +40,13 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.lucaciampi.plancult"
+    },
+    "android": {
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.lucaciampi.plancult"
     }
   }
 }
