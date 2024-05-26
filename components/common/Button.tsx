@@ -6,17 +6,25 @@ import { Text, StyleSheet, Pressable, PressableProps } from 'react-native';
 interface Props extends PressableProps {
   children?: React.ReactNode;
   color?: 'white' | 'orange';
+  fontSize?: 'regular' | 'large';
 }
 
-const Button = ({ children, color = 'white', style, ...rest }: Props) => {
+const Button = ({
+  children,
+  color = 'white',
+  fontSize = 'regular',
+  style,
+  ...rest
+}: Props) => {
   const colorStyle = styles[color]; // Sélectionne dynamiquement le style basé sur la prop `color`
+  const fontSizeStyle = styles[fontSize]; // Sélectionne dynamiquement le style basé sur la prop `fontSize`
 
   return (
     <Pressable
       style={StyleSheet.flatten([styles.button, colorStyle, style])}
       {...rest}
     >
-      <Text style={[styles.text, colorStyle]}>{children}</Text>
+      <Text style={[styles.text, colorStyle, fontSizeStyle]}>{children}</Text>
     </Pressable>
   );
 };
@@ -37,8 +45,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.darkGrey,
   },
   text: {
-    fontSize: Sizes.regularFontSize,
-    lineHeight: Sizes.regularFontSize,
     color: Colors.darkGrey,
     fontWeight: 'bold',
   },
@@ -49,6 +55,12 @@ const styles = StyleSheet.create({
   orange: {
     backgroundColor: Colors.orange,
     color: Colors.white,
+  },
+  regular: {
+    fontSize: Sizes.regularFontSize,
+  },
+  large: {
+    fontSize: Sizes.largeFontSize,
   },
 });
 

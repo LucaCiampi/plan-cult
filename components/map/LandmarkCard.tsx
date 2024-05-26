@@ -7,6 +7,7 @@ import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
+import DateDisclaimer from '@/components/map/DateDisclaimer';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -22,7 +23,8 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
       dispatch(
         increaseCharacterTrustLevel({
           characterId: landmark?.characters[0].id,
-          newTrustLevel: 2,
+          // TODO: use trust level stored in DB
+          newTrustLevel: landmark.characters[0].trust_level ?? 2,
         })
       );
     }
@@ -36,12 +38,24 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         style={styles.landmarkMainPhoto}
       />
       <Text style={styles.landmarkTitle}>
-        Rencard avec {landmark?.characters[0].name}{' '}
-        {landmark?.characters[0].surname}
+        Rencard avec {landmark?.characters[0]?.name}{' '}
+        {landmark?.characters[0]?.surname}
       </Text>
       <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
 
-      <Button onPress={handleClick}>J&apos;y suis</Button>
+      <View style={styles.disclaimers}>
+        <DateDisclaimer icon={'time'} text={'Durée 10 minutes'} />
+        <DateDisclaimer icon={'sound'} text={'Nécessite des écouteurs'} />
+      </View>
+
+      <Button
+        fontSize="large"
+        color="orange"
+        onPress={handleClick}
+        style={styles.startButton}
+      >
+        J&apos;y suis !
+      </Button>
     </View>
   );
 };
@@ -63,6 +77,17 @@ const styles = StyleSheet.create({
   },
   landmarkDescription: {
     fontSize: 16,
+  },
+  disclaimers: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: Sizes.padding,
+    gap: Sizes.padding * 2,
+    justifyContent: 'space-between',
+  },
+  startButton: {
+    borderWidth: 0,
+    marginHorizontal: 'auto',
   },
 });
 

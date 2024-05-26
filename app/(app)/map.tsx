@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
-import LandmarkCard from '@/components/LandmarkCard';
+import LandmarkCard from '@/components/map/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';

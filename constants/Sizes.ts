@@ -7,5 +7,6 @@ export default {
   // Text
   miniFontSize: 10,
   regularFontSize: 14,
+  largeFontSize: 16,
   subtitleFontSize: 22,
 };
