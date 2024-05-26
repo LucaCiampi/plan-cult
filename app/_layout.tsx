@@ -3,8 +3,11 @@ import { useFonts } from 'expo-font';
 import { Slot, SplashScreen } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import { store } from '@/app/store';
-import { DatabaseServiceProvider } from '@/contexts/DatabaseServiceContext';
+import { createStore } from '@/app/store';
+import {
+  DatabaseServiceProvider,
+  useDatabaseService,
+} from '@/contexts/DatabaseServiceContext';
 import { ThemeProvider } from '@react-navigation/native';
 import { useColorScheme, ImageBackground, StyleSheet } from 'react-native';
 import backgroundLightReference from '@/assets/images/background-light.jpg';
@@ -13,12 +16,14 @@ import { customDarkTheme, customLightTheme } from '@/constants/Themes';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
+  const dbService = useDatabaseService();
+  const store = createStore(dbService);
   const [currentTheme, setCurrentTheme] = useState(customLightTheme);
+  const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
     RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
     ITCAvantGardeMd: require('@/assets/fonts/ITCAvantGardeStd-Md.otf'),
   });
-  const colorScheme = useColorScheme();
 
   useEffect(() => {
     if (error != null) throw error;

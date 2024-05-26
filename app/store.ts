@@ -2,23 +2,22 @@ import { configureStore } from '@reduxjs/toolkit';
 import charactersReducer from '@/slices/charactersSlice';
 import chatReducer from '@/slices/chatSlice';
 import locationReducer from '@/slices/locationSlice';
-import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
-const dbService = useDatabaseService();
+export const createStore = (dbService: any) => {
+  return configureStore({
+    reducer: {
+      characters: charactersReducer,
+      chat: chatReducer,
+      location: locationReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: { dbService },
+        },
+      }),
+  });
+};
 
-export const store = configureStore({
-  reducer: {
-    characters: charactersReducer,
-    chat: chatReducer,
-    location: locationReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: { dbService },
-      },
-    }),
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<ReturnType<typeof createStore>['getState']>;
+export type AppDispatch = ReturnType<typeof createStore>['dispatch'];
