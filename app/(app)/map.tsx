@@ -137,7 +137,9 @@ export default function Map() {
               //   handleMarkerDeselect(marker);
               // }}
             >
-              {getPinFromType('default')}
+              {getPinFromType(
+                selectedMarker?.id === marker.id ? 'date' : 'default'
+              )}
               {/* {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
