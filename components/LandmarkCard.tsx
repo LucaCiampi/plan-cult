@@ -18,7 +18,14 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
 
   const handleClick = () => {
     // Dispatch de la thunk action en passant l'instance dbService
-    dispatch(increaseCharacterTrustLevel({ characterId: 4, newTrustLevel: 2 }));
+    if (landmark?.characters[0] !== undefined) {
+      dispatch(
+        increaseCharacterTrustLevel({
+          characterId: landmark?.characters[0].id,
+          newTrustLevel: 2,
+        })
+      );
+    }
   };
 
   return (
@@ -28,7 +35,10 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         source={{ uri: landmark?.thumbnail }}
         style={styles.landmarkMainPhoto}
       />
-      <Text style={styles.landmarkTitle}>{landmark?.name}</Text>
+      <Text style={styles.landmarkTitle}>
+        Rencard avec {landmark?.characters[0].name}{' '}
+        {landmark?.characters[0].surname}
+      </Text>
       <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
 
       <Button onPress={handleClick}>J&apos;y suis</Button>
@@ -43,7 +53,6 @@ const styles = StyleSheet.create({
     gap: Sizes.padding,
   },
   landmarkMainPhoto: {
-    flex: 1,
     width: '100%',
     // TODO: auto aspect-ratio
     aspectRatio: 1,

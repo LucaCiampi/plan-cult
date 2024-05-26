@@ -19,4 +19,5 @@ interface Landmark {
   coordinates: Coordinates;
   thumbnail?: string;
   category: PinCategory;
+  characters: Character[];
 }

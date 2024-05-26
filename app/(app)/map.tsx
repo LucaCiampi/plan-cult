@@ -47,6 +47,7 @@ export default function Map() {
   useEffect(() => {
     const fetchAllLandmarks = async () => {
       const landmarks = await dbService.getAllLandmarks();
+
       setMarkers(landmarks);
     };
     void fetchAllLandmarks();
@@ -312,6 +313,5 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
   },
 });
