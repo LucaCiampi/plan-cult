@@ -14,13 +14,17 @@ import DatePin from '@/assets/images/map/date.svg';
 import CharacterPin from '@/assets/images/map/character.svg';
 import CharacterGlassesPin from '@/assets/images/map/character-glasses.svg';
 import Colors from '@/constants/Colors';
-import { initialRegionView } from '@/constants/Coordinates';
+import {
+  initialRegionView,
+  minDistanceToSwipeCharacter,
+} from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
 import { useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { selectAllCharacters } from '@/slices/charactersSlice';
+import { isNearUser } from '@/utils/randomUtils';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -28,10 +32,8 @@ export default function Map() {
 
   // const { userLocation } = useUserLocation();
   const userLocation = {
-    coords: {
-      latitude: 45.767135,
-      longitude: 4.833658,
-    },
+    latitude: 45.767135,
+    longitude: 4.833658,
   };
 
   const allCharacters = useSelector(selectAllCharacters);
@@ -153,8 +155,8 @@ export default function Map() {
             <>
               <Marker
                 coordinate={{
-                  latitude: userLocation.coords.latitude,
-                  longitude: userLocation.coords.longitude,
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
                 }}
                 title={'User'}
               >
@@ -162,10 +164,10 @@ export default function Map() {
               </Marker>
               <Circle
                 center={{
-                  latitude: userLocation.coords.latitude,
-                  longitude: userLocation.coords.longitude,
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
                 }}
-                radius={500}
+                radius={minDistanceToSwipeCharacter}
                 fillColor={`${Colors.purple}4D`}
                 strokeColor="#00000000"
               />
@@ -194,7 +196,11 @@ export default function Map() {
                   // }}
                 >
                   {/* {getPinFromType(character.category)} */}
-                  {getPinFromType('character')}
+                  {getPinFromType(
+                    isNearUser(userLocation, character.coordinates)
+                      ? 'characterGlasses'
+                      : 'character'
+                  )}
                   {/* {selectedMarker?.id === character.id && (
                 <Callout tooltip>
                   <View>
@@ -267,8 +273,10 @@ const pinsByCategory: Record<PinCategory, any> = {
   default: DefaultPin,
   user: UserPin,
   anecdote: AnecdotePin,
+  anecdoteSeen: AnecdoteSeenPin,
   date: DatePin,
   character: CharacterPin,
+  characterGlasses: CharacterGlassesPin,
 };
 
 // Fonction pour obtenir la référence d'image en fonction de la catégorie du repère

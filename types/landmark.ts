@@ -1,4 +1,11 @@
-type PinCategory = 'default' | 'user' | 'anecdote' | 'date' | 'character';
+type PinCategory =
+  | 'default'
+  | 'user'
+  | 'anecdote'
+  | 'anecdoteSeen'
+  | 'date'
+  | 'character'
+  | 'characterGlasses';
 
 interface Coordinates {
   latitude: number;
