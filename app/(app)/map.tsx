@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Circle } from 'react-native-maps';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import LandmarkCard from '@/components/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -7,9 +7,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import DefaultPin from '@/assets/images/map/pin.svg';
+import UserPin from '@/assets/images/map/user.svg';
 import AnecdotePin from '@/assets/images/map/anecdote.svg';
+import AnecdoteSeenPin from '@/assets/images/map/anecdote-seen.svg';
 import DatePin from '@/assets/images/map/date.svg';
 import CharacterPin from '@/assets/images/map/character.svg';
+import CharacterGlassesPin from '@/assets/images/map/character-glasses.svg';
 import Colors from '@/constants/Colors';
 import { initialRegionView } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
@@ -23,8 +26,8 @@ export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
 
-  // const { location } = useUserLocation();
-  const location = {
+  // const { userLocation } = useUserLocation();
+  const userLocation = {
     coords: {
       latitude: 45.767135,
       longitude: 4.833658,
@@ -134,7 +137,7 @@ export default function Map() {
               //   handleMarkerDeselect(marker);
               // }}
             >
-              {getPinFromType('date')}
+              {getPinFromType('default')}
               {/* {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
@@ -144,16 +147,27 @@ export default function Map() {
               )} */}
             </Marker>
           ))}
-          {location !== null && (
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              title={'User'}
-            >
-              {getPinFromType('anecdote')}
-            </Marker>
+          {userLocation !== null && (
+            <>
+              <Marker
+                coordinate={{
+                  latitude: userLocation.coords.latitude,
+                  longitude: userLocation.coords.longitude,
+                }}
+                title={'User'}
+              >
+                {getPinFromType('user')}
+              </Marker>
+              <Circle
+                center={{
+                  latitude: userLocation.coords.latitude,
+                  longitude: userLocation.coords.longitude,
+                }}
+                radius={500}
+                fillColor={`${Colors.purple}4D`}
+                strokeColor="#00000000"
+              />
+            </>
           )}
           {/* <Overlay
             bounds={[
@@ -248,6 +262,8 @@ export default function Map() {
 
 // Objet de mappage pour associer chaque catégorie de Landmark à sa référence d'image
 const pinsByCategory: Record<PinCategory, any> = {
+  default: DefaultPin,
+  user: UserPin,
   anecdote: AnecdotePin,
   date: DatePin,
   character: CharacterPin,
