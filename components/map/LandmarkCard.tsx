@@ -8,6 +8,7 @@ import { AppDispatch } from '@/app/store';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
+import CharacterTag from '@/components/map/CharacterTag';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -16,6 +17,8 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
+
+  console.log(landmark);
 
   const handleClick = () => {
     // Dispatch de la thunk action en passant l'instance dbService
@@ -32,11 +35,11 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
 
   return (
     <View style={styles.card}>
-      <Image
+      {/* <Image
         // TODO: manifestement les images fetchées ne sont pas celles en local
         source={{ uri: landmark?.thumbnail }}
         style={styles.landmarkMainPhoto}
-      />
+      /> */}
       <Text style={styles.landmarkTitle}>
         Rencard avec {landmark?.characters[0]?.name}{' '}
         {landmark?.characters[0]?.surname}
@@ -47,6 +50,13 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         <DateDisclaimer icon={'time'} text={'Durée 10 minutes'} />
         <DateDisclaimer icon={'sound'} text={'Nécessite des écouteurs'} />
       </View>
+
+      {landmark?.characters[0] !== undefined && (
+        <View style={styles.dateWith}>
+          <Text style={styles.dateWithText}>Votre rencard avec :</Text>
+          <CharacterTag character={landmark?.characters[0]} />
+        </View>
+      )}
 
       <Button
         fontSize="large"
@@ -84,6 +94,13 @@ const styles = StyleSheet.create({
     padding: Sizes.padding,
     gap: Sizes.padding * 2,
     justifyContent: 'space-between',
+  },
+  dateWith: {
+    marginBottom: Sizes.padding * 4,
+  },
+  dateWithText: {
+    fontWeight: 'bold',
+    marginBottom: Sizes.padding,
   },
   startButton: {
     borderWidth: 0,

@@ -5,7 +5,7 @@ import defaultUserAvatar from '@/assets/images/user.jpg';
 
 interface Props {
   src?: string;
-  size?: 'mini' | 'medium';
+  size?: 'mini' | 'medium' | 'large';
   isUser?: boolean; // TODO: remove this
   style?: ImageStyle;
 }
@@ -45,6 +45,10 @@ const styles = StyleSheet.create({
   medium: {
     height: 50,
     width: 50,
+  },
+  large: {
+    height: 72,
+    width: 72,
   },
 });
 
