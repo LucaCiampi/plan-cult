@@ -131,7 +131,7 @@ export default function Map() {
             <Marker
               key={index}
               coordinate={marker.coordinates}
-              title={marker.name}
+              title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
               // image={} // unused
               onPress={() => {
                 handleMarkerPress(marker);

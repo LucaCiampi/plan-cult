@@ -1,6 +1,6 @@
 // LandmarkCard.tsx
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/common/Button';
 import { useDispatch } from 'react-redux';
 import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
