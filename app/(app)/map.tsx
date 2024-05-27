@@ -1,34 +1,39 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Circle } from 'react-native-maps';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
-import LandmarkCard from '@/components/LandmarkCard';
+import LandmarkCard from '@/components/map/LandmarkCard';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import DefaultPin from '@/assets/images/map/pin.svg';
+import UserPin from '@/assets/images/map/user.svg';
 import AnecdotePin from '@/assets/images/map/anecdote.svg';
+import AnecdoteSeenPin from '@/assets/images/map/anecdote-seen.svg';
 import DatePin from '@/assets/images/map/date.svg';
 import CharacterPin from '@/assets/images/map/character.svg';
+import CharacterGlassesPin from '@/assets/images/map/character-glasses.svg';
 import Colors from '@/constants/Colors';
-import { initialRegionView } from '@/constants/Coordinates';
+import {
+  initialRegionView,
+  minDistanceToSwipeCharacter,
+} from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
 import { useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { selectAllCharacters } from '@/slices/charactersSlice';
+import { isNearUser } from '@/utils/randomUtils';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
 
-  // const { location } = useUserLocation();
-  const location = {
-    coords: {
-      latitude: 45.767135,
-      longitude: 4.833658,
-    },
+  // const { userLocation } = useUserLocation();
+  const userLocation = {
+    latitude: 45.767135,
+    longitude: 4.833658,
   };
 
   const allCharacters = useSelector(selectAllCharacters);
@@ -42,6 +47,7 @@ export default function Map() {
   useEffect(() => {
     const fetchAllLandmarks = async () => {
       const landmarks = await dbService.getAllLandmarks();
+
       setMarkers(landmarks);
     };
     void fetchAllLandmarks();
@@ -125,7 +131,7 @@ export default function Map() {
             <Marker
               key={index}
               coordinate={marker.coordinates}
-              title={marker.name}
+              title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
               // image={} // unused
               onPress={() => {
                 handleMarkerPress(marker);
@@ -134,7 +140,9 @@ export default function Map() {
               //   handleMarkerDeselect(marker);
               // }}
             >
-              {getPinFromType('date')}
+              {getPinFromType(
+                selectedMarker?.id === marker.id ? 'date' : 'default'
+              )}
               {/* {selectedMarker?.id === marker.id && (
                 <Callout tooltip>
                   <View>
@@ -144,16 +152,27 @@ export default function Map() {
               )} */}
             </Marker>
           ))}
-          {location !== null && (
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              title={'User'}
-            >
-              {getPinFromType('anecdote')}
-            </Marker>
+          {userLocation !== null && (
+            <>
+              <Marker
+                coordinate={{
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
+                }}
+                title={'User'}
+              >
+                {getPinFromType('user')}
+              </Marker>
+              <Circle
+                center={{
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
+                }}
+                radius={minDistanceToSwipeCharacter}
+                fillColor={`${Colors.purple}4D`}
+                strokeColor="#00000000"
+              />
+            </>
           )}
           {/* <Overlay
             bounds={[
@@ -178,7 +197,11 @@ export default function Map() {
                   // }}
                 >
                   {/* {getPinFromType(character.category)} */}
-                  {getPinFromType('character')}
+                  {getPinFromType(
+                    isNearUser(userLocation, character.coordinates)
+                      ? 'characterGlasses'
+                      : 'character'
+                  )}
                   {/* {selectedMarker?.id === character.id && (
                 <Callout tooltip>
                   <View>
@@ -248,9 +271,13 @@ export default function Map() {
 
 // Objet de mappage pour associer chaque catégorie de Landmark à sa référence d'image
 const pinsByCategory: Record<PinCategory, any> = {
+  default: DefaultPin,
+  user: UserPin,
   anecdote: AnecdotePin,
+  anecdoteSeen: AnecdoteSeenPin,
   date: DatePin,
   character: CharacterPin,
+  characterGlasses: CharacterGlassesPin,
 };
 
 // Fonction pour obtenir la référence d'image en fonction de la catégorie du repère
@@ -286,6 +313,5 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
   },
 });

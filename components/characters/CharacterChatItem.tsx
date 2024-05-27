@@ -16,7 +16,7 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
   }, []);
 
   const handleNotificationPress = useCallback(() => {
-    console.log('rediriger vers le marker carte');
+    console.log('TODO: rediriger vers le marker carte');
   }, []);
 
   return (

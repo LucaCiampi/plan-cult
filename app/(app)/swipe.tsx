@@ -9,8 +9,7 @@ import {
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectLocation } from '@/slices/locationSlice';
-import { haversineDistance } from '@/utils/randomUtils';
-import { minDistanceToSwipeCharacter } from '@/constants/Coordinates';
+import { isNearUser } from '@/utils/randomUtils';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -38,11 +37,7 @@ export default function SwipePage() {
     if (userLocation !== undefined && allCharacters.length > 0) {
       const nearbyCharacters = allCharacters.filter((character) => {
         if (character.coordinates !== undefined) {
-          const distance = haversineDistance(
-            userLocation,
-            character.coordinates
-          );
-          return distance <= minDistanceToSwipeCharacter; // Périmètre défini de 500 mètres
+          return isNearUser(userLocation, character.coordinates);
         }
         return false;
       });

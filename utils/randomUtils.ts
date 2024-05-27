@@ -1,3 +1,5 @@
+import { minDistanceToSwipeCharacter } from '@/constants/Coordinates';
+
 export const randomBetween = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
@@ -35,4 +37,20 @@ export const haversineDistance = (
   const d = R * c;
 
   return d * 1000; // Convertir en mètres
+};
+
+/**
+ * Retourne true si la distance entre l'utilisateur et un point est inférieur ou égale à celle tolérée dans les constantes
+ * @param userCoordinates Coordonnées LatLng de l'utilisateur
+ * @param itemCoordonates Coordonnées LatLng de l'élément à comparer
+ * @returns Booléen : true si la distance est <= à celle acceptée dans les constantes
+ */
+export const isNearUser = (
+  userCoordinates: Coordinates,
+  itemCoordonates: Coordinates
+) => {
+  return (
+    haversineDistance(userCoordinates, itemCoordonates) <=
+    minDistanceToSwipeCharacter
+  );
 };

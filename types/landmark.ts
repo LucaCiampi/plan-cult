@@ -1,4 +1,11 @@
-type PinCategory = 'anecdote' | 'date' | 'character';
+type PinCategory =
+  | 'default'
+  | 'user'
+  | 'anecdote'
+  | 'anecdoteSeen'
+  | 'date'
+  | 'character'
+  | 'characterGlasses';
 
 interface Coordinates {
   latitude: number;
@@ -12,4 +19,5 @@ interface Landmark {
   coordinates: Coordinates;
   thumbnail?: string;
   category: PinCategory;
+  characters: Character[];
 }
