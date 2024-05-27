@@ -20,4 +20,5 @@ interface Landmark {
   thumbnail?: string;
   category: PinCategory;
   characters: Character[];
+  experience?: any;
 }

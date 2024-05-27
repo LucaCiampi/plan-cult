@@ -119,5 +119,6 @@ export const normalizeLandmarksFromStrapi = (data: any): Landmark[] => {
     characters: item.attributes.characters.data.map(
       (character: any) => character.attributes
     ),
+    experience: item.attributes.experience.data,
   }));
 };

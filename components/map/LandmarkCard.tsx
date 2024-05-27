@@ -9,13 +9,13 @@ import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
+import { router } from 'expo-router';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
-  onClose: () => void;
 }
 
-const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
+const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   console.log(landmark);
@@ -31,6 +31,10 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
         })
       );
     }
+
+    router.push({
+      pathname: `/experience/${landmark?.experience.id}`,
+    });
   };
 
   return (
@@ -57,15 +61,16 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
           <CharacterTag character={landmark?.characters[0]} />
         </View>
       )}
-
-      <Button
-        fontSize="large"
-        color="orange"
-        onPress={handleClick}
-        style={styles.startButton}
-      >
-        J&apos;y suis !
-      </Button>
+      {landmark?.experience !== null && (
+        <Button
+          fontSize="large"
+          color="orange"
+          onPress={handleClick}
+          style={styles.startButton}
+        >
+          J&apos;y suis !
+        </Button>
+      )}
     </View>
   );
 };
