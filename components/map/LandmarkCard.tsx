@@ -2,6 +2,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/common/Button';
+import { router } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
@@ -17,11 +18,17 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const experienceId = 1;
 
   console.log(landmark);
 
   const handleClick = () => {
     // Dispatch de la thunk action en passant l'instance dbService
+    router.push({
+      pathname: '/experience/[id]',
+      params: { id: experienceId },
+    });
+
     if (landmark?.characters[0] !== undefined) {
       dispatch(
         increaseCharacterTrustLevel({
