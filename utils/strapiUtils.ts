@@ -122,3 +122,11 @@ export const normalizeLandmarksFromStrapi = (data: any): Landmark[] => {
     experience: item.attributes.experience.data,
   }));
 };
+
+export const normalizeExperienceFromStrapi = (data: any): Experience => {
+  const item = data.data;
+  return {
+    id: item.id,
+    steps: item.attributes.steps.data.map((step: any) => step.attributes),
+  };
+};

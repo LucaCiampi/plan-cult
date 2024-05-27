@@ -100,7 +100,7 @@ class SQLiteService implements IDatabaseService {
       }
 
       console.log('Ouverture de la base de données...');
-      return SQLite.openDatabaseAsync(databaseFilename);
+      return await SQLite.openDatabaseAsync(databaseFilename);
     } catch (error) {
       console.error(
         `Erreur lors de la préparation de la base de données : ${
@@ -243,6 +243,10 @@ class SQLiteService implements IDatabaseService {
   async getAllLandmarks(): Promise<Landmark[]> {
     // TODO
     return await this.strapiService.getAllLandmarks();
+  }
+
+  async getExperienceOfId(experienceId: number): Promise<Experience> {
+    return await this.strapiService.getExperienceOfId(experienceId);
   }
 }
 
