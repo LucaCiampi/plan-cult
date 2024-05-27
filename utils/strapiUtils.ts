@@ -127,6 +127,6 @@ export const normalizeExperienceFromStrapi = (data: any): Experience => {
   const item = data.data;
   return {
     id: item.id,
-    steps: item.attributes.steps.data.map((step: any) => step.attributes),
+    steps: item.attributes.step.map((step: any) => step),
   };
 };

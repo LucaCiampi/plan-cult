@@ -115,7 +115,7 @@ class StrapiService implements IDatabaseService {
   async getExperienceOfId(experienceId: number): Promise<Experience> {
     return normalizeExperienceFromStrapi(
       await fetchDataFromStrapi(
-        `experience/${experienceId}?populate[step][populate]=*`
+        `experiences/${experienceId}?populate[step][populate]=*`
       )
     );
   }
