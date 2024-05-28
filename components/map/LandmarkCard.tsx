@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
+  onClose: () => void;
 }
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
