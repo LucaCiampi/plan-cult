@@ -5,6 +5,7 @@ import {
   normalizeCurrentConversationStateFromStrapi,
   normalizeDialogueAnchorFromStrapi,
   normalizeDialogueFromStrapi,
+  normalizeExperienceFromStrapi,
   normalizeLandmarksFromStrapi,
 } from '@/utils/strapiUtils';
 
@@ -108,6 +109,14 @@ class StrapiService implements IDatabaseService {
   async getAllLandmarks(): Promise<Landmark[]> {
     return normalizeLandmarksFromStrapi(
       await fetchDataFromStrapi('landmarks?populate=*')
+    );
+  }
+
+  async getExperienceOfId(experienceId: number): Promise<Experience> {
+    return normalizeExperienceFromStrapi(
+      await fetchDataFromStrapi(
+        `experiences/${experienceId}?populate[step][populate]=*`
+      )
     );
   }
 }

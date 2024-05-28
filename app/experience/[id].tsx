@@ -12,13 +12,82 @@ import {
   ViroTrackingReason,
   ViroTrackingStateConstants,
 } from '@viro-community/react-viro';
-import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import bowlObject from '@/assets/experiences/bowl.glb';
 import fish1 from '@/assets/experiences/fish1.png';
 import fish2 from '@/assets/experiences/fish2.png';
 import fish3 from '@/assets/experiences/fish3.png';
+import { View, Text, StyleSheet } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+
+const ARSceneNavigator = () => {
+  const { id } = useLocalSearchParams();
+  const dbService = useDatabaseService();
+  const [experience, setExperience] = useState<Experience | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const experience = await dbService.getExperienceOfId(Number(id));
+        setExperience(experience);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          title: `Expérience ${id?.toString()}`,
+          headerBackTitle: 'Retour',
+        }}
+      />
+      <ViroARSceneNavigator
+        autofocus={true}
+        initialScene={{
+          scene: HelloWorldSceneAR,
+        }}
+        style={styles.container}
+      />
+      {experience?.steps?.map((step) => (
+        <View key={step.id}>
+          <Text>{step.image.data.attributes.url}</Text>
+          <Text>{step.title}</Text>
+          <Text>{step.text}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const AnimatedFish = () => {
+  const [currentImage, setCurrentImage] = useState(0);
+  const images = [fish1, fish2, fish3];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((currentImage + 1) % images.length);
+    }, 1000); // Change l'image toutes les 1000 ms (1 seconde)
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [currentImage, images.length]);
+
+  return (
+    <ViroImage
+      source={images[currentImage]}
+      position={[0, 0, -1]} // Position de l'image dans la scène
+      scale={[1, 1, 1]} // Taille de l'image
+    />
+  );
+};
+
+export default ARSceneNavigator;
 
 const HelloWorldSceneAR = () => {
   const [currentFishImage, setFishCurrentImage] = useState(0);
@@ -104,7 +173,7 @@ const HelloWorldSceneAR = () => {
             onLoadEnd={() => {
               console.log('GLB model loaded successfully');
             }}
-            onError={(error) => {
+            onError={(error: any) => {
               console.log('Error loading GLB model:', error);
             }}
           />
@@ -119,50 +188,6 @@ const HelloWorldSceneAR = () => {
     </ViroARScene>
   );
 };
-
-const ARSceneNavigator = () => {
-  return (
-    <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
-      <ViroARSceneNavigator
-        autofocus={true}
-        initialScene={{
-          scene: HelloWorldSceneAR,
-        }}
-        style={styles.container}
-      />
-    </View>
-  );
-};
-
-const AnimatedFish = () => {
-  const [currentImage, setCurrentImage] = useState(0);
-  const images = [fish1, fish2, fish3];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((currentImage + 1) % images.length);
-    }, 1000); // Change l'image toutes les 1000 ms (1 seconde)
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImage, images.length]);
-
-  return (
-    <ViroImage
-      source={images[currentImage]}
-      position={[0, 0, -1]} // Position de l'image dans la scène
-      scale={[1, 1, 1]} // Taille de l'image
-    />
-  );
-};
-
-export default ARSceneNavigator;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
