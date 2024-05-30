@@ -15,9 +15,9 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
     router.push(`/chat/${character.id}`);
   }, []);
 
-  const handleNotificationPress = useCallback(() => {
-    console.log('TODO: rediriger vers le marker carte');
-  }, []);
+  // const handleNotificationPress = useCallback(() => {
+  //   console.log('TODO: rediriger vers le marker carte');
+  // }, []);
 
   return (
     <View style={styles.characterChatItem}>
@@ -33,10 +33,10 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
               nihil recusandae sunt et quia, ipsa at ea quasi repellat magni.
             </Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.notification}
             onPress={handleNotificationPress}
-          />
+          /> */}
         </View>
       </TouchableOpacity>
     </View>

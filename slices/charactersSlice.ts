@@ -15,9 +15,12 @@ const initialState: CharactersState = {
 
 // Créer l'action asynchrone pour récupérer tous les personnages
 export const fetchAllCharacters = createAsyncThunk<
+  // Type de la valeur de retour
   Character[],
+  // Type de l'argument d'entrée
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   void,
+  // Type des options de configuration supplémentaires
   { state: RootState; extra: { dbService: IDatabaseService } }
 >('characters/fetchAllCharacters', async (_, { extra }) => {
   console.log('🪨 fetchAllCharacters');
@@ -28,9 +31,12 @@ export const fetchAllCharacters = createAsyncThunk<
 });
 
 export const updateCharacterCoordinates = createAsyncThunk<
+  // Type de la valeur de retour
   Character[],
+  // Type de l'argument d'entrée
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   void,
+  // Type des options de configuration supplémentaires
   { state: RootState }
 >('characters/updateCharacterCoordinates', async (_, { getState }) => {
   console.log('🪨 updateCharacterCoordinates');
