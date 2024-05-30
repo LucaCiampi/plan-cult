@@ -96,9 +96,9 @@ export default function SwipePage() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={loadedCharactersProfiles}
+        data={[...loadedCharactersProfiles].reverse()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <CharacterCard character={item} />}
+        renderItem={({ item, index }) => <CharacterCard character={item} />}
       />
     </View>
   );
