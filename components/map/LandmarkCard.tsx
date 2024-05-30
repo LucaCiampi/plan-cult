@@ -1,5 +1,5 @@
 // LandmarkCard.tsx
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/common/Button';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,8 @@ import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
+import { setCurrentQuestions } from '@/slices/chatSlice';
+import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { router } from 'expo-router';
 
 interface LandmarkCardProps {
@@ -18,19 +20,48 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const experienceId = 1;
+  const dbService = useDatabaseService();
 
-  console.log(landmark);
+  console.log('landmark', landmark);
+  console.log('landmark?.characters[0]', landmark?.characters[0]);
+
+  /**
+   * Updates new questions according to trust level
+   */
+  const updateFollowingQuestions = useCallback(
+    async (characterId: number, newTrustLevel: number) => {
+      const followingQuestions = await dbService.getFirstDialoguesOfTrustLevel(
+        characterId,
+        newTrustLevel
+      );
+
+      const characterIdString = String(characterId);
+      dispatch(
+        setCurrentQuestions({
+          characterId: characterIdString,
+          questions: followingQuestions,
+        })
+      );
+    },
+    []
+  );
 
   const handleClick = () => {
     // Dispatch de la thunk action en passant l'instance dbService
     if (landmark?.characters[0] !== undefined) {
+      let newTrustLevel = 2;
+      if (landmark?.characters[0].trust_level !== undefined) {
+        newTrustLevel = landmark?.characters[0].trust_level + 1;
+      }
       dispatch(
         increaseCharacterTrustLevel({
           characterId: landmark?.characters[0].id,
           // TODO: use trust level stored in DB
-          newTrustLevel: landmark.characters[0].trust_level ?? 2,
+          newTrustLevel,
         })
       );
+      void updateFollowingQuestions(landmark?.characters[0].id, newTrustLevel);
     }
 
     router.push({

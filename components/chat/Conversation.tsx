@@ -91,10 +91,14 @@ const Conversation = ({ characterId, character }: Props) => {
       ))}
       <View
         style={[
-          styles.bottomSpacer,
+          currentCharacterSpeakingState === SpeakingState.Idle &&
+            character.detoured_character !== '0' &&
+            styles.bottomSpacer,
           currentCharacterSpeakingState !== SpeakingState.Idle &&
+            character.detoured_character !== '0' &&
             styles.bottomSpacerTaller,
-          character.detoured_character === undefined &&
+          (character.detoured_character === '0' ||
+            character.detoured_character === null) &&
             styles.bottomSpacerNoDetouredCharacter,
         ]}
       />
