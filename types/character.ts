@@ -7,7 +7,7 @@ interface Character {
   avatar_url?: string;
   profile?: CharacterProfileSection[];
   trust_level?: number;
-  detoured_character?: string;
+  detoured_character: string;
   coordinates?: {
     latitude: number;
     longitude: number;

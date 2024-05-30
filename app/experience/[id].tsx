@@ -53,13 +53,13 @@ const ARSceneNavigator = () => {
         }}
         style={styles.container}
       />
-      {experience?.steps?.map((step) => (
+      {/* {experience?.steps?.map((step) => (
         <View key={step.id}>
           <Text>{step.image.data.attributes.url}</Text>
           <Text>{step.title}</Text>
           <Text>{step.text}</Text>
         </View>
-      ))}
+      ))} */}
     </View>
   );
 };
