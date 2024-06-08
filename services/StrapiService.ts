@@ -1,5 +1,6 @@
 import {
   fetchDataFromStrapi,
+  normalizeAnecdotesFromStrapi,
   normalizeCharacterFromStrapi,
   normalizeCharacterProfileFromStrapi,
   normalizeCurrentConversationStateFromStrapi,
@@ -117,6 +118,12 @@ class StrapiService implements IDatabaseService {
       await fetchDataFromStrapi(
         `experiences/${experienceId}?populate[step][populate]=*`
       )
+    );
+  }
+
+  async getAllAnecdotes(): Promise<Anecdote[]> {
+    return normalizeAnecdotesFromStrapi(
+      await fetchDataFromStrapi('anecdotes?populate=*')
     );
   }
 }

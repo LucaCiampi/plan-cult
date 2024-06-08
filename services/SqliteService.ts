@@ -248,6 +248,11 @@ class SQLiteService implements IDatabaseService {
   async getExperienceOfId(experienceId: number): Promise<Experience> {
     return await this.strapiService.getExperienceOfId(experienceId);
   }
+
+  async getAllAnecdotes(): Promise<Anecdote[]> {
+    // TODO
+    return await this.strapiService.getAllAnecdotes();
+  }
 }
 
 export default SQLiteService;
