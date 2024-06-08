@@ -10,6 +10,7 @@ import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectLocation } from '@/slices/locationSlice';
 import { isNearUser } from '@/utils/randomUtils';
+import { useUserLocation } from '@/hooks/useUserLocation';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -21,10 +22,7 @@ export default function SwipePage() {
   const dbService = useDatabaseService();
 
   // Récupération de la position de l'utilisateur depuis Redux
-  const [userLocation] = useState({
-    latitude: 45.767135,
-    longitude: 4.833658,
-  });
+  const { userLocation } = useUserLocation();
 
   // Récupération des profils likés depuis Redux
   const allCharacters = useSelector(selectAllCharacters);

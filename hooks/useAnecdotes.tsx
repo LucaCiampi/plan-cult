@@ -7,7 +7,7 @@ export function useAnecdotes(): Anecdote[] | undefined {
   console.log('🪝 useAnecdotes');
 
   const dbService = useDatabaseService();
-  const { location: userLocation } = useUserLocation();
+  const { userLocation } = useUserLocation();
 
   const [anecdotes, setAnecdotes] = useState<Anecdote[]>();
 

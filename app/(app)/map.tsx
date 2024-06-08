@@ -30,18 +30,15 @@ import { useAnecdotes } from '@/hooks/useAnecdotes';
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
+  // TODO: centraliser la position utilisateur dans redux pour éviter les calls redondants de hooks
   const anecdotes = useAnecdotes();
+  const { userLocation } = useUserLocation();
 
-  // const { userLocation } = useUserLocation();
-  // const userLocation = {
-  //   latitude: 45.767135,
-  //   longitude: 4.833658,
-  // };
   // Mâchecroute
-  const userLocation = {
-    latitude: 45.754,
-    longitude: 4.8379504,
-  };
+  // const userLocation = {
+  //   latitude: 45.754,
+  //   longitude: 4.8379504,
+  // };
 
   const allCharacters = useSelector(selectAllCharacters);
 
