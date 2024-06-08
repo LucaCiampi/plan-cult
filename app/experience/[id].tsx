@@ -1,14 +1,7 @@
 import {
-  ViroARImageMarker,
   ViroARScene,
   ViroARSceneNavigator,
   ViroAmbientLight,
-  ViroBox,
-  ViroImage,
-  ViroNode,
-  ViroText,
-  ViroTrackingReason,
-  ViroTrackingStateConstants,
 } from '@viro-community/react-viro';
 import ArrowForwardIcon from '@/assets/images/arrow-forward.svg';
 import React, { useCallback, useEffect, useState } from 'react';
