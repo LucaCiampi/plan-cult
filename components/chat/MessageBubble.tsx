@@ -50,7 +50,9 @@ const MessageBubble = ({
    * Style array is impossible with SVG transformer so we have to use a function
    */
   const getDynamicStyle = useCallback((): any => {
-    return userSent ? styles.userBubbleEndpoint : styles.bubbleEndpoint;
+    return userSent === true
+      ? styles.userBubbleEndpoint
+      : styles.bubbleEndpoint;
   }, []);
 
   return (

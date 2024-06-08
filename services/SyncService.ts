@@ -139,7 +139,7 @@ class SyncService {
       const existingColumns = tableInfo.map((column: any) => column.name);
 
       const missingColumns = Object.entries(requiredColumns).filter(
-        ([columnName]) => existingColumns.includes(columnName) === false
+        ([columnName]) => !existingColumns.includes(columnName)
       );
 
       for (const [columnName, columnType] of missingColumns) {

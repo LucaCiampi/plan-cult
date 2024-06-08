@@ -20,11 +20,7 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const experienceId = 1;
   const dbService = useDatabaseService();
-
-  console.log('landmark', landmark);
-  console.log('landmark?.characters[0]', landmark?.characters[0]);
 
   /**
    * Updates new questions according to trust level

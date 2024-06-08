@@ -3,27 +3,17 @@ import { Platform } from 'react-native';
 import * as Location from 'expo-location';
 import * as Device from 'expo-device';
 
-interface LocationData {
-  coords: {
-    latitude: number;
-    longitude: number;
-    altitude: number | null;
-    accuracy: number | null;
-    altitudeAccuracy: number | null;
-    heading: number | null;
-    speed: number | null;
-  };
-  timestamp: number;
-}
-
 interface UseUserLocationResult {
-  location: LocationData | null;
+  location: Location.LocationObjectCoords | null;
   errorMsg: string | null;
   locationText: string;
 }
 
 export function useUserLocation(): UseUserLocationResult {
-  const [location, setLocation] = useState<LocationData | null>(null);
+  console.log('🪝 useUserLocation');
+
+  const [location, setLocation] =
+    useState<Location.LocationObjectCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [locationText, setLocationText] = useState<string>('Waiting..');
 
@@ -41,8 +31,16 @@ export function useUserLocation(): UseUserLocationResult {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      void Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 10000, // Update every 10 seconds
+          distanceInterval: 10, // Update every 10 meters
+        },
+        (newLocation) => {
+          setLocation(newLocation.coords);
+        }
+      );
     })();
   }, []);
 
@@ -51,10 +49,10 @@ export function useUserLocation(): UseUserLocationResult {
     if (errorMsg !== null) {
       text = errorMsg;
     } else if (location !== null) {
-      text = `Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`;
+      text = `Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
     }
     setLocationText(text);
-    console.log('👺 location : ', text);
+    console.log('🚶 location : ', text);
   }, [location, errorMsg]);
 
   return { location, errorMsg, locationText };
