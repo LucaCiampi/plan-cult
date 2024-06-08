@@ -22,17 +22,17 @@ import { customMapStyle } from '@/constants/Styles';
 import { useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useUserLocation } from '@/hooks/useUserLocation';
 import { selectAllCharacters } from '@/slices/charactersSlice';
 import { isNearUser } from '@/utils/randomUtils';
 import { useAnecdotes } from '@/hooks/useAnecdotes';
+import { selectUserLocation } from '@/slices/userLocationSlice';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
   // TODO: centraliser la position utilisateur dans redux pour éviter les calls redondants de hooks
   const anecdotes = useAnecdotes();
-  const { userLocation } = useUserLocation();
+  const userLocation = useSelector(selectUserLocation);
 
   // Mâchecroute
   // const userLocation = {

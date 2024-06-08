@@ -13,6 +13,7 @@ import { useColorScheme, ImageBackground, StyleSheet } from 'react-native';
 import backgroundLightReference from '@/assets/images/background-light.jpg';
 import backgroundDarkReference from '@/assets/images/background-dark.jpg';
 import { customDarkTheme, customLightTheme } from '@/constants/Themes';
+import { UserLocationTracker } from '@/components/utilities/UserLocationTracker';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
@@ -59,6 +60,7 @@ export default function AppLayout() {
             resizeMode="cover"
             style={styles.backgroundImage}
           >
+            <UserLocationTracker />
             <Slot />
           </ImageBackground>
         </DatabaseServiceProvider>

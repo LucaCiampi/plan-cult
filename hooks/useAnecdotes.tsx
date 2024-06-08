@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useUserLocation } from '@/hooks/useUserLocation';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { isNearUser } from '@/utils/randomUtils';
+import { useSelector } from 'react-redux';
+import { selectUserLocation } from '@/slices/userLocationSlice';
 
 export function useAnecdotes(): Anecdote[] | undefined {
   console.log('🪝 useAnecdotes');
 
   const dbService = useDatabaseService();
-  const { userLocation } = useUserLocation();
+  const userLocation = useSelector(selectUserLocation);
 
   const [anecdotes, setAnecdotes] = useState<Anecdote[]>();
 

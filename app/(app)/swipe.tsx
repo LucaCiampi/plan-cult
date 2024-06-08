@@ -8,9 +8,8 @@ import {
 } from '@/slices/charactersSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { selectLocation } from '@/slices/locationSlice';
+import { selectUserLocation } from '@/slices/userLocationSlice';
 import { isNearUser } from '@/utils/randomUtils';
-import { useUserLocation } from '@/hooks/useUserLocation';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -22,7 +21,7 @@ export default function SwipePage() {
   const dbService = useDatabaseService();
 
   // Récupération de la position de l'utilisateur depuis Redux
-  const { userLocation } = useUserLocation();
+  const userLocation = useSelector(selectUserLocation);
 
   // Récupération des profils likés depuis Redux
   const allCharacters = useSelector(selectAllCharacters);
