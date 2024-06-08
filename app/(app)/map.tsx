@@ -130,12 +130,16 @@ export default function Map() {
     [selectedMarker]
   );
 
+  const handleAnecdotePress = useCallback(
+    (anecdote: Anecdote) => {
+      // setSelectedMarker(anecdote);
+      // bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
+    },
+    [selectedMarker]
+  );
+
   const handleUserMarkerPress = useCallback(() => {
     if (Config.DEBUG) {
-      console.log(
-        'presentationUserPositionIndex',
-        presentationUserPositionIndex
-      );
       const nextIndex = presentationUserPositionIndex + 1;
 
       if (nextIndex < defaultUserLocations.length) {
@@ -187,11 +191,35 @@ export default function Map() {
           key={index}
           coordinate={anecdote.coordinates}
           title={anecdote.title}
+          onPress={() => {
+            handleAnecdotePress(anecdote);
+          }}
         >
           {getPinFromType('anecdote')}
         </Marker>
       )),
     [anecdotes]
+  );
+
+  const renderedCharacters = useMemo(
+    () =>
+      allCharacters.map(
+        (character, index) =>
+          character.coordinates !== undefined && (
+            <Marker
+              key={index}
+              coordinate={character.coordinates}
+              title={`${character.name} ${character.surname ?? ''}`}
+            >
+              {getPinFromType(
+                isNearUser(userLocation, character.coordinates)
+                  ? 'characterGlasses'
+                  : 'character'
+              )}
+            </Marker>
+          )
+      ),
+    [allCharacters, userLocation]
   );
 
   if (Platform.OS !== 'web') {
@@ -207,6 +235,7 @@ export default function Map() {
         >
           {renderedMarkers}
           {renderedAnecdotes}
+          {renderedCharacters}
           {userLocation !== null && (
             <>
               <Marker
@@ -228,22 +257,6 @@ export default function Map() {
                 strokeColor="#00000000"
               />
             </>
-          )}
-          {allCharacters.map(
-            (character, index) =>
-              character.coordinates !== undefined && (
-                <Marker
-                  key={index}
-                  coordinate={character.coordinates}
-                  title={character.name}
-                >
-                  {getPinFromType(
-                    isNearUser(userLocation, character.coordinates)
-                      ? 'characterGlasses'
-                      : 'character'
-                  )}
-                </Marker>
-              )
           )}
         </MapView>
         <BottomSheet

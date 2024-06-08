@@ -23,8 +23,6 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
   const dbService = useDatabaseService();
 
-  console.log(landmark);
-
   /**
    * Updates new questions according to trust level
    */
