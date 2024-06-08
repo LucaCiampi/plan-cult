@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
-import { generateRandomPositionInBoundaries } from '@/utils/randomUtils';
+import { generateRandomPositionInBoundaries } from '@/utils/distanceUtils';
 import { lyonBoundary } from '@/constants/Coordinates';
 
 interface CharactersState {

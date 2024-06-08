@@ -29,13 +29,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectAllCharacters } from '@/slices/charactersSlice';
-import { isNearUser } from '@/utils/randomUtils';
+import { isNearUser } from '@/utils/distanceUtils';
 import { useAnecdotes } from '@/hooks/useAnecdotes';
 import {
   selectUserLocation,
   setUserLocation,
 } from '@/slices/userLocationSlice';
 import Config from '@/constants/Config';
+import { formatMapMarkerTitle } from '@/utils/labellingUtils';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -150,20 +151,22 @@ export default function Map() {
 
   const renderedMarkers = useMemo(
     () =>
-      markers.map((marker, index) => (
-        <Marker
-          key={index}
-          coordinate={marker.coordinates}
-          title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
-          onPress={() => {
-            handleMarkerPress(marker);
-          }}
-        >
-          {getPinFromType(
-            selectedMarker?.id === marker.id ? 'date' : 'default'
-          )}
-        </Marker>
-      )),
+      markers.map((marker, index) => {
+        return (
+          <Marker
+            key={index}
+            coordinate={marker.coordinates}
+            title={formatMapMarkerTitle(marker.characters[0])}
+            onPress={() => {
+              handleMarkerPress(marker);
+            }}
+          >
+            {getPinFromType(
+              selectedMarker?.id === marker.id ? 'date' : 'default'
+            )}
+          </Marker>
+        );
+      }),
     [markers, selectedMarker]
   );
 
@@ -267,7 +270,7 @@ export default function Map() {
             setSelectedMarker(marker);
           }}
         >
-          <h4>{marker.name}</h4>
+          <h4>{formatMapMarkerTitle(marker.characters[0])}</h4>
         </TouchableOpacity>
       ))}
       {/* <Image

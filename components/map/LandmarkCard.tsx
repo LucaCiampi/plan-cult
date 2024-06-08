@@ -12,6 +12,7 @@ import CharacterTag from '@/components/map/CharacterTag';
 import { setCurrentQuestions } from '@/slices/chatSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { router } from 'expo-router';
+import { formatMapMarkerTitle } from '@/utils/labellingUtils';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -21,6 +22,8 @@ interface LandmarkCardProps {
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
   const dbService = useDatabaseService();
+
+  console.log(landmark);
 
   /**
    * Updates new questions according to trust level
@@ -43,9 +46,10 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     []
   );
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     // Dispatch de la thunk action en passant l'instance dbService
     if (landmark?.characters[0] !== undefined) {
+      // TODO: utiliser le trust level du character
       let newTrustLevel = 2;
       if (landmark?.characters[0].trust_level !== undefined) {
         newTrustLevel = landmark?.characters[0].trust_level + 1;
@@ -53,7 +57,6 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
       dispatch(
         increaseCharacterTrustLevel({
           characterId: landmark?.characters[0].id,
-          // TODO: use trust level stored in DB
           newTrustLevel,
         })
       );
@@ -63,7 +66,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     router.push({
       pathname: `/experience/${landmark?.experience.id}`,
     });
-  };
+  }, [landmark]);
 
   return (
     <View style={styles.card}>
@@ -73,8 +76,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
         style={styles.landmarkMainPhoto}
       /> */}
       <Text style={styles.landmarkTitle}>
-        Rencard avec {landmark?.characters[0]?.name}{' '}
-        {landmark?.characters[0]?.surname}
+        {formatMapMarkerTitle(landmark?.characters[0])}
       </Text>
       <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
 
