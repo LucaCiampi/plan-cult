@@ -4,6 +4,7 @@ import Sizes from '@/constants/Sizes';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { ExpoRouter } from 'expo-router/types/expo-router';
 
 interface Props {
   color?: 'orange' | 'purple';
@@ -23,7 +24,7 @@ const UserProfileButton = ({
   const handlePress = () => {
     if (link !== null) {
       // Routes are static, this is a trick to pass route as prop
-      router.push(link as any);
+      router.push(link as ExpoRouter.Href);
     }
   };
 

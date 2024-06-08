@@ -20,7 +20,6 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const experienceId = 1;
   const dbService = useDatabaseService();
 
   /**

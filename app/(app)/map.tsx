@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from 'react';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import LandmarkCard from '@/components/map/LandmarkCard';
@@ -19,31 +25,50 @@ import {
   minDistanceToSwipeCharacter,
 } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useUserLocation } from '@/hooks/useUserLocation';
 import { selectAllCharacters } from '@/slices/charactersSlice';
 import { isNearUser } from '@/utils/randomUtils';
+import { useAnecdotes } from '@/hooks/useAnecdotes';
+import {
+  selectUserLocation,
+  setUserLocation,
+} from '@/slices/userLocationSlice';
+import Config from '@/constants/Config';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
-
-  // const { userLocation } = useUserLocation();
-  const userLocation = {
-    latitude: 45.767135,
-    longitude: 4.833658,
-  };
+  const anecdotes = useAnecdotes();
+  const userLocation = useSelector(selectUserLocation);
+  const dispatch = useDispatch();
 
   const allCharacters = useSelector(selectAllCharacters);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
-  const [anecdotes, setAnecdotes] = useState<Anecdote[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
+  const [presentationUserPositionIndex, setPresentationUserPositionIndex] =
+    useState<number>(-1);
 
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  /**
+   * Positions utilisées pour la présentation
+   */
+  const [defaultUserLocations] = useState([
+    {
+      // Centre, à côté de place des terreaux
+      latitude: 45.766035,
+      longitude: 4.833658,
+    },
+    {
+      // Mâchecroute
+      latitude: 45.754,
+      longitude: 4.8379504,
+    },
+  ]);
 
   useEffect(() => {
     const fetchAllLandmarks = async () => {
@@ -52,16 +77,11 @@ export default function Map() {
       setMarkers(landmarks);
     };
     void fetchAllLandmarks();
-
-    const fetchAllAnecdotes = async () => {
-      const anecdotes = await dbService.getAllAnecdotes();
-
-      setAnecdotes(anecdotes);
-    };
-    void fetchAllAnecdotes();
   }, []);
 
   useEffect(() => {
+    if (route.params == null || markers.length === 0) return;
+
     // @ts-expect-error: TODO: replace with redux rather than route param
     const landmarkId = route.params?.landmarkId;
 
@@ -97,32 +117,69 @@ export default function Map() {
     // console.log('handleSheetChanges', index);
   }, []);
 
-  const isLandmark = (marker: Landmark | Character): marker is Landmark => {
-    return (marker as Landmark).category !== undefined;
-  };
-
-  const isCharacter = (marker: Landmark | Character): marker is Character => {
-    return (marker as Character).surname !== undefined;
-  };
-
-  const handleMarkerPress = (marker: Landmark | Character) => {
-    if (isLandmark(marker)) {
+  const handleMarkerPress = useCallback(
+    (marker: Landmark) => {
       setSelectedMarker(marker);
       bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
-    } else if (isCharacter(marker)) {
-      // setSelectedMarker(marker);
-    }
-  };
+    },
+    [selectedMarker]
+  );
 
-  // const handleMarkerDeselect = (marker: Landmark) => {
-  //   setSelectedMarker(null);
-  //   bottomSheetRef.current?.collapse();
-  // };
+  const handleUserMarkerPress = useCallback(() => {
+    if (Config.DEBUG) {
+      console.log(
+        'presentationUserPositionIndex',
+        presentationUserPositionIndex
+      );
+      const nextIndex = presentationUserPositionIndex + 1;
+
+      if (nextIndex < defaultUserLocations.length) {
+        setPresentationUserPositionIndex(nextIndex);
+        dispatch(setUserLocation(defaultUserLocations[nextIndex]));
+      } else {
+        setPresentationUserPositionIndex(0);
+        dispatch(setUserLocation(defaultUserLocations[0]));
+      }
+    }
+  }, [presentationUserPositionIndex, dispatch, defaultUserLocations]);
 
   // Fonction pour fermer la carte
-  const handleLandmarkClose = () => {
+  const handleLandmarkClose = useCallback(() => {
     setSelectedMarker(null);
-  };
+  }, []);
+
+  const renderedMarkers = useMemo(
+    () =>
+      markers.map((marker, index) => (
+        <Marker
+          key={index}
+          coordinate={marker.coordinates}
+          title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
+          onPress={() => {
+            handleMarkerPress(marker);
+          }}
+        >
+          {getPinFromType(
+            selectedMarker?.id === marker.id ? 'date' : 'default'
+          )}
+        </Marker>
+      )),
+    [markers, selectedMarker]
+  );
+
+  const renderedAnecdotes = useMemo(
+    () =>
+      anecdotes?.map((anecdote, index) => (
+        <Marker
+          key={index}
+          coordinate={anecdote.coordinates}
+          title={anecdote.title}
+        >
+          {getPinFromType('anecdote')}
+        </Marker>
+      )),
+    [anecdotes]
+  );
 
   if (Platform.OS !== 'web') {
     return (
@@ -135,43 +192,8 @@ export default function Map() {
           mapType="mutedStandard"
           showsPointsOfInterest={false}
         >
-          {markers.map((marker, index) => (
-            <Marker
-              key={index}
-              coordinate={marker.coordinates}
-              title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
-              // image={} // unused
-              onPress={() => {
-                handleMarkerPress(marker);
-              }}
-              // onDeselect={() => {
-              //   handleMarkerDeselect(marker);
-              // }}
-            >
-              {getPinFromType(
-                selectedMarker?.id === marker.id ? 'date' : 'default'
-              )}
-              {/* {selectedMarker?.id === marker.id && (
-                <Callout tooltip>
-                  <View>
-                    <Text>{marker.name}</Text>
-                  </View>
-                </Callout>
-              )} */}
-            </Marker>
-          ))}
-          {anecdotes.map((anecdote, index) => (
-            <Marker
-              key={index}
-              coordinate={anecdote.coordinates}
-              title={anecdote.title}
-              onPress={() => {
-                handleMarkerPress(anecdote);
-              }}
-            >
-              {getPinFromType('anecdote')}
-            </Marker>
-          ))}
+          {renderedMarkers}
+          {renderedAnecdotes}
           {userLocation !== null && (
             <>
               <Marker
@@ -179,7 +201,7 @@ export default function Map() {
                   latitude: userLocation.latitude,
                   longitude: userLocation.longitude,
                 }}
-                title={'User'}
+                onPress={handleUserMarkerPress}
               >
                 {getPinFromType('user')}
               </Marker>
@@ -194,13 +216,6 @@ export default function Map() {
               />
             </>
           )}
-          {/* <Overlay
-            bounds={[
-              [45.72, 4.8],
-              [45.78, 4.87],
-            ]}
-            image={cursorPin}
-          /> */}
           {allCharacters.map(
             (character, index) =>
               character.coordinates !== undefined && (
@@ -208,27 +223,12 @@ export default function Map() {
                   key={index}
                   coordinate={character.coordinates}
                   title={character.name}
-                  // image={} // unused
-                  onPress={() => {
-                    handleMarkerPress(character);
-                  }}
-                  // onDeselect={() => {
-                  //   handleMarkerDeselect(character);
-                  // }}
                 >
-                  {/* {getPinFromType(character.category)} */}
                   {getPinFromType(
                     isNearUser(userLocation, character.coordinates)
                       ? 'characterGlasses'
                       : 'character'
                   )}
-                  {/* {selectedMarker?.id === character.id && (
-                <Callout tooltip>
-                  <View>
-                    <Text>{character.name}</Text>
-                  </View>
-                </Callout>
-              )} */}
                 </Marker>
               )
           )}
@@ -254,6 +254,9 @@ export default function Map() {
     );
   }
 
+  /**
+   * Version web
+   */
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {markers.map((marker) => (
