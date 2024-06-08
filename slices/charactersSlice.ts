@@ -126,5 +126,9 @@ export const selectAllCharacters = (state: RootState) =>
   state.characters.allCharacters;
 export const selectLikedCharacters = (state: RootState) =>
   state.characters.likedCharacters;
+export const selectCharacterOfId = (state: RootState, characterId: number) =>
+  state.characters.allCharacters.find(
+    (character) => character.id === characterId
+  );
 
 export default charactersSlice.reducer;
