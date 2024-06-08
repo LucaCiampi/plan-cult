@@ -28,7 +28,10 @@ import { customMapStyle } from '@/constants/Styles';
 import { useDispatch, useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { selectAllCharacters } from '@/slices/charactersSlice';
+import {
+  selectAllCharacters,
+  selectLikedCharacters,
+} from '@/slices/charactersSlice';
 import { isNearUser } from '@/utils/distanceUtils';
 import { useAnecdotes } from '@/hooks/useAnecdotes';
 import {
@@ -46,6 +49,7 @@ export default function Map() {
   const dispatch = useDispatch();
 
   const allCharacters = useSelector(selectAllCharacters);
+  const likedCharacters = useSelector(selectLikedCharacters);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
@@ -149,9 +153,16 @@ export default function Map() {
     setSelectedMarker(null);
   }, []);
 
-  const renderedMarkers = useMemo(
-    () =>
-      markers.map((marker, index) => {
+  const renderedMarkers = useMemo(() => {
+    return markers
+      .filter((marker) =>
+        marker.characters.some((character) =>
+          likedCharacters.some(
+            (likedCharacter) => likedCharacter.id === character.id
+          )
+        )
+      )
+      .map((marker, index) => {
         return (
           <Marker
             key={index}
@@ -166,9 +177,8 @@ export default function Map() {
             )}
           </Marker>
         );
-      }),
-    [markers, selectedMarker]
-  );
+      });
+  }, [markers, selectedMarker, likedCharacters]);
 
   const renderedAnecdotes = useMemo(
     () =>
