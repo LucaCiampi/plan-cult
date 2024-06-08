@@ -4,30 +4,17 @@ import {
   ViroAmbientLight,
 } from '@viro-community/react-viro';
 import ArrowForwardIcon from '@/assets/images/arrow-forward.svg';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
-import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import ExperienceStep from '@/components/experience/ExperienceStep';
 import Colors from '@/constants/Colors';
 import Sizes from '@/constants/Sizes';
+import useExperience from '@/hooks/useExperience';
 
 const ARSceneNavigator = () => {
   const { id } = useLocalSearchParams();
-  const dbService = useDatabaseService();
-  const [experience, setExperience] = useState<Experience | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        const experience = await dbService.getExperienceOfId(Number(id));
-        setExperience(experience);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+  const { experience, currentStep, setCurrentStep } = useExperience(Number(id));
 
   const handleNextStepButtonPress = useCallback(() => {
     if (currentStep + 1 === experience?.steps.length) {
@@ -49,9 +36,11 @@ const ARSceneNavigator = () => {
       <ViroARSceneNavigator
         autofocus={true}
         initialScene={{
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           scene: ExperienceSceneAR,
         }}
-        viroAppProps={experience}
+        viroAppProps={{ experience, currentStep }}
         style={styles.container}
       />
       <View style={styles.firstLevelUi}>
@@ -72,27 +61,18 @@ const ARSceneNavigator = () => {
 
 export default ARSceneNavigator;
 
-const ExperienceSceneAR = () => {
-  const { id } = useLocalSearchParams();
-  const dbService = useDatabaseService();
-  const [experience, setExperience] = useState<Experience | null>(null);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        const experience = await dbService.getExperienceOfId(Number(id));
-        setExperience(experience);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+const ExperienceSceneAR = (props: any) => {
+  const { experience, currentStep } = props.sceneNavigator.viroAppProps;
 
   return (
     <ViroARScene>
       <ViroAmbientLight color="#ffffff" />
-      {experience?.steps?.map((step) => (
-        <ExperienceStep key={step.id} experienceStep={step} />
+      {experience?.steps?.map((step: any, index: number) => (
+        <ExperienceStep
+          key={step.id}
+          experienceStep={step}
+          isCurrent={index === currentStep}
+        />
       ))}
     </ViroARScene>
   );
