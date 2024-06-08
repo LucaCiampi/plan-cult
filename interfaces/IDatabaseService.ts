@@ -27,4 +27,5 @@ interface IDatabaseService {
   getDialoguesOfId: (dialoguesId: number[]) => Promise<Dialogue[]>;
   getAllLandmarks: () => Promise<Landmark[]>;
   getExperienceOfId: (experienceId: number) => Promise<Experience>;
+  getAllAnecdotes: () => Promise<Anecdote[]>;
 }

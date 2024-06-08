@@ -15,6 +15,7 @@ import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
+  onClose: () => void;
 }
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {

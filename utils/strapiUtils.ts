@@ -98,6 +98,7 @@ export const normalizeCharacterProfileFromStrapi = (data: any): Character => {
         ? Config.STRAPI_DOMAIN_URL + item.attributes.avatar.data.attributes.url
         : undefined,
     profile: item.attributes.Profil,
+    detoured_character: item.attributes.detoured_character,
   };
 };
 
@@ -130,4 +131,21 @@ export const normalizeExperienceFromStrapi = (data: any): Experience => {
     id: item.id,
     steps: item.attributes.step.map((step: any) => step),
   };
+};
+
+export const normalizeAnecdotesFromStrapi = (data: any): Anecdote[] => {
+  return data.data.map((item: any) => ({
+    id: item.id,
+    title: item.attributes.name,
+    coordinates: {
+      latitude: item.attributes.latitude,
+      longitude: item.attributes.longitude,
+    },
+    description: item.attributes.description,
+    thumbnail:
+      item.attributes.thumbnail?.data != null
+        ? Config.STRAPI_DOMAIN_URL +
+          item.attributes.thumbnail.data.attributes.url
+        : undefined,
+  }));
 };

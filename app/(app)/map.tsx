@@ -39,6 +39,7 @@ export default function Map() {
   const allCharacters = useSelector(selectAllCharacters);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
+  const [anecdotes, setAnecdotes] = useState<Anecdote[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
 
   const mapRef = useRef<MapView>(null);
@@ -51,6 +52,13 @@ export default function Map() {
       setMarkers(landmarks);
     };
     void fetchAllLandmarks();
+
+    const fetchAllAnecdotes = async () => {
+      const anecdotes = await dbService.getAllAnecdotes();
+
+      setAnecdotes(anecdotes);
+    };
+    void fetchAllAnecdotes();
   }, []);
 
   useEffect(() => {
@@ -150,6 +158,18 @@ export default function Map() {
                   </View>
                 </Callout>
               )} */}
+            </Marker>
+          ))}
+          {anecdotes.map((anecdote, index) => (
+            <Marker
+              key={index}
+              coordinate={anecdote.coordinates}
+              title={anecdote.title}
+              onPress={() => {
+                handleMarkerPress(anecdote);
+              }}
+            >
+              {getPinFromType('anecdote')}
             </Marker>
           ))}
           {userLocation !== null && (
