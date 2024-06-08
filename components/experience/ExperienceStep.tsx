@@ -1,38 +1,31 @@
 // ExperienceStep.tsx
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Sizes from '@/constants/Sizes';
-import Colors from '@/constants/Colors';
-import Avatar from '@/components/common/Avatar';
+import { ViroImage, ViroNode } from '@viro-community/react-viro';
 
 interface ExperienceStepProps {
   experienceStep: ExperienceStep;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
 }
 
-const ExperienceStep: React.FC<ExperienceStepProps> = ({ experienceStep }) => {
+const ExperienceStep: React.FC<ExperienceStepProps> = ({
+  experienceStep,
+  position,
+  rotation,
+}) => {
+  console.log('experienceStep', experienceStep);
+
   return (
-    <View style={styles.nameContainer}>
-      <Avatar size="large" src={experienceStep.image} />
-      <Text style={styles.name}>{experienceStep.title}</Text>
-      <Text style={styles.name}>{experienceStep.text}</Text>
-    </View>
+    <ViroNode position={position} rotation={rotation}>
+      {experienceStep.images !== undefined && (
+        <ViroImage
+          source={{ uri: experienceStep.images[0] }}
+          position={[0, 0, -1]} // Position de l'image dans la scène
+          scale={[1, 1, 1]} // Taille de l'image
+        />
+      )}
+    </ViroNode>
   );
 };
-
-const styles = StyleSheet.create({
-  nameContainer: {
-    backgroundColor: Colors.black,
-    padding: 4,
-    borderRadius: 999,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Sizes.padding,
-  },
-  name: {
-    fontSize: Sizes.subtitleFontSize,
-    color: Colors.white,
-    fontWeight: 'bold',
-  },
-});
 
 export default ExperienceStep;

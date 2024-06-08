@@ -2,5 +2,6 @@ interface ExperienceStep {
   id: number;
   title?: string;
   text?: string;
-  image?: any;
+  images?: any[];
+  audio?: any;
 }

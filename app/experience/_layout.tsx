@@ -1,3 +1,4 @@
+import Sizes from '@/constants/Sizes';
 import { Link, Stack } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
   },
   endExperienceButton: {
     position: 'absolute',
-    bottom: 12,
+    top: Sizes.padding * 2,
     right: 12,
     fontSize: 16,
   },

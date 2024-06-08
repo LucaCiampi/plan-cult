@@ -1,4 +1,4 @@
 interface Experience {
   id: number;
-  steps?: ExperienceStep[];
+  steps: ExperienceStep[];
 }

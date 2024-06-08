@@ -21,7 +21,6 @@ export default function AppLayout() {
   const [currentTheme, setCurrentTheme] = useState(customLightTheme);
   const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
-    RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
     ITCAvantGardeMd: require('@/assets/fonts/ITCAvantGardeStd-Md.otf'),
   });
 

@@ -129,7 +129,31 @@ export const normalizeExperienceFromStrapi = (data: any): Experience => {
   const item = data.data;
   return {
     id: item.id,
-    steps: item.attributes.step.map((step: any) => step),
+    steps: item.attributes.step.map((step: any) =>
+      normalizeExperienceStepFromStrapi(step)
+    ),
+  };
+};
+
+export const normalizeExperienceStepFromStrapi = (
+  data: any
+): ExperienceStep => {
+  return {
+    id: data.id,
+    title: data.title,
+    text: data.text,
+    images:
+      data.images?.data != null
+        ? data.images.data.map(
+            (image: any) => Config.STRAPI_DOMAIN_URL + image.attributes.url
+          )
+        : undefined,
+    audio:
+      data.audio?.data != null
+        ? data.audio.data.map(
+            (audio: any) => Config.STRAPI_DOMAIN_URL + audio.attributes.url
+          )
+        : undefined,
   };
 };
 
