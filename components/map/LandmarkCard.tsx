@@ -12,6 +12,7 @@ import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
 import { setCurrentQuestions } from '@/slices/chatSlice';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
+import { formatMapMarkerTitle } from '@/utils/labellingUtils';
 
 interface LandmarkCardProps {
   landmark: Landmark | null;
@@ -43,14 +44,9 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     []
   );
 
-  const handleClick = () => {
-    // Dispatch de la thunk action en passant l'instance dbService
-    router.push({
-      pathname: '/experience/[id]',
-      params: { id: experienceId },
-    });
-
+  const handleClick = useCallback(() => {
     if (landmark?.characters[0] !== undefined) {
+      // TODO: utiliser le trust level du character
       let newTrustLevel = 2;
       if (landmark?.characters[0].trust_level !== undefined) {
         newTrustLevel = landmark?.characters[0].trust_level + 1;
@@ -58,7 +54,6 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
       dispatch(
         increaseCharacterTrustLevel({
           characterId: landmark?.characters[0].id,
-          // TODO: use trust level stored in DB
           newTrustLevel,
         })
       );
@@ -68,7 +63,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     router.push({
       pathname: `/experience/${landmark?.experience.id}`,
     });
-  };
+  }, [landmark]);
 
   return (
     <View style={styles.card}>
@@ -78,8 +73,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
         style={styles.landmarkMainPhoto}
       /> */}
       <Text style={styles.landmarkTitle}>
-        Rencard avec {landmark?.characters[0]?.name}{' '}
-        {landmark?.characters[0]?.surname}
+        {formatMapMarkerTitle(landmark?.characters[0])}
       </Text>
       <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
 

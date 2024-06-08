@@ -4,17 +4,24 @@ import { StyleSheet, Text, View } from 'react-native';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import Avatar from '@/components/common/Avatar';
+import { selectCharacterOfId } from '@/slices/charactersSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
 
 interface CharacterTagProps {
   character: Character;
 }
 
 const CharacterTag: React.FC<CharacterTagProps> = ({ character }) => {
+  const currentCharacter = useSelector((state) =>
+    selectCharacterOfId(state as RootState, character.id)
+  );
+
   return (
     <View style={styles.nameContainer}>
-      <Avatar size="large" src={character.avatar_url} />
+      <Avatar size="large" src={currentCharacter?.avatar_url} />
       <Text style={styles.name}>
-        {character.name} {character.surname}
+        {currentCharacter?.name} {currentCharacter?.surname}
       </Text>
     </View>
   );

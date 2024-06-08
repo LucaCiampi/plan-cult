@@ -9,7 +9,7 @@ import {
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectUserLocation } from '@/slices/userLocationSlice';
-import { isNearUser } from '@/utils/randomUtils';
+import { isNearUser } from '@/utils/distanceUtils';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<

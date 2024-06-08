@@ -9,7 +9,7 @@ import {
   setSpeakingState,
   SpeakingState,
 } from '@/slices/chatSlice';
-import { randomBetween } from '@/utils/randomUtils';
+import { randomBetween } from '@/utils/distanceUtils';
 import { useCallback, useState } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import Colors from '@/constants/Colors';

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
-import { generateRandomPositionInBoundaries } from '@/utils/randomUtils';
+import { generateRandomPositionInBoundaries } from '@/utils/distanceUtils';
 import { lyonBoundary } from '@/constants/Coordinates';
 
 interface CharactersState {
@@ -126,5 +126,9 @@ export const selectAllCharacters = (state: RootState) =>
   state.characters.allCharacters;
 export const selectLikedCharacters = (state: RootState) =>
   state.characters.likedCharacters;
+export const selectCharacterOfId = (state: RootState, characterId: number) =>
+  state.characters.allCharacters.find(
+    (character) => character.id === characterId
+  );
 
 export default charactersSlice.reducer;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
-import { isNearUser } from '@/utils/randomUtils';
+import { isNearUser } from '@/utils/distanceUtils';
 import { useSelector } from 'react-redux';
 import { selectUserLocation } from '@/slices/userLocationSlice';
 
