@@ -7,24 +7,12 @@ interface UserLocationState {
   error: string | null;
 }
 
-/**
- * Positions utilisées pour la présentation
- */
-const defaultUserLocations: Coordinates[] = [
-  {
+const initialState: UserLocationState = {
+  userLocation: {
     // Centre, à côté de place des terreaux
-    latitude: 45.767135,
+    latitude: 45.764135,
     longitude: 4.833658,
   },
-  {
-    // Mâchecroute
-    latitude: 45.754,
-    longitude: 4.8379504,
-  },
-];
-
-const initialState: UserLocationState = {
-  userLocation: defaultUserLocations[0],
   error: null,
 };
 

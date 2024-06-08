@@ -19,13 +19,17 @@ import {
   minDistanceToSwipeCharacter,
 } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectAllCharacters } from '@/slices/charactersSlice';
 import { isNearUser } from '@/utils/randomUtils';
 import { useAnecdotes } from '@/hooks/useAnecdotes';
-import { selectUserLocation } from '@/slices/userLocationSlice';
+import {
+  selectUserLocation,
+  setUserLocation,
+} from '@/slices/userLocationSlice';
+import Config from '@/constants/Config';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -33,6 +37,7 @@ export default function Map() {
   // TODO: centraliser la position utilisateur dans redux pour éviter les calls redondants de hooks
   const anecdotes = useAnecdotes();
   const userLocation = useSelector(selectUserLocation);
+  const dispatch = useDispatch();
 
   // Mâchecroute
   // const userLocation = {
@@ -44,9 +49,27 @@ export default function Map() {
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
+  const [presentationUserPositionIndex, setPresentationUserPositionIndex] =
+    useState<number>(-1);
 
   const mapRef = useRef<MapView>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  /**
+   * Positions utilisées pour la présentation
+   */
+  const [defaultUserLocations] = useState([
+    {
+      // Centre, à côté de place des terreaux
+      latitude: 45.766035,
+      longitude: 4.833658,
+    },
+    {
+      // Mâchecroute
+      latitude: 45.754,
+      longitude: 4.8379504,
+    },
+  ]);
 
   useEffect(() => {
     const fetchAllLandmarks = async () => {
@@ -93,15 +116,31 @@ export default function Map() {
     // console.log('handleSheetChanges', index);
   }, []);
 
-  const handleMarkerPress = (marker: Landmark) => {
-    setSelectedMarker(marker);
-    bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
-  };
+  const handleMarkerPress = useCallback(
+    (marker: Landmark) => {
+      setSelectedMarker(marker);
+      bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
+    },
+    [selectedMarker]
+  );
 
-  // const handleMarkerDeselect = (marker: Landmark) => {
-  //   setSelectedMarker(null);
-  //   bottomSheetRef.current?.collapse();
-  // };
+  const handleUserMarkerPress = useCallback(() => {
+    if (Config.DEBUG) {
+      console.log(
+        'presentationUserPositionIndex',
+        presentationUserPositionIndex
+      );
+      const nextIndex = presentationUserPositionIndex + 1;
+
+      if (nextIndex < defaultUserLocations.length) {
+        setPresentationUserPositionIndex(nextIndex);
+        dispatch(setUserLocation(defaultUserLocations[nextIndex]));
+      } else {
+        setPresentationUserPositionIndex(0);
+        dispatch(setUserLocation(defaultUserLocations[0]));
+      }
+    }
+  }, [presentationUserPositionIndex, dispatch, defaultUserLocations]);
 
   // Fonction pour fermer la carte
   const handleLandmarkClose = () => {
@@ -160,7 +199,7 @@ export default function Map() {
                   latitude: userLocation.latitude,
                   longitude: userLocation.longitude,
                 }}
-                title={'User'}
+                onPress={handleUserMarkerPress}
               >
                 {getPinFromType('user')}
               </Marker>
