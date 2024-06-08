@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from 'react';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import LandmarkCard from '@/components/map/LandmarkCard';
@@ -34,16 +40,9 @@ import Config from '@/constants/Config';
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
-  // TODO: centraliser la position utilisateur dans redux pour éviter les calls redondants de hooks
   const anecdotes = useAnecdotes();
   const userLocation = useSelector(selectUserLocation);
   const dispatch = useDispatch();
-
-  // Mâchecroute
-  // const userLocation = {
-  //   latitude: 45.754,
-  //   longitude: 4.8379504,
-  // };
 
   const allCharacters = useSelector(selectAllCharacters);
 
@@ -81,6 +80,8 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
+    if (route.params == null || markers.length === 0) return;
+
     // @ts-expect-error: TODO: replace with redux rather than route param
     const landmarkId = route.params?.landmarkId;
 
@@ -143,9 +144,42 @@ export default function Map() {
   }, [presentationUserPositionIndex, dispatch, defaultUserLocations]);
 
   // Fonction pour fermer la carte
-  const handleLandmarkClose = () => {
+  const handleLandmarkClose = useCallback(() => {
     setSelectedMarker(null);
-  };
+  }, []);
+
+  const renderedMarkers = useMemo(
+    () =>
+      markers.map((marker, index) => (
+        <Marker
+          key={index}
+          coordinate={marker.coordinates}
+          title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
+          onPress={() => {
+            handleMarkerPress(marker);
+          }}
+        >
+          {getPinFromType(
+            selectedMarker?.id === marker.id ? 'date' : 'default'
+          )}
+        </Marker>
+      )),
+    [markers, selectedMarker]
+  );
+
+  const renderedAnecdotes = useMemo(
+    () =>
+      anecdotes?.map((anecdote, index) => (
+        <Marker
+          key={index}
+          coordinate={anecdote.coordinates}
+          title={anecdote.title}
+        >
+          {getPinFromType('anecdote')}
+        </Marker>
+      )),
+    [anecdotes]
+  );
 
   if (Platform.OS !== 'web') {
     return (
@@ -158,40 +192,8 @@ export default function Map() {
           mapType="mutedStandard"
           showsPointsOfInterest={false}
         >
-          {markers.map((marker, index) => (
-            <Marker
-              key={index}
-              coordinate={marker.coordinates}
-              title={`Rencard avec ${marker.characters[0]?.name} ${marker.characters[0]?.surname}`}
-              // image={} // unused
-              onPress={() => {
-                handleMarkerPress(marker);
-              }}
-              // onDeselect={() => {
-              //   handleMarkerDeselect(marker);
-              // }}
-            >
-              {getPinFromType(
-                selectedMarker?.id === marker.id ? 'date' : 'default'
-              )}
-              {/* {selectedMarker?.id === marker.id && (
-                <Callout tooltip>
-                  <View>
-                    <Text>{marker.name}</Text>
-                  </View>
-                </Callout>
-              )} */}
-            </Marker>
-          ))}
-          {anecdotes?.map((anecdote, index) => (
-            <Marker
-              key={index}
-              coordinate={anecdote.coordinates}
-              title={anecdote.title}
-            >
-              {getPinFromType('anecdote')}
-            </Marker>
-          ))}
+          {renderedMarkers}
+          {renderedAnecdotes}
           {userLocation !== null && (
             <>
               <Marker
@@ -252,6 +254,9 @@ export default function Map() {
     );
   }
 
+  /**
+   * Version web
+   */
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {markers.map((marker) => (
