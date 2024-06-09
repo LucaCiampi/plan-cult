@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '@/app/store';
+import { AppDispatch, RootState } from '@/app/store';
 import { generateRandomPositionInBoundaries } from '@/utils/distanceUtils';
 import { lyonBoundary } from '@/constants/Coordinates';
+import { updateQuestionsToNewTrustLevel } from '@/slices/chatSlice';
 
 interface CharactersState {
   allCharacters: Character[];
@@ -57,6 +58,30 @@ export const updateCharacterCoordinates = createAsyncThunk<
   return updatedCharacters;
 });
 
+export const increaseTrustAndFetchQuestions = createAsyncThunk<
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  { characterId: number },
+  {
+    state: RootState;
+    dispatch: AppDispatch;
+    extra: { dbService: IDatabaseService };
+  }
+>(
+  'characters/increaseTrustAndFetchQuestions',
+  async ({ characterId }, { dispatch, getState, extra }) => {
+    dispatch(increaseCharacterTrustLevel({ characterId }));
+    const state = getState();
+    const character = selectCharacterOfId(state, characterId);
+    if (character != null) {
+      const newTrustLevel = (character.trust_level ?? 0) + 1;
+      await dispatch(
+        updateQuestionsToNewTrustLevel({ characterId, newTrustLevel })
+      );
+    }
+  }
+);
+
 export const charactersSlice = createSlice({
   name: 'characters',
   initialState,
@@ -82,13 +107,12 @@ export const charactersSlice = createSlice({
     },
     increaseCharacterTrustLevel: (
       state,
-      action: PayloadAction<{ characterId: number; newTrustLevel: number }>
+      action: PayloadAction<{ characterId: number }>
     ) => {
-      console.log('🏷️ increaseCharacterTrustLevel');
-      const { characterId, newTrustLevel } = action.payload;
+      const { characterId } = action.payload;
       const character = state.likedCharacters.find((c) => c.id === characterId);
       if (character != null) {
-        character.trust_level = newTrustLevel;
+        character.trust_level = (character.trust_level ?? 0) + 1;
       }
     },
   },

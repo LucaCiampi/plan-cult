@@ -36,8 +36,6 @@ const ARSceneNavigator = () => {
       <ViroARSceneNavigator
         autofocus={true}
         initialScene={{
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
           scene: ExperienceSceneAR,
         }}
         viroAppProps={{ experience, currentStep }}

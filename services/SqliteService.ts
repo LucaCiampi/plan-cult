@@ -204,8 +204,6 @@ class SQLiteService implements IDatabaseService {
     trustLevel: number
   ): Promise<Dialogue[]> {
     const db = await this.getDb();
-    console.log('getFirstDialoguesOfTrustLevel(', characterId, trustLevel, ')');
-
     const result = await db.getFirstAsync(
       'SELECT dialogues_id FROM dialogue_anchor WHERE character_id = ? AND trust_level = ?',
       characterId,
