@@ -5,7 +5,13 @@ import {
 } from '@viro-community/react-viro';
 import ArrowForwardIcon from '@/assets/images/arrow-forward.svg';
 import React, { useCallback } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import ExperienceStep from '@/components/experience/ExperienceStep';
 import Colors from '@/constants/Colors';
@@ -14,15 +20,36 @@ import useExperience from '@/hooks/useExperience';
 
 const ARSceneNavigator = () => {
   const { id } = useLocalSearchParams();
-  const { experience, currentStep, setCurrentStep } = useExperience(Number(id));
+  const { experience, currentStep, setCurrentStep, numberOfSteps, loading } =
+    useExperience(Number(id));
+  console.log('numberOfSteps', numberOfSteps);
 
   const handleNextStepButtonPress = useCallback(() => {
-    if (currentStep + 1 === experience?.steps.length) {
+    console.log(currentStep + '/' + numberOfSteps);
+
+    if (currentStep + 1 >= numberOfSteps) {
       router.navigate('/chat');
       return;
     }
     setCurrentStep(currentStep + 1);
-  }, [currentStep]);
+  }, [currentStep, numberOfSteps]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={Colors.orange} />
+        <Text>Chargement de l&apos;expérience...</Text>
+      </View>
+    );
+  }
+
+  if (experience === undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Aucune expérience trouvée</Text>;
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -36,6 +63,8 @@ const ARSceneNavigator = () => {
       <ViroARSceneNavigator
         autofocus={true}
         initialScene={{
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           scene: ExperienceSceneAR,
         }}
         viroAppProps={{ experience, currentStep }}

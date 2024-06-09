@@ -64,10 +64,15 @@ export default function Map() {
    */
   const [defaultUserLocations] = useState([
     {
-      // Centre, à côté de place des terreaux
-      latitude: 45.766035,
-      longitude: 4.833658,
+      // Croix rousse centre
+      latitude: 45.779706,
+      longitude: 4.8273587,
     },
+    // {
+    //   // Centre, à côté de place des terreaux
+    //   latitude: 45.766035,
+    //   longitude: 4.833658,
+    // },
     {
       // Mâchecroute
       latitude: 45.754,
