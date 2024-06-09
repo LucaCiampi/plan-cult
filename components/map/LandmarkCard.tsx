@@ -9,8 +9,6 @@ import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
-import { setCurrentQuestions } from '@/slices/chatSlice';
-import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { router } from 'expo-router';
 import { formatMapMarkerTitle } from '@/utils/labellingUtils';
 
@@ -21,44 +19,12 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const dbService = useDatabaseService();
-
-  /**
-   * Updates new questions according to trust level
-   */
-  const updateFollowingQuestions = useCallback(
-    async (characterId: number, newTrustLevel: number) => {
-      const followingQuestions = await dbService.getFirstDialoguesOfTrustLevel(
-        characterId,
-        newTrustLevel
-      );
-
-      const characterIdString = String(characterId);
-      dispatch(
-        setCurrentQuestions({
-          characterId: characterIdString,
-          questions: followingQuestions,
-        })
-      );
-    },
-    []
-  );
 
   const handleClick = useCallback(() => {
     // Dispatch de la thunk action en passant l'instance dbService
     if (landmark?.characters[0] !== undefined) {
-      // TODO: utiliser le trust level du character
-      let newTrustLevel = 2;
-      if (landmark?.characters[0].trust_level !== undefined) {
-        newTrustLevel = landmark?.characters[0].trust_level + 1;
-      }
-      dispatch(
-        increaseCharacterTrustLevel({
-          characterId: landmark?.characters[0].id,
-          newTrustLevel,
-        })
-      );
-      void updateFollowingQuestions(landmark?.characters[0].id, newTrustLevel);
+      const characterId = landmark.characters[0].id;
+      void dispatch(increaseCharacterTrustLevel({ characterId }));
     }
 
     router.push({

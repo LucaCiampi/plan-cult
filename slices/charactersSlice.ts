@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '@/app/store';
+import { AppDispatch, RootState } from '@/app/store';
 import { generateRandomPositionInBoundaries } from '@/utils/distanceUtils';
 import { lyonBoundary } from '@/constants/Coordinates';
+import { updateQuestionsToNewTrustLevel } from '@/slices/chatSlice';
 
 interface CharactersState {
   allCharacters: Character[];
@@ -57,6 +58,34 @@ export const updateCharacterCoordinates = createAsyncThunk<
   return updatedCharacters;
 });
 
+export const increaseCharacterTrustLevel = createAsyncThunk<
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  { characterId: number },
+  {
+    state: RootState;
+    dispatch: AppDispatch;
+    extra: { dbService: IDatabaseService };
+  }
+>(
+  'characters/increaseCharacterTrustLevel',
+  async ({ characterId }, { dispatch, getState, extra }) => {
+    console.log('🪨 increaseCharacterTrustLevel');
+
+    const state = getState();
+    const character = selectCharacterOfId(state, characterId);
+    if (character != null) {
+      const newTrustLevel = (character.trust_level ?? 0) + 1;
+      await dispatch(
+        updateQuestionsToNewTrustLevel({ characterId, newTrustLevel })
+      );
+      dispatch(
+        charactersSlice.actions.updateTrustLevel({ characterId, newTrustLevel })
+      );
+    }
+  }
+);
+
 export const charactersSlice = createSlice({
   name: 'characters',
   initialState,
@@ -80,11 +109,10 @@ export const charactersSlice = createSlice({
         (character) => character.id !== action.payload
       );
     },
-    increaseCharacterTrustLevel: (
+    updateTrustLevel: (
       state,
       action: PayloadAction<{ characterId: number; newTrustLevel: number }>
     ) => {
-      console.log('🏷️ increaseCharacterTrustLevel');
       const { characterId, newTrustLevel } = action.payload;
       const character = state.likedCharacters.find((c) => c.id === characterId);
       if (character != null) {
@@ -119,7 +147,7 @@ export const {
   setCharacters,
   likeCharacter,
   dislikeCharacter,
-  increaseCharacterTrustLevel,
+  updateTrustLevel,
 } = charactersSlice.actions;
 
 export const selectAllCharacters = (state: RootState) =>

@@ -1,6 +1,6 @@
 // features/chat/chatSlice.ts
 import { RootState } from '@/app/store';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export enum SpeakingState {
   Idle,
@@ -22,6 +22,37 @@ interface ChatState {
 const initialState: ChatState = {
   chatsByCharacter: {},
 };
+
+/**
+ * Sets questions according to first ones of new character trust level
+ */
+export const updateQuestionsToNewTrustLevel = createAsyncThunk<
+  // Type de la valeur de retour
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  void,
+  // Type de l'argument d'entrée
+  { characterId: number; newTrustLevel: number },
+  // Type des options de configuration supplémentaires
+  { state: RootState; extra: { dbService: IDatabaseService } }
+>(
+  'characters/updateQuestionsToNewTrustLevel',
+  async ({ characterId, newTrustLevel }, { dispatch, extra }) => {
+    console.log('🪨 updateQuestionsToNewTrustLevel');
+
+    const { dbService } = extra;
+    const followingQuestions = await dbService.getFirstDialoguesOfTrustLevel(
+      characterId,
+      newTrustLevel
+    );
+    const characterIdString = String(characterId);
+    dispatch(
+      setCurrentQuestions({
+        characterId: characterIdString,
+        questions: followingQuestions,
+      })
+    );
+  }
+);
 
 const chatSlice = createSlice({
   name: 'chat',
