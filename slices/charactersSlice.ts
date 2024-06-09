@@ -58,7 +58,7 @@ export const updateCharacterCoordinates = createAsyncThunk<
   return updatedCharacters;
 });
 
-export const increaseCharacterTrustLevel = createAsyncThunk<
+export const increaseTrustAndFetchQuestions = createAsyncThunk<
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   void,
   { characterId: number },
@@ -68,19 +68,15 @@ export const increaseCharacterTrustLevel = createAsyncThunk<
     extra: { dbService: IDatabaseService };
   }
 >(
-  'characters/increaseCharacterTrustLevel',
+  'characters/increaseTrustAndFetchQuestions',
   async ({ characterId }, { dispatch, getState, extra }) => {
-    console.log('🪨 increaseCharacterTrustLevel');
-
+    dispatch(increaseCharacterTrustLevel({ characterId }));
     const state = getState();
     const character = selectCharacterOfId(state, characterId);
     if (character != null) {
       const newTrustLevel = (character.trust_level ?? 0) + 1;
       await dispatch(
         updateQuestionsToNewTrustLevel({ characterId, newTrustLevel })
-      );
-      dispatch(
-        charactersSlice.actions.updateTrustLevel({ characterId, newTrustLevel })
       );
     }
   }
@@ -109,14 +105,14 @@ export const charactersSlice = createSlice({
         (character) => character.id !== action.payload
       );
     },
-    updateTrustLevel: (
+    increaseCharacterTrustLevel: (
       state,
-      action: PayloadAction<{ characterId: number; newTrustLevel: number }>
+      action: PayloadAction<{ characterId: number }>
     ) => {
-      const { characterId, newTrustLevel } = action.payload;
+      const { characterId } = action.payload;
       const character = state.likedCharacters.find((c) => c.id === characterId);
       if (character != null) {
-        character.trust_level = newTrustLevel;
+        character.trust_level = (character.trust_level ?? 0) + 1;
       }
     },
   },
@@ -147,7 +143,7 @@ export const {
   setCharacters,
   likeCharacter,
   dislikeCharacter,
-  updateTrustLevel,
+  increaseCharacterTrustLevel,
 } = charactersSlice.actions;
 
 export const selectAllCharacters = (state: RootState) =>

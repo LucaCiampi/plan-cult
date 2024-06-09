@@ -44,9 +44,7 @@ export default function ChatWithCharacterPage() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: `${character.name} ${character.surname ?? ''} ${
-            character.trust_level
-          }`,
+          title: `${character.name} ${character.surname ?? ''}`,
           headerBackTitle: 'Retour',
         }}
       />

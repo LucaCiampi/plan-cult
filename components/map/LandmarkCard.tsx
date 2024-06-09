@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/common/Button';
 import { useDispatch } from 'react-redux';
-import { increaseCharacterTrustLevel } from '@/slices/charactersSlice';
+import { increaseTrustAndFetchQuestions } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
@@ -24,7 +24,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     // Dispatch de la thunk action en passant l'instance dbService
     if (landmark?.characters[0] !== undefined) {
       const characterId = landmark.characters[0].id;
-      void dispatch(increaseCharacterTrustLevel({ characterId }));
+      void dispatch(increaseTrustAndFetchQuestions({ characterId }));
     }
 
     router.push({
