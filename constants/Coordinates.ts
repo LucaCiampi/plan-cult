@@ -12,4 +12,4 @@ export const initialRegionView = {
   longitudeDelta: 0.0421,
 };
 
-export const minDistanceToSwipeCharacter = 5500;
+export const minDistanceToSwipeCharacter = 500;
