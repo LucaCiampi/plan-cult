@@ -26,8 +26,6 @@ import {
 } from '@/constants/Coordinates';
 import { customMapStyle } from '@/constants/Styles';
 import { useDispatch, useSelector } from 'react-redux';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   selectAllCharacters,
   selectLikedCharacters,
@@ -39,20 +37,23 @@ import {
   setUserLocation,
 } from '@/slices/userLocationSlice';
 import Config from '@/constants/Config';
-import { formatMapMarkerTitle } from '@/utils/labellingUtils';
+import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
+import AnecdoteCard from '@/components/map/AnecdoteCard';
 
 export default function Map() {
   const dbService = useDatabaseService();
   const route = useRoute();
   const anecdotes = useAnecdotes();
-  const userLocation = useSelector(selectUserLocation);
   const dispatch = useDispatch();
 
+  const userLocation = useSelector(selectUserLocation);
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
 
   const [markers, setMarkers] = useState<Landmark[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<Landmark | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<
+    Landmark | Anecdote | null
+  >(null);
   const [presentationUserPositionIndex, setPresentationUserPositionIndex] =
     useState<number>(-1);
 
@@ -132,8 +133,8 @@ export default function Map() {
 
   const handleAnecdotePress = useCallback(
     (anecdote: Anecdote) => {
-      // setSelectedMarker(anecdote);
-      // bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
+      setSelectedMarker(anecdote);
+      bottomSheetRef.current?.snapToIndex(1); // Ouvre la BottomSheet au second snap point
     },
     [selectedMarker]
   );
@@ -171,7 +172,7 @@ export default function Map() {
           <Marker
             key={index}
             coordinate={marker.coordinates}
-            title={formatMapMarkerTitle(marker.characters[0])}
+            title={formatMapMarkerDateTitle(marker.characters[0])}
             onPress={() => {
               handleMarkerPress(marker);
             }}
@@ -270,10 +271,15 @@ export default function Map() {
         >
           {/* TODO: remove BottomSheetView ? */}
           <BottomSheetView style={styles.contentContainer}>
-            <LandmarkCard
-              landmark={selectedMarker}
-              onClose={handleLandmarkClose}
-            />
+            {selectedMarker !== null && 'characters' in selectedMarker && (
+              <LandmarkCard
+                landmark={selectedMarker}
+                onClose={handleLandmarkClose}
+              />
+            )}
+            {selectedMarker !== null && 'title' in selectedMarker && (
+              <AnecdoteCard anecdote={selectedMarker} />
+            )}
           </BottomSheetView>
         </BottomSheet>
       </GestureHandlerRootView>
@@ -293,7 +299,7 @@ export default function Map() {
             setSelectedMarker(marker);
           }}
         >
-          <h4>{formatMapMarkerTitle(marker.characters[0])}</h4>
+          <h4>{formatMapMarkerDateTitle(marker.characters[0])}</h4>
         </TouchableOpacity>
       ))}
       {/* <Image
@@ -308,10 +314,15 @@ export default function Map() {
       >
         {/* TODO: remove BottomSheetView ? */}
         <BottomSheetView style={styles.contentContainer}>
-          <LandmarkCard
-            landmark={selectedMarker}
-            onClose={handleLandmarkClose}
-          />
+          {selectedMarker !== null && 'characters' in selectedMarker && (
+            <LandmarkCard
+              landmark={selectedMarker}
+              onClose={handleLandmarkClose}
+            />
+          )}
+          {selectedMarker !== null && 'title' in selectedMarker && (
+            <AnecdoteCard anecdote={selectedMarker} />
+          )}
         </BottomSheetView>
       </BottomSheet>
     </GestureHandlerRootView>

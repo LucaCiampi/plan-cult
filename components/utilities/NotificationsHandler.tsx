@@ -9,12 +9,12 @@ export default function NotificationsHandler() {
   useEffect(() => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log('Notification received: ', notification);
+        console.log('🔔 Notification received: ', notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log('Notification response received: ', response);
+        console.log('🔔 Notification response received: ', response);
       });
 
     return () => {

@@ -1,4 +1,6 @@
-export function formatMapMarkerTitle(character: Character | undefined): string {
+export function formatMapMarkerDateTitle(
+  character: Character | undefined
+): string {
   if (character !== undefined) {
     return `Rencard avec ${character.name} ${character.surname ?? ''}`;
   }

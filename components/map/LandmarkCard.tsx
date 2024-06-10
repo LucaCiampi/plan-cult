@@ -10,10 +10,10 @@ import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
 import { router } from 'expo-router';
-import { formatMapMarkerTitle } from '@/utils/labellingUtils';
+import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
 
 interface LandmarkCardProps {
-  landmark: Landmark | null;
+  landmark: Landmark;
   onClose: () => void;
 }
 
@@ -22,13 +22,13 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
 
   const handleClick = useCallback(() => {
     // Dispatch de la thunk action en passant l'instance dbService
-    if (landmark?.characters[0] !== undefined) {
+    if (landmark.characters[0] !== undefined) {
       const characterId = landmark.characters[0].id;
       void dispatch(increaseTrustAndFetchQuestions({ characterId }));
     }
 
     router.push({
-      pathname: `/experience/${landmark?.experience.id}`,
+      pathname: `/experience/${landmark.experience.id}`,
     });
   }, [landmark]);
 
@@ -36,26 +36,26 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
     <View style={styles.card}>
       {/* <Image
         // TODO: manifestement les images fetchées ne sont pas celles en local
-        source={{ uri: landmark?.thumbnail }}
+        source={{ uri: landmark.thumbnail }}
         style={styles.landmarkMainPhoto}
       /> */}
       <Text style={styles.landmarkTitle}>
-        {formatMapMarkerTitle(landmark?.characters[0])}
+        {formatMapMarkerDateTitle(landmark.characters[0])}
       </Text>
-      <Text style={styles.landmarkDescription}>{landmark?.description}</Text>
+      <Text style={styles.landmarkDescription}>{landmark.description}</Text>
 
       <View style={styles.disclaimers}>
         <DateDisclaimer icon={'time'} text={'Durée 10 minutes'} />
         <DateDisclaimer icon={'sound'} text={'Nécessite des écouteurs'} />
       </View>
 
-      {landmark?.characters[0] !== undefined && (
+      {landmark.characters[0] !== undefined && (
         <View style={styles.dateWith}>
           <Text style={styles.dateWithText}>Votre rencard avec :</Text>
-          <CharacterTag character={landmark?.characters[0]} />
+          <CharacterTag character={landmark.characters[0]} />
         </View>
       )}
-      {landmark?.experience !== null && (
+      {landmark.experience !== null && (
         <Button
           fontSize="large"
           color="orange"
