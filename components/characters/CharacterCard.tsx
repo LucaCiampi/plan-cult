@@ -32,7 +32,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
           </View>
         </View>
         {character.profile?.map((profileSection, index) =>
-          renderProfileSection(profileSection, index, character.id)
+          renderProfileSection(profileSection, index)
         )}
       </View>
     </View>
@@ -41,16 +41,12 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
 
 const renderProfileSection = (
   profileSection: CharacterProfileSection,
-  index: number,
-  characterId: number
+  index: number
 ) => {
   // Préparation du titre
   const titleElement = profileSection.profile_prompt_title?.data?.attributes
     ?.title != null && (
-    <Text
-      key={index + '-title'}
-      style={[styles.sectionPromptTitle, styles.characterDescription]}
-    >
+    <Text key={index + '-title'} style={styles.sectionPromptTitle}>
       {profileSection.profile_prompt_title.data.attributes.title}
     </Text>
   );
@@ -73,10 +69,7 @@ const renderProfileSection = (
       break;
     case 'profile.text-prompt':
       content = (
-        <Text
-          key={index + '-answer'}
-          style={[styles.textSection, styles.characterDescription]}
-        >
+        <Text key={index + '-answer'} style={styles.textSection}>
           {profileSection.answer?.map((answer, answerIndex) =>
             answer.children.map((answerChild, childIndex) => (
               <Text
@@ -109,6 +102,7 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.pageContentVerticalMargin,
     position: 'absolute',
     opacity: 0,
+    marginBottom: Sizes.padding * 6,
   },
   isCurrent: {
     position: 'static',
@@ -134,11 +128,13 @@ const styles = StyleSheet.create({
   sectionPromptTitle: {
     // TODO: pas pris en compte
     fontSize: Sizes.subtitleFontSize,
-    margin: Sizes.padding,
-    marginBottom: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    paddingBottom: 0,
   },
   textSection: {
-    padding: Sizes.padding,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
   },
   characterName: {
     fontSize: Sizes.subtitleFontSize,
@@ -148,7 +144,6 @@ const styles = StyleSheet.create({
   characterDescription: {
     fontSize: Sizes.regularFontSize,
   },
-  likeButton: {},
 });
 
 export default CharacterCard;

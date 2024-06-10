@@ -14,7 +14,7 @@ export default function AppLayout() {
     <Tabs
       sceneContainerStyle={styles.tabsBackground}
       screenOptions={{
-        tabBarActiveTintColor: Colors.purple,
+        tabBarActiveTintColor: Colors.orange,
         tabBarInactiveTintColor: Colors.darkGrey,
         tabBarLabelStyle: {
           fontFamily: 'ITCAvantGardeMd',
