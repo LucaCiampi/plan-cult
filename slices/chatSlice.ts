@@ -140,4 +140,11 @@ export const selectConversations = (
 export const selectSpeakingState = (state: RootState, characterId: string) =>
   state.chat.chatsByCharacter[characterId].speakingState;
 
+export const selectLastDialogue = (state: RootState, characterId: string) => {
+  const conversation = state.chat.chatsByCharacter[characterId].conversation;
+  return conversation.length > 0
+    ? conversation[conversation.length - 1].text
+    : null;
+};
+
 export default chatSlice.reducer;

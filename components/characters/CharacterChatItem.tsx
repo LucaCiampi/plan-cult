@@ -5,6 +5,9 @@ import Avatar from '@/components/common/Avatar';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import { router } from 'expo-router';
+import { useSelector } from 'react-redux';
+import { selectLastDialogue } from '@/slices/chatSlice';
+import { RootState } from '@/app/store';
 
 interface CharacterProps {
   character: Character;
@@ -19,6 +22,10 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
   //   console.log('TODO: rediriger vers le marker carte');
   // }, []);
 
+  const lastDialogue = useSelector((state) =>
+    selectLastDialogue(state as RootState, String(character.id))
+  );
+
   return (
     <View style={styles.characterChatItem}>
       <TouchableOpacity onPress={handleCharacterChatItemPress}>
@@ -29,8 +36,7 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
               {character.name} {character.surname}
             </Text>
             <Text style={styles.lastMessageContent}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci
-              nihil recusandae sunt et quia, ipsa at ea quasi repellat magni.
+              {lastDialogue ?? 'Envoyez le premier message !'}
             </Text>
           </View>
           {/* <TouchableOpacity
