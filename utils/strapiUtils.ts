@@ -144,9 +144,10 @@ export const normalizeExperienceStepFromStrapi = (
     text: data.text,
     images:
       data.images?.data != null
-        ? data.images.data.map(
-            (image: any) => Config.STRAPI_DOMAIN_URL + image.attributes.url
-          )
+        ? data.images.data.map((image: any) => ({
+            src: Config.STRAPI_DOMAIN_URL + image.attributes.url,
+            mimeType: image.attributes.mime,
+          }))
         : undefined,
     audio:
       data.audio?.data != null

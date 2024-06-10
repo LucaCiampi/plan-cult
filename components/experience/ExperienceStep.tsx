@@ -1,6 +1,6 @@
 // ExperienceStep.tsx
 import React from 'react';
-import { ViroImage, ViroNode } from '@viro-community/react-viro';
+import { ViroImage, ViroNode, ViroVideo } from '@viro-community/react-viro';
 
 interface ExperienceStepProps {
   experienceStep: ExperienceStep;
@@ -19,13 +19,21 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 
   return (
     <ViroNode position={position} rotation={rotation}>
-      {experienceStep.images !== undefined && (
-        <ViroImage
-          source={{ uri: experienceStep.images[0] }}
-          position={[0, 0, imagePosition]} // Position de l'image dans la scène
-          scale={[1, 1, 1]} // Taille de l'image
-        />
-      )}
+      {experienceStep.images?.[0] !== undefined &&
+        (experienceStep.images[0].mimeType === 'video/mp4' ? (
+          <ViroVideo
+            source={{ uri: experienceStep.images[0].src }}
+            loop={true}
+            position={[0, 0, imagePosition]}
+            scale={[1, 1, 1]}
+          />
+        ) : (
+          <ViroImage
+            source={{ uri: experienceStep.images[0].src }}
+            position={[0, 0, imagePosition]} // Position de l'image dans la scène
+            scale={[1, 1, 1]} // Taille de l'image
+          />
+        ))}
     </ViroNode>
   );
 };
