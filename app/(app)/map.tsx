@@ -64,15 +64,25 @@ export default function Map() {
    * Positions utilisées pour la présentation
    */
   const [defaultUserLocations] = useState([
-    {
-      // Centre, à côté de place des terreaux
-      latitude: 45.766035,
-      longitude: 4.833658,
-    },
+    // {
+    //   // Croix rousse centre
+    //   latitude: 45.779706,
+    //   longitude: 4.8273587,
+    // },
+    // {
+    //   // Centre, à côté de place des terreaux
+    //   latitude: 45.766035,
+    //   longitude: 4.833658,
+    // },
     {
       // Mâchecroute
       latitude: 45.754,
       longitude: 4.8379504,
+    },
+    {
+      // Parking gare perrache
+      latitude: 45.7492992,
+      longitude: 4.8254754,
     },
   ]);
 

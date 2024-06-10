@@ -45,15 +45,37 @@ export const updateCharacterCoordinates = createAsyncThunk<
   const state: RootState = getState();
   const { allCharacters } = state.characters;
 
-  const updatedCharacters = allCharacters.map((character) => ({
-    ...character,
-    coordinates: generateRandomPositionInBoundaries(
-      lyonBoundary.north,
-      lyonBoundary.south,
-      lyonBoundary.east,
-      lyonBoundary.west
-    ),
-  }));
+  // Spécifie les ID et les coordonnées spécifiques
+  // TODO: supprimer ceci
+  const specificCoordinates = new Map<
+    number,
+    { latitude: number; longitude: number }
+  >([
+    [4, { latitude: 45.7515747, longitude: 4.8377601 }], // Paul Bocuse
+    [5, { latitude: 45.7478312, longitude: 4.8336335 }], // Edouard Herriot
+    [2, { latitude: 45.7553046, longitude: 4.8428548 }], // Antoine Saint Exupéry
+  ]);
+
+  const updatedCharacters = allCharacters.map((character) => {
+    const specificCoord = specificCoordinates.get(character.id);
+    if (specificCoord !== null && specificCoord !== undefined) {
+      // Assigner les coordonnées spécifiques si l'ID correspond
+      return {
+        ...character,
+        coordinates: specificCoord,
+      };
+    }
+    // Sinon, assigner des coordonnées aléatoires
+    return {
+      ...character,
+      coordinates: generateRandomPositionInBoundaries(
+        lyonBoundary.north,
+        lyonBoundary.south,
+        lyonBoundary.east,
+        lyonBoundary.west
+      ),
+    };
+  });
 
   return updatedCharacters;
 });
