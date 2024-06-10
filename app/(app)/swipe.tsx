@@ -10,6 +10,7 @@ import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { selectUserLocation } from '@/slices/userLocationSlice';
 import { isNearUser } from '@/utils/distanceUtils';
+import LikeButton from '@/components/characters/LikeButton';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -95,8 +96,17 @@ export default function SwipePage() {
       <FlatList
         data={[...loadedCharactersProfiles].reverse()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item, index }) => <CharacterCard character={item} />}
+        renderItem={({ item, index }) => (
+          <CharacterCard character={item} isCurrent={index === 0} />
+        )}
       />
+      {loadedCharactersProfiles.length > 0 && (
+        <LikeButton
+          characterId={
+            loadedCharactersProfiles[1]?.id ?? loadedCharactersProfiles[0]?.id
+          }
+        />
+      )}
     </View>
   );
 }

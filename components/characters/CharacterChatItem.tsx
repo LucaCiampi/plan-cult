@@ -1,23 +1,37 @@
 // CharacterChatItem.tsx
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Avatar from '@/components/common/Avatar';
 import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import { router } from 'expo-router';
+import { useSelector } from 'react-redux';
+import { selectLastMessageSent } from '@/slices/chatSlice';
+import { RootState } from '@/app/store';
 
 interface CharacterProps {
   character: Character;
 }
 
 const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+
+  const lastDialogue = useSelector((state) =>
+    selectLastMessageSent(state as RootState, String(character.id))
+  );
+
+  useEffect(() => {
+    setHasNewMessage(true);
+  }, [lastDialogue]);
+
   const handleCharacterChatItemPress = useCallback(() => {
+    setHasNewMessage(false);
     router.push(`/chat/${character.id}`);
   }, []);
 
-  // const handleNotificationPress = useCallback(() => {
-  //   console.log('TODO: rediriger vers le marker carte');
-  // }, []);
+  const handleNotificationPress = useCallback(() => {
+    console.log('TODO: rediriger vers le marker carte');
+  }, []);
 
   return (
     <View style={styles.characterChatItem}>
@@ -29,14 +43,15 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
               {character.name} {character.surname}
             </Text>
             <Text style={styles.lastMessageContent}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci
-              nihil recusandae sunt et quia, ipsa at ea quasi repellat magni.
+              {lastDialogue ?? 'Envoyez le premier message !'}
             </Text>
           </View>
-          {/* <TouchableOpacity
-            style={styles.notification}
-            onPress={handleNotificationPress}
-          /> */}
+          {hasNewMessage && (
+            <TouchableOpacity
+              style={styles.notification}
+              onPress={handleNotificationPress}
+            />
+          )}
         </View>
       </TouchableOpacity>
     </View>
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.yellow,
     position: 'absolute',
     right: Sizes.padding,
-    top: '50%',
+    alignSelf: 'center',
   },
 });
 

@@ -160,7 +160,7 @@ export const normalizeExperienceStepFromStrapi = (
 export const normalizeAnecdotesFromStrapi = (data: any): Anecdote[] => {
   return data.data.map((item: any) => ({
     id: item.id,
-    title: item.attributes.name,
+    title: item.attributes.title,
     coordinates: {
       latitude: item.attributes.latitude,
       longitude: item.attributes.longitude,

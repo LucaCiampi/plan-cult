@@ -3,6 +3,9 @@ import UserProfileButton from '@/components/userProfile/UserProfileButton';
 import Sizes from '@/constants/Sizes';
 import { Stack } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import DatesButton from '@/assets/images/profile/button-dates.png';
+import DicoButton from '@/assets/images/profile/button-dico.png';
+import FunFactsButton from '@/assets/images/profile/button-fun-facts.png';
 
 export default function Page() {
   return (
@@ -18,18 +21,24 @@ export default function Page() {
       />
       <UserProfileHeader />
       <View style={styles.buttons}>
-        <UserProfileButton text="Anecdotes" link="/profile/anecdotes" />
         <UserProfileButton
-          color="purple"
-          text="Trophées"
+          isLarge
+          image={DatesButton}
+          color="none"
           link="/profile/trophies"
         />
         <UserProfileButton
-          color="purple"
-          text="Anecdotes"
+          isLarge
+          image={DicoButton}
+          color="none"
           link="/profile/anecdotes"
         />
-        <UserProfileButton text="Trophées" link="/profile/trophies" />
+        <UserProfileButton
+          isLarge
+          color="none"
+          image={FunFactsButton}
+          link="/profile/trophies"
+        />
       </View>
     </View>
   );
@@ -43,8 +52,8 @@ const styles = StyleSheet.create({
     gap: Sizes.padding,
   },
   buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
+    // flexWrap: 'wrap',
     gap: Sizes.padding,
   },
 });

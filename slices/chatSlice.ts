@@ -9,6 +9,7 @@ export enum SpeakingState {
 }
 
 interface CharacterChatState {
+  lastMessage: string | null;
   conversation: Message[];
   currentQuestions: Dialogue[] | null;
   previousQuestions: Dialogue[] | null;
@@ -115,6 +116,18 @@ const chatSlice = createSlice({
       const { characterId, speakingState } = action.payload;
       state.chatsByCharacter[characterId].speakingState = speakingState;
     },
+    saveLastMessageSent: (
+      state,
+      action: PayloadAction<{
+        characterId: string;
+        lastMessage: string | null;
+      }>
+    ) => {
+      console.log('🍕 saveLastMessageSent');
+
+      const { characterId, lastMessage } = action.payload;
+      state.chatsByCharacter[characterId].lastMessage = lastMessage;
+    },
   },
 });
 
@@ -124,6 +137,7 @@ export const {
   clearMessagesFromConversation,
   setCurrentQuestions,
   setSpeakingState,
+  saveLastMessageSent,
 } = chatSlice.actions;
 
 export const selectCurrentQuestions = (state: RootState, characterId: string) =>
@@ -139,5 +153,12 @@ export const selectConversations = (
 
 export const selectSpeakingState = (state: RootState, characterId: string) =>
   state.chat.chatsByCharacter[characterId].speakingState;
+
+export const selectLastMessageSent = (
+  state: RootState,
+  characterId: string
+) => {
+  return state.chat.chatsByCharacter[characterId].lastMessage;
+};
 
 export default chatSlice.reducer;

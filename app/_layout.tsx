@@ -14,6 +14,7 @@ import backgroundLightReference from '@/assets/images/background-light.jpg';
 import backgroundDarkReference from '@/assets/images/background-dark.jpg';
 import { customDarkTheme, customLightTheme } from '@/constants/Themes';
 import { UserLocationTracker } from '@/components/utilities/UserLocationTracker';
+import NotificationsHandler from '@/components/utilities/NotificationsHandler';
 
 void SplashScreen.preventAutoHideAsync();
 export default function AppLayout() {
@@ -33,6 +34,9 @@ export default function AppLayout() {
     if (loaded) {
       getDeviceColorScheme();
       void SplashScreen.hideAsync();
+
+      // TODO
+      // void registerForPushNotificationsAsync();
     }
   }, [loaded]);
 
@@ -60,6 +64,7 @@ export default function AppLayout() {
             style={styles.backgroundImage}
           >
             <UserLocationTracker />
+            <NotificationsHandler />
             <Slot />
           </ImageBackground>
         </DatabaseServiceProvider>
