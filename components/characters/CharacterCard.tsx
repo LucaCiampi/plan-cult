@@ -5,7 +5,6 @@ import Config from '@/constants/Config';
 import Colors from '@/constants/Colors';
 import { Image } from 'expo-image';
 import Sizes from '@/constants/Sizes';
-import LikeButton from '@/components/characters/LikeButton';
 
 interface CharacterProps {
   character: Character;
@@ -31,7 +30,6 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
               <Text style={styles.characterDescription}>{character.birth}</Text>
             )}
           </View>
-          <LikeButton characterId={character.id} />
         </View>
         {character.profile?.map((profileSection, index) =>
           renderProfileSection(profileSection, index, character.id)
@@ -100,7 +98,6 @@ const renderProfileSection = (
     <View style={styles.section} key={index}>
       {titleElement}
       {content}
-      <LikeButton characterId={characterId} />
     </View>
   );
 };

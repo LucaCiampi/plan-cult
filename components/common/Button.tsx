@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Sizes.padding,
     borderRadius: Sizes.buttonBorderRadius,
     elevation: 3,
-    shadowColor: Colors.black,
+    shadowColor: Colors.darkGrey,
     shadowRadius: 0,
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 1,
