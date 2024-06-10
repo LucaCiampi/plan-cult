@@ -43,7 +43,7 @@ const ARSceneNavigator = () => {
     );
   }
 
-  if (experience === undefined) {
+  if (experience === undefined || experience === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Aucune expérience trouvée</Text>;
@@ -72,9 +72,9 @@ const ARSceneNavigator = () => {
       />
       <View style={styles.firstLevelUi}>
         <Text style={styles.firstLevelUiTitle}>
-          {experience?.steps[currentStep].title ?? 'titre'}
+          {experience.steps[currentStep].title}
         </Text>
-        <Text>{experience?.steps[currentStep].text ?? 'texte'}</Text>
+        <Text>{experience.steps[currentStep].text}</Text>
         <TouchableOpacity
           style={styles.firstLevelUIArrow}
           onPress={handleNextStepButtonPress}
@@ -94,7 +94,7 @@ const ExperienceSceneAR = (props: any) => {
   return (
     <ViroARScene>
       <ViroAmbientLight color="#ffffff" />
-      {experience?.steps?.map((step: any, index: number) => (
+      {experience.steps?.map((step: any, index: number) => (
         <ExperienceStep
           key={step.id}
           experienceStep={step}
