@@ -6,8 +6,12 @@ import Avatar from '@/components/common/Avatar';
 import SettingsIcon from '@/assets/images/settings.svg';
 import KeyNumber from '@/components/userProfile/KeyNumber';
 import Colors from '@/constants/Colors';
+import { useSelector } from 'react-redux';
+import { selectLikedCharacters } from '@/slices/charactersSlice';
 
 const UserProfileHeader = () => {
+  const likedCharactersNumber = useSelector(selectLikedCharacters).length;
+
   return (
     <View style={styles.card}>
       <View style={styles.top}>
@@ -19,9 +23,12 @@ const UserProfileHeader = () => {
         <SettingsIcon />
       </View>
       <View style={styles.stats}>
-        <KeyNumber number={21} text="Personnages débloqués" />
-        <KeyNumber number={21} text="Personnages débloqués" />
-        <KeyNumber number={21} text="Personnages débloqués" />
+        <KeyNumber
+          number={likedCharactersNumber}
+          text="Personnages débloqués"
+        />
+        <KeyNumber number={likedCharactersNumber * 2} text="Messages envoyés" />
+        <KeyNumber number={1} text="Rencard effectué" />
       </View>
     </View>
   );
