@@ -9,7 +9,6 @@ import Sizes from '@/constants/Sizes';
 import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
-import { router } from 'expo-router';
 import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
 
 interface LandmarkCardProps {
