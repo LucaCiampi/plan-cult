@@ -91,7 +91,6 @@ const renderProfileSection = (
         </Text>
       );
       break;
-    // Ajoute d'autres cas ici selon les types de __component que tu as
     default:
       content = null;
   }
