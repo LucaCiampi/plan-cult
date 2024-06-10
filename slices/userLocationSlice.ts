@@ -9,9 +9,9 @@ interface UserLocationState {
 
 const initialState: UserLocationState = {
   userLocation: {
-    // Centre, à côté de place des terreaux
-    latitude: 45.764135,
-    longitude: 4.833658,
+    // Pont Gallien
+    latitude: 45.7507126,
+    longitude: 4.8354594,
   },
   error: null,
 };
