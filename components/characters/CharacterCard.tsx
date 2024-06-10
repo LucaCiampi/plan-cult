@@ -9,11 +9,12 @@ import LikeButton from '@/components/characters/LikeButton';
 
 interface CharacterProps {
   character: Character;
+  isCurrent: boolean;
 }
 
-const CharacterCard: React.FC<CharacterProps> = ({ character }) => {
+const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
   return (
-    <View style={styles.characterCard}>
+    <View style={[styles.characterCard, isCurrent && styles.isCurrent]}>
       <View style={styles.characterCardContent}>
         <View style={styles.section}>
           <Image
@@ -110,6 +111,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Sizes.pageContentHorizontalMargin,
     paddingVertical: Sizes.pageContentVerticalMargin,
+    position: 'absolute',
+    opacity: 0,
+  },
+  isCurrent: {
+    position: 'static',
+    opacity: 1,
   },
   characterCardContent: {
     flex: 1,
