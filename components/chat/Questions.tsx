@@ -8,12 +8,14 @@ import {
   selectCurrentQuestions,
   setSpeakingState,
   SpeakingState,
+  saveLastMessageSent,
 } from '@/slices/chatSlice';
 import { randomBetween } from '@/utils/distanceUtils';
 import { useCallback, useState } from 'react';
 import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import Colors from '@/constants/Colors';
 import Sizes from '@/constants/Sizes';
+import { truncateText } from '@/utils/labellingUtils';
 
 interface Props {
   characterId: string;
@@ -138,6 +140,12 @@ const Questions = ({ characterId }: Props) => {
               Number(characterId),
               isUserSent,
               message.text
+            );
+            dispatch(
+              saveLastMessageSent({
+                characterId,
+                lastMessage: truncateText(message.text, 14),
+              })
             );
             resolve();
           }, delay);

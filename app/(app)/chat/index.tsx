@@ -37,7 +37,7 @@ export default function ChatIndexPage() {
         }}
       />
       <FlatList
-        data={likedCharacters}
+        data={likedCharacters.toReversed()}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.CharacterChatItemContainer}
         renderItem={({ item }) => <CharacterChatItem character={item} />}
