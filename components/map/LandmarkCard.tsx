@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '@/components/common/Button';
 import { router } from 'expo-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { increaseTrustAndFetchQuestions } from '@/slices/charactersSlice';
 import { AppDispatch } from '@/app/store';
 import Sizes from '@/constants/Sizes';
@@ -11,6 +11,8 @@ import Colors from '@/constants/Colors';
 import DateDisclaimer from '@/components/map/DateDisclaimer';
 import CharacterTag from '@/components/map/CharacterTag';
 import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
+import { selectUserLocation } from '@/slices/userLocationSlice';
+import { isNearUser } from '@/utils/distanceUtils';
 
 interface LandmarkCardProps {
   landmark: Landmark;
@@ -19,6 +21,7 @@ interface LandmarkCardProps {
 
 const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const userLocation = useSelector(selectUserLocation);
 
   const handleClick = useCallback(() => {
     // Dispatch de la thunk action en passant l'instance dbService
@@ -55,16 +58,21 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
           <CharacterTag character={landmark.characters[0]} />
         </View>
       )}
-      {landmark.experience !== null && (
-        <Button
-          fontSize="large"
-          color="orange"
-          onPress={handleClick}
-          style={styles.startButton}
-        >
-          J&apos;y suis !
-        </Button>
-      )}
+      {landmark.experience !== null &&
+        (isNearUser(userLocation, landmark.coordinates) ? (
+          <Button
+            fontSize="large"
+            color="orange"
+            onPress={handleClick}
+            style={styles.startButton}
+          >
+            J&apos;y suis !
+          </Button>
+        ) : (
+          <Text style={styles.startExperienceRequirement}>
+            Vous devez être à proximité du rencard pour lancer l&apos;expérience
+          </Text>
+        ))}
     </View>
   );
 };
@@ -104,6 +112,12 @@ const styles = StyleSheet.create({
   startButton: {
     borderWidth: 0,
     marginHorizontal: 'auto',
+  },
+  startExperienceRequirement: {
+    color: Colors.orange,
+    fontWeight: 'bold',
+    fontSize: Sizes.largeFontSize,
+    textAlign: 'center',
   },
 });
 
