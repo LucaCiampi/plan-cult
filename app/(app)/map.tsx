@@ -261,7 +261,7 @@ export default function Map() {
           )}
         </MapView>
         <BottomSheet
-          snapPoints={[36, 160, '100%']}
+          snapPoints={[36, 160, '99%']}
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
           handleIndicatorStyle={{
