@@ -20,7 +20,7 @@ interface Props extends PressableProps {
   characterId: number;
 }
 
-const Button = ({ characterId, ...rest }: Props) => {
+const LikeButton = ({ characterId, ...rest }: Props) => {
   const dispatch = useDispatch();
 
   return (
@@ -39,6 +39,7 @@ const Button = ({ characterId, ...rest }: Props) => {
             conversation: [],
             currentQuestions: [],
             previousQuestions: [],
+            lastMessage: '',
             speakingState: SpeakingState.Idle,
           };
           const characterIdString = characterId.toString();
@@ -75,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Button;
+export default LikeButton;
