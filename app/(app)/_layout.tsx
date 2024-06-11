@@ -34,7 +34,6 @@ export default function AppLayout() {
           shadowRadius: 6,
           borderTopWidth: 0,
           justifyContent: 'center',
-          height: 60,
         },
         headerStyle: {
           borderBottomWidth: 0,
