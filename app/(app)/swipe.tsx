@@ -65,12 +65,14 @@ export default function SwipePage() {
         });
       const newProfiles = await Promise.all(profilesToLoad);
       setLoadedCharacterProfiles(newProfiles);
+    } else {
+      setLoadedCharacterProfiles([]);
     }
   }, [charactersNearbyNotLiked, dbService]);
 
   useEffect(() => {
     void loadCharacterProfiles();
-  }, [charactersNearbyNotLiked, loadCharacterProfiles]);
+  }, [charactersNearbyNotLiked]);
 
   /**
    * Met à jour loadedCharactersProfiles lorsque les profils likés changent
