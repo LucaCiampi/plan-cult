@@ -25,13 +25,13 @@ export default function Page() {
           isLarge
           image={DatesButton}
           color="none"
-          link="/profile/history"
+          link="/profile/anecdotes"
         />
         <UserProfileButton
           isLarge
           image={DicoButton}
           color="none"
-          link="/profile/dictionary"
+          link="/profile/anecdotes"
         />
         <UserProfileButton
           isLarge
