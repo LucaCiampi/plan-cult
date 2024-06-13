@@ -1,7 +1,7 @@
 import Button from '@/components/common/Button';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import {
@@ -45,10 +45,7 @@ export default function Page() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       {!isSyncComplete ? (
-        <>
-          <ActivityIndicator size="large" />
-          <Text>Loading database...</Text>
-        </>
+        <ActivityIndicator size="large" />
       ) : isCoordinatesUpdated ? (
         <Button
           onPress={() => {
