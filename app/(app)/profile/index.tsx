@@ -25,7 +25,7 @@ export default function Page() {
           isLarge
           image={DatesButton}
           color="none"
-          link="/profile/anecdotes"
+          link="/profile/history"
         />
         <UserProfileButton
           isLarge
