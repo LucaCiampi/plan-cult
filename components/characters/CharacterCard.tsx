@@ -1,11 +1,10 @@
 // CharacterCard.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Config from '@/constants/Config';
 import Colors from '@/constants/Colors';
 import { Image } from 'expo-image';
 import Sizes from '@/constants/Sizes';
-import { Stack } from 'expo-router';
 
 interface CharacterProps {
   character: Character;
@@ -13,13 +12,13 @@ interface CharacterProps {
 }
 
 const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
+  const characterCardStyle = useMemo(
+    () => [styles.characterCard, isCurrent && styles.isCurrent],
+    [isCurrent]
+  );
+
   return (
-    <View style={[styles.characterCard, isCurrent && styles.isCurrent]}>
-      <Stack.Screen
-        options={{
-          headerTitle: `${character.name} ${character.surname}`,
-        }}
-      />
+    <View style={characterCardStyle}>
       <View style={styles.characterCardContent}>
         <View style={styles.section}>
           <Image
@@ -37,18 +36,31 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
             )}
           </View>
         </View>
-        {character.profile?.map((profileSection, index) =>
-          renderProfileSection(profileSection, index)
-        )}
+        {character.profile?.map((profileSection, index) => (
+          <ProfileSection
+            key={index}
+            profileSection={profileSection}
+            index={index}
+          />
+        ))}
       </View>
     </View>
   );
 };
 
-const renderProfileSection = (
-  profileSection: CharacterProfileSection,
-  index: number
-) => {
+const getSectionStyles = (componentType: string) => {
+  switch (componentType) {
+    case 'profile.text-prompt':
+      return { backgroundColor: Colors.yellow };
+    default:
+      return {};
+  }
+};
+
+const ProfileSection: React.FC<{
+  profileSection: CharacterProfileSection;
+  index: number;
+}> = ({ profileSection, index }) => {
   // Préparation du titre
   const titleElement = profileSection.profile_prompt_title?.data?.attributes
     ?.title != null && (
@@ -58,43 +70,48 @@ const renderProfileSection = (
   );
 
   // Génération du contenu spécifique basé sur le __component
-  let content;
-  switch (profileSection.__component) {
-    case 'profile.photo':
-      content = (
-        <Image
-          key={index}
-          source={{
-            uri:
-              Config.STRAPI_DOMAIN_URL +
-              profileSection.image?.data?.attributes?.url,
-          }}
-          style={styles.profilePhoto}
-        />
-      );
-      break;
-    case 'profile.text-prompt':
-      content = (
-        <Text key={index + '-answer'} style={styles.textSection}>
-          {profileSection.answer?.map((answer, answerIndex) =>
-            answer.children.map((answerChild, childIndex) => (
-              <Text
-                key={`${index}-${answerIndex}-${childIndex}-${answerChild.text}`}
-              >
-                {answerChild?.text}
-              </Text>
-            ))
-          )}
-        </Text>
-      );
-      break;
-    default:
-      content = null;
-  }
+  const content = useMemo(() => {
+    switch (profileSection.__component) {
+      case 'profile.photo':
+        return (
+          <Image
+            key={index}
+            source={{
+              uri:
+                Config.STRAPI_DOMAIN_URL +
+                profileSection.image?.data?.attributes?.url,
+            }}
+            style={styles.profilePhoto}
+          />
+        );
+      case 'profile.text-prompt':
+        return (
+          <Text key={index + '-answer'} style={styles.textSection}>
+            {profileSection.answer?.map((answer, answerIndex) =>
+              answer.children.map((answerChild, childIndex) => (
+                <Text
+                  key={`${index}-${answerIndex}-${childIndex}-${answerChild.text}`}
+                >
+                  {answerChild?.text}
+                </Text>
+              ))
+            )}
+          </Text>
+        );
+      default:
+        return null;
+    }
+  }, [profileSection]);
+
+  // Styles conditionnels pour la section
+  const sectionStyle = useMemo(
+    () => [styles.section, getSectionStyles(profileSection.__component)],
+    [profileSection.__component]
+  );
 
   // Retourne le titre (si présent) et le contenu spécifique
   return (
-    <View style={styles.section} key={index}>
+    <View style={sectionStyle} key={index}>
       {titleElement}
       {content}
     </View>

@@ -24,5 +24,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Sizes.pageContentHorizontalMargin,
     paddingVertical: Sizes.pageContentVerticalMargin,
     rowGap: Sizes.padding,
+    margin: 'auto',
   },
 });
