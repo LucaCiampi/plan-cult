@@ -6,10 +6,10 @@ export default function Page() {
     <View>
       <Stack.Screen
         options={{
-          headerTitle: 'Fun facts',
+          headerTitle: "Le dico'",
         }}
       />
-      <Text>Anecdotes</Text>
+      <Text>Profile</Text>
     </View>
   );
 }

@@ -11,6 +11,7 @@ import { useDatabaseService } from '@/contexts/DatabaseServiceContext';
 import { selectUserLocation } from '@/slices/userLocationSlice';
 import { isNearUser } from '@/utils/distanceUtils';
 import LikeButton from '@/components/characters/LikeButton';
+import { Stack } from 'expo-router';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -88,6 +89,11 @@ export default function SwipePage() {
   if (loadedCharactersProfiles.length === 0) {
     return (
       <View style={styles.centeredContainer}>
+        <Stack.Screen
+          options={{
+            headerTitle: 'Mes plans cult',
+          }}
+        />
         <Text>Pas de profil dans les parages</Text>
       </View>
     );
@@ -95,6 +101,11 @@ export default function SwipePage() {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerTitle: 'Mes plans cult',
+        }}
+      />
       <FlatList
         data={[...loadedCharactersProfiles].reverse()}
         keyExtractor={(item) => item.id.toString()}

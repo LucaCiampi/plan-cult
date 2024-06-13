@@ -39,6 +39,7 @@ import {
 import Config from '@/constants/Config';
 import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
 import AnecdoteCard from '@/components/map/AnecdoteCard';
+import { Stack } from 'expo-router';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -236,6 +237,11 @@ export default function Map() {
   if (Platform.OS !== 'web') {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack.Screen
+          options={{
+            headerTitle: "Carte cult'",
+          }}
+        />
         <MapView
           ref={mapRef}
           style={styles.map}

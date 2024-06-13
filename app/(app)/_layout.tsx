@@ -55,21 +55,21 @@ export default function AppLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          title: 'Map',
+          title: 'Carte',
           tabBarIcon: ({ color }) => <MapIcon style={{ color }} />,
         }}
       />
       <Tabs.Screen
         name="swipe"
         options={{
-          title: 'Swipe',
+          title: 'Match',
           tabBarIcon: ({ color }) => <SparklesIcon style={{ color }} />,
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
-          title: 'Chat',
+          title: 'Message',
           tabBarIcon: ({ color }) => <MessageIcon style={{ color }} />,
         }}
       />
