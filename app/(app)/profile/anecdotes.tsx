@@ -1,15 +1,28 @@
 import { Stack } from 'expo-router';
-import { View, Text } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import AnecdotePlaceholderLine from '@/assets/placeholders/anecdote-line.svg';
+import Sizes from '@/constants/Sizes';
 
 export default function Page() {
   return (
-    <View>
+    <ScrollView style={styles.container}>
       <Stack.Screen
         options={{
           headerTitle: 'Fun facts',
         }}
       />
-      <Text>Anecdotes</Text>
-    </View>
+      {Array.from({ length: 10 }).map((_, index) => (
+        <AnecdotePlaceholderLine key={index} />
+      ))}
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: Sizes.pageContentHorizontalMargin,
+    paddingVertical: Sizes.pageContentVerticalMargin,
+    rowGap: Sizes.padding,
+  },
+});
