@@ -19,6 +19,7 @@ import AnecdoteSeenPin from '@/assets/images/map/anecdote-seen.svg';
 import DatePin from '@/assets/images/map/date.svg';
 import CharacterPin from '@/assets/images/map/character.svg';
 import CharacterGlassesPin from '@/assets/images/map/character-glasses.svg';
+import UserFocusImage from '@/assets/images/map/user-focus.svg';
 import Colors from '@/constants/Colors';
 import {
   initialRegionView,
@@ -40,6 +41,7 @@ import Config from '@/constants/Config';
 import { formatMapMarkerDateTitle } from '@/utils/labellingUtils';
 import AnecdoteCard from '@/components/map/AnecdoteCard';
 import { Stack } from 'expo-router';
+import Sizes from '@/constants/Sizes';
 
 export default function Map() {
   const dbService = useDatabaseService();
@@ -234,6 +236,19 @@ export default function Map() {
     [allCharacters, userLocation]
   );
 
+  const handleUserFocusPress = () => {
+    if (userLocation != null) {
+      mapRef.current?.animateToRegion(
+        {
+          ...userLocation,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        },
+        600
+      );
+    }
+  };
+
   if (Platform.OS !== 'web') {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -276,6 +291,9 @@ export default function Map() {
             </>
           )}
         </MapView>
+        <TouchableOpacity onPress={handleUserFocusPress}>
+          <UserFocusImage style={styles.userFocus} />
+        </TouchableOpacity>
         <BottomSheet
           snapPoints={[36, 160, '99%']}
           ref={bottomSheetRef}
@@ -408,5 +426,10 @@ const styles = StyleSheet.create({
   },
   characterGlasses: {
     maxWidth: 25,
+  },
+  userFocus: {
+    position: 'absolute',
+    right: Sizes.padding,
+    bottom: Sizes.padding * 4,
   },
 });
