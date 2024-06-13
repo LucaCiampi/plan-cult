@@ -5,6 +5,7 @@ import Config from '@/constants/Config';
 import Colors from '@/constants/Colors';
 import { Image } from 'expo-image';
 import Sizes from '@/constants/Sizes';
+import { Stack } from 'expo-router';
 
 interface CharacterProps {
   character: Character;
@@ -14,6 +15,11 @@ interface CharacterProps {
 const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
   return (
     <View style={[styles.characterCard, isCurrent && styles.isCurrent]}>
+      <Stack.Screen
+        options={{
+          headerTitle: `${character.name} ${character.surname}`,
+        }}
+      />
       <View style={styles.characterCardContent}>
         <View style={styles.section}>
           <Image

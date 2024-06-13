@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import AnecdotePlaceholderLine from '@/assets/placeholders/anecdote-line.svg';
 import Sizes from '@/constants/Sizes';
 

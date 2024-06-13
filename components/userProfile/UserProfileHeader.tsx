@@ -17,7 +17,7 @@ const UserProfileHeader = () => {
       <View style={styles.top}>
         <Avatar size="medium" isUser />
         <View style={styles.name}>
-          <Text style={styles.userName}>Julie</Text>
+          <Text style={styles.userName}>Lucie</Text>
           <Text style={styles.userSurname}>Deschamps</Text>
         </View>
         <SettingsIcon />
