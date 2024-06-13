@@ -360,7 +360,8 @@ const pinsByCategory: Record<PinCategory, any> = {
 function getPinFromType(category: PinCategory): any {
   const PinComponent =
     pinsByCategory[category] !== null ? pinsByCategory[category] : DefaultPin;
-  return <PinComponent style={styles.mapMarker} />;
+  const PinStyle = styles[category];
+  return <PinComponent style={[PinStyle]} />;
 }
 
 const styles = StyleSheet.create({
@@ -368,10 +369,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  mapMarker: {
-    maxHeight: 24,
-    maxWidth: 24,
-  },
+  mapMarker: {},
   webMarker: {
     padding: 12,
     borderBottomWidth: 1,
@@ -389,5 +387,26 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+  },
+  default: {
+    maxWidth: 44,
+  },
+  user: {
+    maxWidth: 32,
+  },
+  anecdote: {
+    maxWidth: 22,
+  },
+  anecdoteSeen: {
+    maxWidth: 32,
+  },
+  date: {
+    maxWidth: 42,
+  },
+  character: {
+    maxWidth: 22,
+  },
+  characterGlasses: {
+    maxWidth: 25,
   },
 });
