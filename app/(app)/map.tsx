@@ -302,6 +302,7 @@ export default function Map() {
             backgroundColor: Colors.orange,
             width: '20%',
           }}
+          backgroundStyle={{ backgroundColor: Colors.lightBeige }}
         >
           {/* TODO: remove BottomSheetView ? */}
           <BottomSheetView style={styles.contentContainer}>
