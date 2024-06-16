@@ -25,7 +25,7 @@ export default function Page() {
           isLarge
           image={DatesButton}
           color="none"
-          link="/profile/trophies"
+          link="/profile/history"
         />
         <UserProfileButton
           isLarge
@@ -37,7 +37,7 @@ export default function Page() {
           isLarge
           color="none"
           image={FunFactsButton}
-          link="/profile/trophies"
+          link="/profile/anecdotes"
         />
       </View>
     </View>

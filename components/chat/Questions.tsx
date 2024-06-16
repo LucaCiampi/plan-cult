@@ -35,7 +35,7 @@ const Questions = ({ characterId }: Props) => {
    * Sends the dialogue object with user texts, answers and eventual followUp
    * @param question the current Dialogue node
    */
-  const handleQuestionClick = useCallback(async (question: Dialogue) => {
+  const handleQuestionPress = useCallback(async (question: Dialogue) => {
     setAllMessagesSent(false);
 
     // Envoi des questions utilisateur de manière graduelle
@@ -169,7 +169,7 @@ const Questions = ({ characterId }: Props) => {
                 index === 0 && styles.firstQuestionButton,
               ]}
               onPress={() => {
-                void handleQuestionClick(currentQuestion);
+                void handleQuestionPress(currentQuestion);
               }}
             >
               {currentQuestion.question_short}

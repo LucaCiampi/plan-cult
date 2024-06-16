@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
-import { StyleSheet, ScrollView } from 'react-native';
-import AnecdotePlaceholderLine from '@/assets/placeholders/anecdote-line.svg';
+import { ScrollView, StyleSheet } from 'react-native';
+import DatePlaceholderLine from '@/assets/placeholders/date-line.svg';
 import Sizes from '@/constants/Sizes';
 
 export default function Page() {
@@ -8,11 +8,11 @@ export default function Page() {
     <ScrollView style={styles.container}>
       <Stack.Screen
         options={{
-          headerTitle: 'Fun facts',
+          headerTitle: "Rencards cult'",
         }}
       />
       {Array.from({ length: 10 }).map((_, index) => (
-        <AnecdotePlaceholderLine key={index} />
+        <DatePlaceholderLine key={index} />
       ))}
     </ScrollView>
   );
