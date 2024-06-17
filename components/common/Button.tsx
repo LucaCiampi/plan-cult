@@ -5,7 +5,7 @@ import { Text, StyleSheet, Pressable, PressableProps } from 'react-native';
 
 interface Props extends PressableProps {
   children?: React.ReactNode;
-  color?: 'white' | 'orange';
+  color?: 'white' | 'orange' | 'purple';
   fontSize?: 'regular' | 'large';
 }
 
@@ -56,6 +56,11 @@ const styles = StyleSheet.create({
   orange: {
     backgroundColor: Colors.orange,
     color: Colors.white,
+  },
+  purple: {
+    backgroundColor: Colors.purple,
+    color: Colors.white,
+    borderWidth: 0,
   },
   regular: {
     fontSize: Sizes.regularFontSize,

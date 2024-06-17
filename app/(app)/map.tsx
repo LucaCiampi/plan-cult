@@ -242,8 +242,6 @@ export default function Map() {
   );
 
   const handleUserFocusPress = () => {
-    console.log('coucoua');
-
     if (userLocation != null) {
       mapRef.current?.animateToRegion(
         {

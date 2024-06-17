@@ -58,7 +58,6 @@ export const updateCharacterCoordinates = createAsyncThunk<
 
   const updatedCharacters = allCharacters.map((character) => {
     const specificCoord = specificCoordinates.get(character.id);
-    console.log(character.city);
 
     if (specificCoord !== null && specificCoord !== undefined) {
       // Assigner les coordonnées spécifiques si l'ID correspond
