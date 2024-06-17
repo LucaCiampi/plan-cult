@@ -18,7 +18,7 @@ export default function ChatIndexPage() {
             contentStyle: {
               backgroundColor: 'transparent',
             },
-            headerTitle: "Messages cult'",
+            headerTitle: "Mes plans cult'",
           }}
         />
         <Text>Pas de matchs, pas de chocolat…</Text>
@@ -35,7 +35,7 @@ export default function ChatIndexPage() {
           contentStyle: {
             backgroundColor: 'transparent',
           },
-          headerTitle: "Messages cult'",
+          headerTitle: "Mes plans cult'",
         }}
       />
       <FlatList

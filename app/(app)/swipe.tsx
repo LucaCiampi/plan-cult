@@ -128,7 +128,7 @@ export default function SwipePage() {
       <View style={styles.centeredContainer}>
         <Stack.Screen
           options={{
-            headerTitle: 'Mes plans cult',
+            headerTitle: 'Profils à proximité',
           }}
         />
         <Image
@@ -149,7 +149,7 @@ export default function SwipePage() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          headerTitle: 'Mes plans cult',
+          headerTitle: 'Profils à proximité',
         }}
       />
       <FlatList

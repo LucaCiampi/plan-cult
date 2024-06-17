@@ -43,7 +43,9 @@ const CharacterChatItem: React.FC<CharacterProps> = ({ character }) => {
               {character.name} {character.surname}
             </Text>
             <Text style={styles.lastMessageContent}>
-              {lastDialogue ?? 'Envoyez le premier message !'}
+              {lastDialogue !== ''
+                ? lastDialogue
+                : 'Envoie le premier message !'}
             </Text>
           </View>
           {hasNewMessage && (
