@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
   sectionPromptTitle: {
     // TODO: pas pris en compte
     fontSize: Sizes.subtitleFontSize,
+    fontFamily: 'FreightSansProMediumBold',
     paddingHorizontal: 16,
     paddingVertical: 18,
     paddingBottom: 0,
@@ -158,11 +159,12 @@ const styles = StyleSheet.create({
   textSection: {
     paddingHorizontal: 16,
     paddingVertical: 18,
+    fontFamily: 'FreightSansProMediumRegular',
   },
   characterName: {
     fontSize: Sizes.subtitleFontSize,
     fontWeight: 'bold',
-    fontFamily: 'ITCAvantGardeMd',
+    fontFamily: 'FreightSansProMediumRegular',
   },
   characterDescription: {
     fontSize: Sizes.regularFontSize,

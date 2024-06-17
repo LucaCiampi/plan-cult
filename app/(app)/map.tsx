@@ -295,12 +295,13 @@ export default function Map() {
           <UserFocusImage style={styles.userFocus} />
         </TouchableOpacity>
         <BottomSheet
-          snapPoints={[36, 160, '99%']}
+          snapPoints={[36, 160, '90%']}
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
           handleIndicatorStyle={{
             backgroundColor: Colors.orange,
             width: '20%',
+            height: 5,
           }}
           backgroundStyle={{ backgroundColor: Colors.lightBeige }}
         >

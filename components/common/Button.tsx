@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.darkGrey,
-    fontWeight: 'bold',
+    fontFamily: 'FreightSansProMediumBold',
+    fontSize: Sizes.regularFontSize,
   },
   white: {
     backgroundColor: Colors.white,

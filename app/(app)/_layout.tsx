@@ -17,7 +17,7 @@ export default function AppLayout() {
         tabBarActiveTintColor: Colors.orange,
         tabBarInactiveTintColor: Colors.darkGrey,
         tabBarLabelStyle: {
-          fontFamily: 'ITCAvantGardeMd',
+          fontFamily: 'FreightSansProMediumRegular',
           display: 'flex',
           justifyContent: 'center',
           alignContent: 'center',
@@ -48,7 +48,7 @@ export default function AppLayout() {
           shadowRadius: 6,
         },
         headerTitleStyle: {
-          fontFamily: 'ITCAvantGardeMd',
+          fontFamily: 'FreightSansProMediumBold',
         },
       }}
     >

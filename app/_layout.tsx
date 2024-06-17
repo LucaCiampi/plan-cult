@@ -23,8 +23,8 @@ export default function AppLayout() {
   const [currentTheme, setCurrentTheme] = useState(customLightTheme);
   const colorScheme = useColorScheme();
   const [loaded, error] = useFonts({
-    RobotoLight: require('@/assets/fonts/Roboto-Light.ttf'),
-    ITCAvantGardeMd: require('@/assets/fonts/ITCAvantGardeStd-Md.otf'),
+    FreightSansProMediumRegular: require('@/assets/fonts/FreightSansProMedium-Regular.ttf'),
+    FreightSansProMediumBold: require('@/assets/fonts/FreightSansProBold-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: '100%',
-    fontFamily: 'ITCAvantGardeMd',
+    fontFamily: 'FreightSansProMediumRegular',
   },
 });

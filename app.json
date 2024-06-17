@@ -16,7 +16,7 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/ITCAvantGardeStd-Md.otf"
+            "./assets/fonts/FreightSansProMedium-Regular.ttf"
           ]
         }
       ],
