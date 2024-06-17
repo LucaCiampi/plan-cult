@@ -45,7 +45,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
       <Text style={styles.landmarkTitle}>
         {formatMapMarkerDateTitle(landmark.characters[0])}
       </Text>
-      <Text style={styles.landmarkDescription}>{landmark.description}</Text>
+      {/* <Text style={styles.landmarkDescription}>{landmark.description}</Text> */}
 
       <View style={styles.disclaimers}>
         <DateDisclaimer icon={'time'} text={'Durée 10 minutes'} />

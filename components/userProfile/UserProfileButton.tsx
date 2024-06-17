@@ -47,7 +47,7 @@ const UserProfileButton = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: Sizes.borderRadius,
-    minHeight: 100,
+    minHeight: 110,
     flexDirection: 'column',
     justifyContent: 'center',
     flex: 1,

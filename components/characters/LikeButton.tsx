@@ -18,9 +18,14 @@ import Colors from '@/constants/Colors';
 
 interface Props extends PressableProps {
   characterId: number;
+  handleLikeButtonPress?: () => void;
 }
 
-const LikeButton = ({ characterId, ...rest }: Props) => {
+const LikeButton = ({
+  characterId,
+  handleLikeButtonPress = () => {},
+  ...rest
+}: Props) => {
   const dispatch = useDispatch();
 
   return (
@@ -34,6 +39,7 @@ const LikeButton = ({ characterId, ...rest }: Props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          handleLikeButtonPress();
           dispatch(likeCharacter(characterId));
           const initialChatState = {
             conversation: [],

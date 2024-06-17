@@ -1,7 +1,6 @@
-import Button from '@/components/common/Button';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import {
@@ -9,6 +8,8 @@ import {
   updateCharacterCoordinates,
 } from '@/slices/charactersSlice';
 import { useSyncComplete } from '@/contexts/DatabaseServiceContext';
+import HeartAnim from '@/assets/images/heart-anim.gif';
+import { Image } from 'expo-image';
 
 export default function Page() {
   const [isCharactersLoaded, setIsCharactersLoaded] = useState(false);
@@ -42,21 +43,21 @@ export default function Page() {
     }
   }, [isCharactersLoaded, dispatch]);
 
+  useEffect(() => {
+    if (isCoordinatesUpdated) {
+      setTimeout(() => {
+        router.navigate('/onboarding/1');
+      }, 1000);
+    }
+  }, [isCoordinatesUpdated]);
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      {!isSyncComplete ? (
-        <ActivityIndicator size="large" />
-      ) : isCoordinatesUpdated ? (
-        <Button
-          onPress={() => {
-            router.navigate('/swipe');
-          }}
-        >
-          Je suis prêt
-        </Button>
-      ) : (
-        <ActivityIndicator size="large" />
-      )}
+      <Image
+        style={{ width: 400, height: 400 }}
+        contentFit="cover"
+        source={HeartAnim}
+      />
     </View>
   );
 }

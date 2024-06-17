@@ -164,7 +164,12 @@ export default function Map() {
         dispatch(setUserLocation(defaultUserLocations[0]));
       }
     }
-  }, [presentationUserPositionIndex, dispatch, defaultUserLocations]);
+  }, [
+    presentationUserPositionIndex,
+    dispatch,
+    defaultUserLocations,
+    Config.DEBUG,
+  ]);
 
   // Fonction pour fermer la carte
   const handleLandmarkClose = useCallback(() => {
@@ -295,13 +300,15 @@ export default function Map() {
           <UserFocusImage style={styles.userFocus} />
         </TouchableOpacity>
         <BottomSheet
-          snapPoints={[36, 160, '99%']}
+          snapPoints={[36, 160, '90%']}
           ref={bottomSheetRef}
           onChange={handleSheetChanges}
           handleIndicatorStyle={{
             backgroundColor: Colors.orange,
             width: '20%',
+            height: 5,
           }}
+          backgroundStyle={{ backgroundColor: Colors.lightBeige }}
         >
           {/* TODO: remove BottomSheetView ? */}
           <BottomSheetView style={styles.contentContainer}>
@@ -431,5 +438,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: Sizes.padding,
     bottom: Sizes.padding * 4,
+    zIndex: 5,
   },
 });

@@ -22,6 +22,7 @@ class SyncService {
       avatar_url: 'TEXT',
       detoured_character: 'TEXT',
       trust_level: 'INTEGER NOT NULL',
+      city: 'TEXT',
     },
     dialogue_anchor: {
       id: 'INTEGER PRIMARY KEY',

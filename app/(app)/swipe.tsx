@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
 import CharacterCard from '@/components/characters/CharacterCard';
 import { useSelector } from 'react-redux';
 import {
@@ -12,14 +13,21 @@ import { selectUserLocation } from '@/slices/userLocationSlice';
 import { isNearUser } from '@/utils/distanceUtils';
 import LikeButton from '@/components/characters/LikeButton';
 import { Stack } from 'expo-router';
+import NoResultsMoveImage from '@/assets/images/no-results/move.png';
+import NoResultsOupsImage from '@/assets/images/no-results/oups.png';
+import Sizes from '@/constants/Sizes';
+import HeartAnim from '@/assets/images/heart-anim.gif';
 
 export default function SwipePage() {
-  const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
-    Character[]
-  >([]);
   const [charactersNearbyNotLiked, setCharactersNearbyNotLiked] = useState<
     Character[]
   >([]);
+  const [loadedCharactersProfiles, setLoadedCharactersProfiles] = useState<
+    Character[]
+  >([]);
+  const [displayedCharactersProfiles, setDisplayedCharactersProfiles] =
+    useState<Character[]>([]);
+  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const dbService = useDatabaseService();
 
   // Récupération de la position de l'utilisateur depuis Redux
@@ -28,6 +36,18 @@ export default function SwipePage() {
   // Récupération des profils likés depuis Redux
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
+
+  /**
+   * Lance l'animation de coeurs au like
+   */
+  const likeButtonAnimation = useCallback(() => {
+    console.log('image');
+
+    setShowHeartAnimation(true); // Affiche l'image temporairement
+    setTimeout(() => {
+      setShowHeartAnimation(false); // Masque l'image après 1 seconde
+    }, 2800);
+  }, []);
 
   /**
    * Récupère les profils à proximité
@@ -65,28 +85,45 @@ export default function SwipePage() {
           return profile;
         });
       const newProfiles = await Promise.all(profilesToLoad);
-      setLoadedCharacterProfiles(newProfiles);
+      setLoadedCharactersProfiles(newProfiles);
     } else {
-      setLoadedCharacterProfiles([]);
+      setLoadedCharactersProfiles([]);
     }
   }, [charactersNearbyNotLiked, dbService]);
 
+  /**
+   * Si les personnages à proximité changent,
+   * on charge les nouveaux profils
+   */
   useEffect(() => {
     void loadCharacterProfiles();
   }, [charactersNearbyNotLiked]);
 
   /**
+   * On assure une distinction entre les profils chargés et affichés
+   * de sorte à mettre l'animation de like
+   * et à gérer correctement les affichages
+   */
+  useEffect(() => {
+    void (async () => {
+      showHeartAnimation &&
+        (await new Promise((resolve) => setTimeout(resolve, 3000)));
+      setDisplayedCharactersProfiles(loadedCharactersProfiles.reverse());
+    })();
+  }, [loadedCharactersProfiles]);
+
+  /**
    * Met à jour loadedCharactersProfiles lorsque les profils likés changent
    */
   useEffect(() => {
-    setLoadedCharacterProfiles((prevProfiles) =>
+    setLoadedCharactersProfiles((prevProfiles) =>
       prevProfiles.filter(
         (profile) => !likedCharacters.some((liked) => liked.id === profile.id)
       )
     );
   }, [likedCharacters]);
 
-  if (loadedCharactersProfiles.length === 0) {
+  if (displayedCharactersProfiles.length === 0) {
     return (
       <View style={styles.centeredContainer}>
         <Stack.Screen
@@ -94,7 +131,16 @@ export default function SwipePage() {
             headerTitle: 'Mes plans cult',
           }}
         />
-        <Text>Pas de profil dans les parages</Text>
+        <Image
+          style={styles.moveMessage}
+          contentFit="contain"
+          source={NoResultsMoveImage}
+        />
+        <Image
+          style={styles.oupsMessage}
+          contentFit="contain"
+          source={NoResultsOupsImage}
+        />
       </View>
     );
   }
@@ -107,17 +153,23 @@ export default function SwipePage() {
         }}
       />
       <FlatList
-        data={[...loadedCharactersProfiles].reverse()}
+        data={displayedCharactersProfiles}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => (
           <CharacterCard character={item} isCurrent={index === 0} />
         )}
       />
-      {loadedCharactersProfiles.length > 0 && (
+      {displayedCharactersProfiles.length > 0 && (
         <LikeButton
-          characterId={
-            loadedCharactersProfiles[1]?.id ?? loadedCharactersProfiles[0]?.id
-          }
+          handleLikeButtonPress={likeButtonAnimation}
+          characterId={displayedCharactersProfiles[0]?.id}
+        />
+      )}
+      {showHeartAnimation && (
+        <Image
+          style={{ width: 400, height: 400, position: 'absolute', zIndex: 5 }}
+          contentFit="cover"
+          source={HeartAnim}
         />
       )}
     </View>
@@ -132,5 +184,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  oupsMessage: {
+    position: 'absolute',
+    width: 325,
+    height: 274,
+    top: Sizes.padding,
+    left: -Sizes.padding,
+  },
+  moveMessage: {
+    position: 'absolute',
+    zIndex: 2,
+    width: 320,
+    height: 310,
+    right: -Sizes.padding,
+    bottom: Sizes.padding * 2,
   },
 });

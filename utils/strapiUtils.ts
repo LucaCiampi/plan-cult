@@ -43,6 +43,7 @@ export const normalizeCharacterFromStrapi = (data: any): Character[] => {
       item.attributes.avatar.data !== null
         ? Config.STRAPI_DOMAIN_URL + item.attributes.avatar.data.attributes.url
         : undefined,
+    city: item.attributes.city,
   }));
 };
 
