@@ -27,7 +27,7 @@ export default function SwipePage() {
   >([]);
   const [displayedCharactersProfiles, setDisplayedCharactersProfiles] =
     useState<Character[]>([]);
-  const [showLikeImage, setShowLikeImage] = useState(false);
+  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const dbService = useDatabaseService();
 
   // Récupération de la position de l'utilisateur depuis Redux
@@ -43,9 +43,9 @@ export default function SwipePage() {
   const likeButtonAnimation = useCallback(() => {
     console.log('image');
 
-    setShowLikeImage(true); // Affiche l'image temporairement
+    setShowHeartAnimation(true); // Affiche l'image temporairement
     setTimeout(() => {
-      setShowLikeImage(false); // Masque l'image après 1 seconde
+      setShowHeartAnimation(false); // Masque l'image après 1 seconde
     }, 2800);
   }, []);
 
@@ -106,7 +106,7 @@ export default function SwipePage() {
    */
   useEffect(() => {
     void (async () => {
-      showLikeImage &&
+      showHeartAnimation &&
         (await new Promise((resolve) => setTimeout(resolve, 3000)));
       setDisplayedCharactersProfiles(loadedCharactersProfiles.reverse());
     })();
@@ -165,7 +165,7 @@ export default function SwipePage() {
           characterId={displayedCharactersProfiles[0]?.id}
         />
       )}
-      {showLikeImage && (
+      {showHeartAnimation && (
         <Image
           style={{ width: 400, height: 400, position: 'absolute', zIndex: 5 }}
           contentFit="cover"

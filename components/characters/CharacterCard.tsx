@@ -27,7 +27,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
             style={styles.profilePhoto}
             contentFit="cover"
           />
-          <View style={styles.textSection}>
+          <View style={[styles.textSection, styles.characterProfileBio]}>
             <Text style={styles.characterName}>
               {character.name} {character.surname}
             </Text>
@@ -81,7 +81,7 @@ const ProfileSection: React.FC<{
                 Config.STRAPI_DOMAIN_URL +
                 profileSection.image?.data?.attributes?.url,
             }}
-            style={styles.profilePhoto}
+            style={[styles.profilePhoto, { aspectRatio: 1 }]}
           />
         );
       case 'profile.text-prompt':
@@ -131,6 +131,19 @@ const styles = StyleSheet.create({
     position: 'static',
     opacity: 1,
   },
+  section: {
+    borderRadius: Sizes.borderRadius,
+    backgroundColor: Colors.white,
+    overflow: 'hidden',
+    gap: Sizes.padding,
+  },
+  characterProfileBio: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.black + '88',
+  },
   characterCardContent: {
     flex: 1,
     gap: Sizes.padding,
@@ -139,14 +152,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     // TODO: auto aspect-ratio
-    aspectRatio: 1,
-    backgroundColor: Colors.grey,
-  },
-  section: {
-    borderRadius: Sizes.borderRadius,
-    backgroundColor: Colors.white,
-    overflow: 'hidden',
-    gap: Sizes.padding,
+    aspectRatio: 0.68,
+    marginVertical: -10,
   },
   sectionPromptTitle: {
     // TODO: pas pris en compte
@@ -164,10 +171,12 @@ const styles = StyleSheet.create({
   characterName: {
     fontSize: Sizes.subtitleFontSize,
     fontWeight: 'bold',
-    fontFamily: 'FreightSansProMediumRegular',
+    fontFamily: 'FreightSansProMediumBold',
+    color: Colors.white,
   },
   characterDescription: {
     fontSize: Sizes.regularFontSize,
+    color: Colors.white,
   },
 });
 
