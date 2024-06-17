@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'column',
     // flexWrap: 'wrap',
-    gap: Sizes.padding,
+    // gap: Sizes.padding,
   },
 });
