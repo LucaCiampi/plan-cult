@@ -108,7 +108,7 @@ const ExperienceSceneAR = (props: any) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   flyingText: {
-    fontFamily: 'ITCAvantGardeMd',
+    fontFamily: 'FreightSansProMediumRegular',
     fontSize: 30,
     color: '#ffffff',
     textAlignVertical: 'center',
