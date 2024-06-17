@@ -164,7 +164,12 @@ export default function Map() {
         dispatch(setUserLocation(defaultUserLocations[0]));
       }
     }
-  }, [presentationUserPositionIndex, dispatch, defaultUserLocations]);
+  }, [
+    presentationUserPositionIndex,
+    dispatch,
+    defaultUserLocations,
+    Config.DEBUG,
+  ]);
 
   // Fonction pour fermer la carte
   const handleLandmarkClose = useCallback(() => {
@@ -237,6 +242,8 @@ export default function Map() {
   );
 
   const handleUserFocusPress = () => {
+    console.log('coucoua');
+
     if (userLocation != null) {
       mapRef.current?.animateToRegion(
         {
@@ -433,5 +440,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: Sizes.padding,
     bottom: Sizes.padding * 4,
+    zIndex: 5,
   },
 });

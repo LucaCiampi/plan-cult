@@ -39,7 +39,7 @@ export const UserLocationTracker = () => {
         );
       }
     })();
-  }, [dispatch]);
+  }, [dispatch, Config]);
 
   return null;
 };
