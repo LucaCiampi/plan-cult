@@ -5,6 +5,13 @@ export const lyonBoundary = {
   east: 4.8564,
 };
 
+export const annecyBoundary = {
+  north: 45.9122381,
+  south: 45.9051618,
+  west: 6.0974775,
+  east: 6.1064697,
+};
+
 export const initialRegionView = {
   latitude: 45.767135,
   longitude: 4.833658,

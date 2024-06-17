@@ -12,4 +12,5 @@ interface Character {
     latitude: number;
     longitude: number;
   };
+  city?: string;
 }

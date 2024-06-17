@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from '@/app/store';
 import { generateRandomPositionInBoundaries } from '@/utils/distanceUtils';
-import { lyonBoundary } from '@/constants/Coordinates';
+import { annecyBoundary, lyonBoundary } from '@/constants/Coordinates';
 import { updateQuestionsToNewTrustLevel } from '@/slices/chatSlice';
 
 interface CharactersState {
@@ -58,11 +58,27 @@ export const updateCharacterCoordinates = createAsyncThunk<
 
   const updatedCharacters = allCharacters.map((character) => {
     const specificCoord = specificCoordinates.get(character.id);
+    console.log(character.city);
+
     if (specificCoord !== null && specificCoord !== undefined) {
       // Assigner les coordonnées spécifiques si l'ID correspond
       return {
         ...character,
         coordinates: specificCoord,
+      };
+    } else if (
+      character.city !== undefined &&
+      character.city === 'Annecy - Papeteries'
+    ) {
+      // Assigner les coordonnées spécifiques si l'ID correspond
+      return {
+        ...character,
+        coordinates: generateRandomPositionInBoundaries(
+          annecyBoundary.north,
+          annecyBoundary.south,
+          annecyBoundary.east,
+          annecyBoundary.west
+        ),
       };
     }
     // Sinon, assigner des coordonnées aléatoires
