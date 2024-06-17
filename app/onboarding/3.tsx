@@ -36,14 +36,14 @@ const styles = StyleSheet.create({
   onboardingView: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   welcome: {
     position: 'absolute',
-    top: Sizes.padding * 2,
+    top: Sizes.padding * 5,
     height: 218,
     width: 228,
     zIndex: 3,
   },
   personnagesMessage: {
     position: 'absolute',
-    bottom: Sizes.padding * 14,
+    bottom: '30%',
     height: 318,
     width: 298,
     zIndex: 2,

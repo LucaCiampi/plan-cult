@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 280,
     height: 260,
-    top: '4%',
+    top: '6%',
     zIndex: 3,
   },
   geolocNoMessage: {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -30,
     right: 0,
-    height: 530,
+    height: 550,
     aspectRatio: 0.46,
   },
   bottomButtonsWrapper: {
