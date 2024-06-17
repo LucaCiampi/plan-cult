@@ -12,6 +12,12 @@ export const annecyBoundary = {
   east: 6.1064697,
 };
 
+export const presentationInitialUserCoordinates = {
+  // Café de la crêche
+  latitude: 45.775398,
+  longitude: 4.8342997,
+};
+
 export const initialRegionView = {
   latitude: 45.767135,
   longitude: 4.833658,

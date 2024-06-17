@@ -11,6 +11,7 @@ import { selectLikedCharacters } from '@/slices/charactersSlice';
 import Config from '@/constants/Config';
 import * as Location from 'expo-location';
 import { setUserLocation } from '@/slices/userLocationSlice';
+import { presentationInitialUserCoordinates } from '@/constants/Coordinates';
 
 const UserProfileHeader = () => {
   const likedCharactersNumber = useSelector(selectLikedCharacters).length;
@@ -31,13 +32,7 @@ const UserProfileHeader = () => {
         }
       );
     } else {
-      dispatch(
-        setUserLocation({
-          // Pont Gallien
-          latitude: 45.7507126,
-          longitude: 4.8354594,
-        })
-      );
+      dispatch(setUserLocation(presentationInitialUserCoordinates));
     }
   }, [isDebug]);
 
