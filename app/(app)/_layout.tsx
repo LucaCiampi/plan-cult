@@ -69,7 +69,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: 'Message',
+          title: 'Messages',
           tabBarIcon: ({ color }) => <MessageIcon style={{ color }} />,
         }}
       />

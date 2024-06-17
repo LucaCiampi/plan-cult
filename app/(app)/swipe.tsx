@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
 import CharacterCard from '@/components/characters/CharacterCard';
 import { useSelector } from 'react-redux';
 import {
@@ -12,6 +13,9 @@ import { selectUserLocation } from '@/slices/userLocationSlice';
 import { isNearUser } from '@/utils/distanceUtils';
 import LikeButton from '@/components/characters/LikeButton';
 import { Stack } from 'expo-router';
+import NoResultsMoveImage from '@/assets/images/no-results/move.png';
+import NoResultsOupsImage from '@/assets/images/no-results/oups.png';
+import Sizes from '@/constants/Sizes';
 
 export default function SwipePage() {
   const [loadedCharactersProfiles, setLoadedCharacterProfiles] = useState<
@@ -94,7 +98,16 @@ export default function SwipePage() {
             headerTitle: 'Mes plans cult',
           }}
         />
-        <Text>Pas de profil dans les parages</Text>
+        <Image
+          style={styles.moveMessage}
+          contentFit="contain"
+          source={NoResultsMoveImage}
+        />
+        <Image
+          style={styles.oupsMessage}
+          contentFit="contain"
+          source={NoResultsOupsImage}
+        />
       </View>
     );
   }
@@ -132,5 +145,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  oupsMessage: {
+    position: 'absolute',
+    width: 325,
+    height: 274,
+    top: Sizes.padding,
+    left: -Sizes.padding,
+  },
+  moveMessage: {
+    position: 'absolute',
+    zIndex: 2,
+    width: 320,
+    height: 310,
+    right: -Sizes.padding,
+    bottom: Sizes.padding * 2,
   },
 });
