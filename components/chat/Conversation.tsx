@@ -59,7 +59,7 @@ const Conversation = ({ characterId, character }: Props) => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
     }
-  }, [conversation, isInitialLoad]);
+  }, [conversation, isInitialLoad, currentCharacterSpeakingState]);
 
   return (
     <ScrollView ref={scrollViewRef}>
@@ -94,7 +94,10 @@ const Conversation = ({ characterId, character }: Props) => {
           currentCharacterSpeakingState === SpeakingState.Idle &&
             character.detoured_character !== '0' &&
             styles.bottomSpacer,
-          currentCharacterSpeakingState !== SpeakingState.Idle &&
+          currentCharacterSpeakingState === SpeakingState.Thinking &&
+            character.detoured_character !== '0' &&
+            styles.bottomSpacerThinking,
+          currentCharacterSpeakingState === SpeakingState.Speaking &&
             character.detoured_character !== '0' &&
             styles.bottomSpacerTaller,
           (character.detoured_character === '0' ||
@@ -111,7 +114,10 @@ const styles = StyleSheet.create({
     height: Sizes.padding,
   },
   bottomSpacer: {
-    height: 180,
+    height: 130,
+  },
+  bottomSpacerThinking: {
+    height: 320,
   },
   bottomSpacerTaller: {
     height: 240,
