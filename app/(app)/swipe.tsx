@@ -16,6 +16,8 @@ import NoResultsMoveImage from '@/assets/images/no-results/move.png';
 import NoResultsOupsImage from '@/assets/images/no-results/oups.png';
 import Sizes from '@/constants/Sizes';
 import HeartAnim from '@/assets/images/heart-anim.gif';
+import { Audio } from 'expo-av';
+import LikeSound from '@/assets/sounds/like.m4a';
 
 export default function SwipePage() {
   const [charactersNearbyNotLiked, setCharactersNearbyNotLiked] = useState<
@@ -36,14 +38,32 @@ export default function SwipePage() {
   const allCharacters = useSelector(selectAllCharacters);
   const likedCharacters = useSelector(selectLikedCharacters);
 
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  const playLikeSound = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const { sound } = await Audio.Sound.createAsync(LikeSound);
+    setSound(sound);
+    await sound.playAsync();
+  }, [sound]);
+
+  useEffect(() => {
+    return sound !== undefined
+      ? () => {
+          void sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
   /**
    * Lance l'animation de coeurs au like
    */
   const likeButtonAnimation = useCallback(() => {
+    void playLikeSound();
     setShowHeartAnimation(true); // Affiche l'image temporairement
     setTimeout(() => {
       setShowHeartAnimation(false); // Masque l'image après 1 seconde
-    }, 2800);
+    }, 2000);
   }, []);
 
   /**
@@ -104,7 +124,7 @@ export default function SwipePage() {
   useEffect(() => {
     void (async () => {
       showHeartAnimation &&
-        (await new Promise((resolve) => setTimeout(resolve, 3000)));
+        (await new Promise((resolve) => setTimeout(resolve, 2000)));
       setDisplayedCharactersProfiles(loadedCharactersProfiles.reverse());
     })();
   }, [loadedCharactersProfiles]);
