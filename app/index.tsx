@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import {
@@ -9,7 +9,6 @@ import {
 } from '@/slices/charactersSlice';
 import { useSyncComplete } from '@/contexts/DatabaseServiceContext';
 import LogoAnim from '@/assets/images/logo-anim.gif';
-import { Image } from 'expo-image';
 
 export default function Page() {
   const [isCharactersLoaded, setIsCharactersLoaded] = useState(false);
@@ -53,11 +52,7 @@ export default function Page() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image
-        style={{ width: 400, height: 400 }}
-        contentFit="cover"
-        source={LogoAnim}
-      />
+      <Image style={{ width: 400, height: 400 }} source={LogoAnim} />
     </View>
   );
 }
