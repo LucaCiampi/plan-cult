@@ -9,12 +9,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 
 interface CharacterTagProps {
-  character: Character;
+  characterId: number;
 }
 
-const CharacterTag: React.FC<CharacterTagProps> = ({ character }) => {
+const CharacterTag: React.FC<CharacterTagProps> = ({ characterId }) => {
   const currentCharacter = useSelector((state) =>
-    selectCharacterOfId(state as RootState, character.id)
+    selectCharacterOfId(state as RootState, characterId)
   );
 
   return (

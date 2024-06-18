@@ -55,7 +55,7 @@ const LandmarkCard: React.FC<LandmarkCardProps> = ({ landmark }) => {
       {landmark.characters[0] !== undefined && (
         <View style={styles.dateWith}>
           <Text style={styles.dateWithText}>Votre rencard avec :</Text>
-          <CharacterTag character={landmark.characters[0]} />
+          <CharacterTag characterId={landmark.characters[0].id} />
         </View>
       )}
       {landmark.experience !== null &&

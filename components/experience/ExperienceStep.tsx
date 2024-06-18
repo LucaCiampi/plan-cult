@@ -25,22 +25,28 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
         uri: experienceStep.audio,
       });
       setSound(sound);
-
-      console.log('Playing Sound');
       await sound.playAsync();
     }
-  }, []);
+  }, [sound]);
+
+  const stopSound = useCallback(async () => {
+    if (sound !== undefined) {
+      await sound.stopAsync();
+    }
+  }, [sound]);
 
   useEffect(() => {
     if (isCurrent) {
       void playSound();
+    } else {
+      void stopSound();
     }
   }, [isCurrent]);
 
   useEffect(() => {
     return sound !== undefined
       ? () => {
-          sound.unloadAsync();
+          void sound.unloadAsync();
         }
       : undefined;
   }, [sound]);

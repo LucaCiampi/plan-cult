@@ -28,7 +28,7 @@ const ARSceneNavigator = () => {
     console.log(currentStep + '/' + numberOfSteps);
 
     if (currentStep + 1 >= numberOfSteps) {
-      router.navigate('/chat');
+      router.navigate('/experience/end');
       return;
     }
     setCurrentStep(currentStep + 1);
