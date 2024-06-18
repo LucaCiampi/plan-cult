@@ -1,5 +1,6 @@
 // userLocationSlice.ts
 import { RootState } from '@/app/store';
+import { presentationInitialUserCoordinates } from '@/constants/Coordinates';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserLocationState {
@@ -8,11 +9,7 @@ interface UserLocationState {
 }
 
 const initialState: UserLocationState = {
-  userLocation: {
-    // Pont Gallien
-    latitude: 45.7507126,
-    longitude: 4.8354594,
-  },
+  userLocation: presentationInitialUserCoordinates,
   error: null,
 };
 

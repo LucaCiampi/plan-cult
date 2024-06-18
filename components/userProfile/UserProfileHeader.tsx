@@ -11,6 +11,7 @@ import { selectLikedCharacters } from '@/slices/charactersSlice';
 import Config from '@/constants/Config';
 import * as Location from 'expo-location';
 import { setUserLocation } from '@/slices/userLocationSlice';
+import { presentationInitialUserCoordinates } from '@/constants/Coordinates';
 
 const UserProfileHeader = () => {
   const likedCharactersNumber = useSelector(selectLikedCharacters).length;
@@ -31,13 +32,7 @@ const UserProfileHeader = () => {
         }
       );
     } else {
-      dispatch(
-        setUserLocation({
-          // Pont Gallien
-          latitude: 45.7507126,
-          longitude: 4.8354594,
-        })
-      );
+      dispatch(setUserLocation(presentationInitialUserCoordinates));
     }
   }, [isDebug]);
 
@@ -71,7 +66,8 @@ const UserProfileHeader = () => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: Sizes.pageContentHorizontalMargin,
+    paddingVertical: Sizes.pageContentHorizontalMargin,
+    paddingHorizontal: Sizes.pageContentHorizontalMargin * 2,
     backgroundColor: Colors.white,
     borderRadius: Sizes.borderRadius,
     gap: 24,
@@ -86,13 +82,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   userName: {
-    fontSize: 24,
+    fontSize: Sizes.subtitleFontSize,
+    fontFamily: 'FreightSansProMediumBold',
+    lineHeight: 24,
   },
   userSurname: {
-    fontSize: 16,
+    fontSize: Sizes.subtitleFontSize,
+    fontFamily: 'FreightSansProMediumBold',
+    lineHeight: 24,
   },
   stats: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 

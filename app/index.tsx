@@ -8,7 +8,7 @@ import {
   updateCharacterCoordinates,
 } from '@/slices/charactersSlice';
 import { useSyncComplete } from '@/contexts/DatabaseServiceContext';
-import HeartAnim from '@/assets/images/heart-anim.gif';
+import LogoAnim from '@/assets/images/logo-anim.gif';
 import { Image } from 'expo-image';
 
 export default function Page() {
@@ -56,7 +56,7 @@ export default function Page() {
       <Image
         style={{ width: 400, height: 400 }}
         contentFit="cover"
-        source={HeartAnim}
+        source={LogoAnim}
       />
     </View>
   );

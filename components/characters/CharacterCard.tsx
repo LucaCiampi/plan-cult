@@ -27,7 +27,7 @@ const CharacterCard: React.FC<CharacterProps> = ({ character, isCurrent }) => {
             style={styles.profilePhoto}
             contentFit="cover"
           />
-          <View style={[styles.textSection, styles.characterProfileBio]}>
+          <View style={styles.characterProfileBio}>
             <Text style={styles.characterName}>
               {character.name} {character.surname}
             </Text>
@@ -143,6 +143,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: Colors.black + '88',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontFamily: 'FreightSansProMediumRegular',
   },
   characterCardContent: {
     flex: 1,
@@ -161,11 +164,11 @@ const styles = StyleSheet.create({
     fontFamily: 'FreightSansProMediumBold',
     paddingHorizontal: 16,
     paddingVertical: 18,
-    paddingBottom: 0,
+    paddingBottom: 8,
   },
   textSection: {
     paddingHorizontal: 16,
-    paddingVertical: 18,
+    paddingBottom: 18,
     fontFamily: 'FreightSansProMediumRegular',
   },
   characterName: {

@@ -51,8 +51,8 @@ export const updateCharacterCoordinates = createAsyncThunk<
     number,
     { latitude: number; longitude: number }
   >([
-    [4, { latitude: 45.7515747, longitude: 4.8377601 }], // Paul Bocuse
-    [5, { latitude: 45.7478312, longitude: 4.8336335 }], // Edouard Herriot
+    [4, { latitude: 45.777328, longitude: 4.8301197 }], // Paul Bocuse
+    [5, { latitude: 45.773328, longitude: 4.8351197 }], // Edouard Herriot
     [2, { latitude: 45.7553046, longitude: 4.8428548 }], // Antoine Saint Exupéry
   ]);
 

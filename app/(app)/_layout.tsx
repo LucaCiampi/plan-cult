@@ -17,12 +17,11 @@ export default function AppLayout() {
         tabBarActiveTintColor: Colors.orange,
         tabBarInactiveTintColor: Colors.darkGrey,
         tabBarLabelStyle: {
-          fontFamily: 'FreightSansProMediumRegular',
+          fontFamily: 'FreightSansProMediumBold',
           display: 'flex',
           justifyContent: 'center',
           alignContent: 'center',
           alignItems: 'center',
-          paddingBottom: 10,
         },
         tabBarStyle: {
           shadowColor: '#000',

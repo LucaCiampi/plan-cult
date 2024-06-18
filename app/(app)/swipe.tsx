@@ -41,8 +41,6 @@ export default function SwipePage() {
    * Lance l'animation de coeurs au like
    */
   const likeButtonAnimation = useCallback(() => {
-    console.log('image');
-
     setShowHeartAnimation(true); // Affiche l'image temporairement
     setTimeout(() => {
       setShowHeartAnimation(false); // Masque l'image après 1 seconde
@@ -128,7 +126,7 @@ export default function SwipePage() {
       <View style={styles.centeredContainer}>
         <Stack.Screen
           options={{
-            headerTitle: 'Mes plans cult',
+            headerTitle: 'Profils à proximité',
           }}
         />
         <Image
@@ -149,7 +147,7 @@ export default function SwipePage() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          headerTitle: 'Mes plans cult',
+          headerTitle: 'Profils à proximité',
         }}
       />
       <FlatList
