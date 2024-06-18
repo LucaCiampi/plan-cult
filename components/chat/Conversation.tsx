@@ -28,6 +28,8 @@ const Conversation = ({ characterId, character }: Props) => {
     selectSpeakingState(state as RootState, characterId)
   );
 
+  console.log('currentCharacterSpeakingState', currentCharacterSpeakingState);
+
   useEffect(() => {
     const loadHistory = async () => {
       const history = await dbService.loadConversationFromConversationHistory(
@@ -59,7 +61,7 @@ const Conversation = ({ characterId, character }: Props) => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
     }
-  }, [conversation, isInitialLoad]);
+  }, [conversation, isInitialLoad, currentCharacterSpeakingState]);
 
   return (
     <ScrollView ref={scrollViewRef}>
@@ -94,7 +96,10 @@ const Conversation = ({ characterId, character }: Props) => {
           currentCharacterSpeakingState === SpeakingState.Idle &&
             character.detoured_character !== '0' &&
             styles.bottomSpacer,
-          currentCharacterSpeakingState !== SpeakingState.Idle &&
+          currentCharacterSpeakingState === SpeakingState.Thinking &&
+            character.detoured_character !== '0' &&
+            styles.bottomSpacerThinking,
+          currentCharacterSpeakingState === SpeakingState.Speaking &&
             character.detoured_character !== '0' &&
             styles.bottomSpacerTaller,
           (character.detoured_character === '0' ||
@@ -112,6 +117,9 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: 180,
+  },
+  bottomSpacerThinking: {
+    height: 320,
   },
   bottomSpacerTaller: {
     height: 240,
