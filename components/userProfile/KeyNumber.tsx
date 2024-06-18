@@ -22,15 +22,17 @@ const KeyNumber = ({ number, text, link }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 'auto',
   },
   number: {
     textAlign: 'center',
     color: Colors.orange,
-    fontWeight: 'bold',
+    fontFamily: 'FreightSansProMediumBold',
     fontSize: Sizes.subtitleFontSize,
   },
   text: {
     textAlign: 'center',
+    fontFamily: 'FreightSansProMediumRegular',
   },
 });
 
