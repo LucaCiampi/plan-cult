@@ -5,8 +5,34 @@ import { Link, Stack } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 import HeartAnim from '@/assets/images/heart-anim.gif';
 import { Image } from 'expo-image';
+import { Audio } from 'expo-av';
+import { useCallback, useEffect, useState } from 'react';
+import SucessSound from '@/assets/sounds/success.m4a';
 
 const ARSceneNavigator = () => {
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  const playSuccessSound = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const { sound } = await Audio.Sound.createAsync(SucessSound);
+    setSound(sound);
+    await sound.playAsync();
+  }, [sound]);
+
+  useEffect(() => {
+    console.log('sound');
+
+    void playSuccessSound();
+  }, []);
+
+  useEffect(() => {
+    return sound !== undefined
+      ? () => {
+          void sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
   return (
     <View style={styles.centeredContainer}>
       <Stack.Screen
