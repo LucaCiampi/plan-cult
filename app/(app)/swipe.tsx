@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-import { Image } from 'expo-image';
+import { View, FlatList, StyleSheet, Image } from 'react-native';
 import CharacterCard from '@/components/characters/CharacterCard';
 import { useSelector } from 'react-redux';
 import {
@@ -129,16 +128,8 @@ export default function SwipePage() {
             headerTitle: 'Profils à proximité',
           }}
         />
-        <Image
-          style={styles.moveMessage}
-          contentFit="contain"
-          source={NoResultsMoveImage}
-        />
-        <Image
-          style={styles.oupsMessage}
-          contentFit="contain"
-          source={NoResultsOupsImage}
-        />
+        <Image style={styles.moveMessage} source={NoResultsMoveImage} />
+        <Image style={styles.oupsMessage} source={NoResultsOupsImage} />
       </View>
     );
   }
@@ -166,7 +157,6 @@ export default function SwipePage() {
       {showHeartAnimation && (
         <Image
           style={{ width: 400, height: 400, position: 'absolute', zIndex: 5 }}
-          contentFit="cover"
           source={HeartAnim}
         />
       )}
