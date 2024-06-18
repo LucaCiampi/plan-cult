@@ -5,7 +5,10 @@ import Sizes from '@/constants/Sizes';
 
 export default function Page() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <Stack.Screen
         options={{
           headerTitle: "Rencards cult'",
@@ -25,5 +28,10 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.pageContentVerticalMargin,
     rowGap: Sizes.padding,
     margin: 'auto',
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    gap: 6,
   },
 });

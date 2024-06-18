@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   presentateur: {
     position: 'absolute',
-    bottom: -30,
+    bottom: -40,
     right: 0,
     width: '100%',
     aspectRatio: 0.92,
