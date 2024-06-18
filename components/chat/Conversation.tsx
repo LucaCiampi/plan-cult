@@ -28,8 +28,6 @@ const Conversation = ({ characterId, character }: Props) => {
     selectSpeakingState(state as RootState, characterId)
   );
 
-  console.log('currentCharacterSpeakingState', currentCharacterSpeakingState);
-
   useEffect(() => {
     const loadHistory = async () => {
       const history = await dbService.loadConversationFromConversationHistory(
