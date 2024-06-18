@@ -143,10 +143,9 @@ export const normalizeAnecdotesFromStrapi = (data: any): Anecdote[] => {
       longitude: item.attributes.longitude,
     },
     description: item.attributes.description,
-    thumbnail:
-      item.attributes.thumbnail?.data != null
-        ? Config.STRAPI_DOMAIN_URL +
-          item.attributes.thumbnail.data.attributes.url
+    image:
+      item.attributes.image?.data != null
+        ? Config.STRAPI_DOMAIN_URL + item.attributes.image.data.attributes.url
         : undefined,
   }));
 };

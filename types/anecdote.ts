@@ -3,5 +3,5 @@ interface Anecdote {
   title: string;
   description?: string;
   coordinates: Coordinates;
-  thumbnail?: string;
+  image?: string;
 }
