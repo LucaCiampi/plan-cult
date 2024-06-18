@@ -152,9 +152,7 @@ export const normalizeExperienceStepFromStrapi = (
         : undefined,
     audio:
       data.audio?.data != null
-        ? data.audio.data.map(
-            (audio: any) => Config.STRAPI_DOMAIN_URL + audio.attributes.url
-          )
+        ? Config.STRAPI_DOMAIN_URL + data.audio.data.attributes.url
         : undefined,
   };
 };

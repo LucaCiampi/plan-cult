@@ -1,6 +1,7 @@
 // ExperienceStep.tsx
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ViroImage, ViroNode, ViroVideo } from '@viro-community/react-viro';
+import { Audio } from 'expo-av';
 
 interface ExperienceStepProps {
   experienceStep: ExperienceStep;
@@ -16,6 +17,33 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
   isCurrent,
 }) => {
   const imagePosition = isCurrent ? -1 : -2;
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  const playSound = useCallback(async () => {
+    if (experienceStep.audio !== undefined) {
+      const { sound } = await Audio.Sound.createAsync({
+        uri: experienceStep.audio,
+      });
+      setSound(sound);
+
+      console.log('Playing Sound');
+      await sound.playAsync();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isCurrent) {
+      void playSound();
+    }
+  }, [isCurrent]);
+
+  useEffect(() => {
+    return sound !== undefined
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   return (
     <ViroNode position={position} rotation={rotation}>
