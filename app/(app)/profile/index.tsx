@@ -31,7 +31,7 @@ export default function Page() {
           isLarge
           image={DicoButton}
           color="none"
-          link="/profile/anecdotes"
+          link="/profile/dictionary"
         />
         <UserProfileButton
           isLarge

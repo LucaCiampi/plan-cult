@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import DatePlaceholderLine from '@/assets/placeholders/date-line.svg';
 import Sizes from '@/constants/Sizes';
 
@@ -12,10 +12,13 @@ export default function Page() {
       <Stack.Screen
         options={{
           headerTitle: "Rencards cult'",
+          headerBackTitle: 'Retour',
         }}
       />
-      {Array.from({ length: 10 }).map((_, index) => (
-        <DatePlaceholderLine key={index} />
+      {Array.from({ length: 1 }).map((_, index) => (
+        <View key={index} style={styles.line}>
+          <DatePlaceholderLine />
+        </View>
       ))}
     </ScrollView>
   );
@@ -31,7 +34,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
     gap: 6,
+  },
+  line: {
+    marginHorizontal: 'auto',
   },
 });
