@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     height: Sizes.padding,
   },
   bottomSpacer: {
-    height: 180,
+    height: 130,
   },
   bottomSpacerThinking: {
     height: 320,
